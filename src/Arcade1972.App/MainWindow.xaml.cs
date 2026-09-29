@@ -291,10 +291,20 @@ public sealed partial class MainWindow : Window
 
     private async void MainWindow_Activated(object sender, WindowActivatedEventArgs args)
     {
-        if (args.WindowActivationState != WindowActivationState.Deactivated
-            && MenuOverlay.Visibility == Visibility.Visible)
+        if (args.WindowActivationState == WindowActivationState.Deactivated)
+        {
+            PauseMatch();
+            return;
+        }
+
+        if (MenuOverlay.Visibility == Visibility.Visible)
         {
             await RefreshQuotaDisplayAsync();
+        }
+
+        if (isMatchPaused && PauseOverlay.Visibility == Visibility.Visible)
+        {
+            ResumeMatchButton.Focus(FocusState.Programmatic);
         }
     }
 
