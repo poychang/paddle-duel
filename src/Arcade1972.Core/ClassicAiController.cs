@@ -1,12 +1,61 @@
 namespace Arcade1972.Core;
 
-public sealed class ClassicAiController(
-    Classic1972Rules rules,
-    double reactionIntervalSeconds = 0.12,
-    double aimOffset = 0)
+public enum ClassicAiDifficulty
 {
+    Easy,
+    Medium,
+    Hard,
+}
+
+public sealed record ClassicAiDifficultyProfile(
+    double ReactionIntervalSeconds,
+    double AimOffset)
+{
+    public static ClassicAiDifficultyProfile For(ClassicAiDifficulty difficulty)
+    {
+        return difficulty switch
+        {
+            ClassicAiDifficulty.Easy => new(0.24, 6),
+            ClassicAiDifficulty.Medium => new(0.12, 2),
+            ClassicAiDifficulty.Hard => new(0.06, 0),
+            _ => throw new ArgumentOutOfRangeException(nameof(difficulty)),
+        };
+    }
+}
+
+public sealed class ClassicAiController
+{
+    private readonly Classic1972Rules rules;
+    private readonly double reactionIntervalSeconds;
+    private readonly double aimOffset;
     private double elapsedSinceReaction = double.MaxValue;
     private double currentAxis;
+
+    public ClassicAiController(
+        Classic1972Rules rules,
+        double reactionIntervalSeconds = 0.12,
+        double aimOffset = 0)
+    {
+        this.rules = rules;
+        this.reactionIntervalSeconds = reactionIntervalSeconds;
+        this.aimOffset = aimOffset;
+        Difficulty = null;
+    }
+
+    public ClassicAiController(Classic1972Rules rules, ClassicAiDifficulty difficulty)
+    {
+        this.rules = rules;
+        var profile = ClassicAiDifficultyProfile.For(difficulty);
+        reactionIntervalSeconds = profile.ReactionIntervalSeconds;
+        aimOffset = profile.AimOffset;
+        Difficulty = difficulty;
+    }
+
+    public ClassicAiDifficulty? Difficulty { get; }
+
+    public double ReactionIntervalSeconds => reactionIntervalSeconds;
+
+    public double AimOffset => aimOffset;
 
     public double Update(GameState state, double elapsedSeconds)
     {

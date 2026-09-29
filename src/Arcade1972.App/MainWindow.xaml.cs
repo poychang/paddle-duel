@@ -8,6 +8,7 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
 using Windows.Graphics;
 using VirtualKey = Windows.System.VirtualKey;
 using Rect = Windows.Foundation.Rect;
@@ -20,7 +21,7 @@ public sealed partial class MainWindow : Window
     private readonly WindowStateStore windowStateStore = new();
     private readonly Classic1972Rules rules = new();
     private readonly ClassicGameSimulation simulation;
-    private readonly ClassicAiController aiController;
+    private ClassicAiController aiController;
     private readonly DispatcherQueueTimer gameTimer;
     private readonly Stopwatch frameClock = new();
     private FixedStepGameLoop gameLoop;
@@ -33,6 +34,7 @@ public sealed partial class MainWindow : Window
     private bool isMatchPaused;
     private bool isCompletingMatch;
     private FreePlayMatchSession? activeFreePlaySession;
+    private ClassicAiDifficulty aiDifficulty = ClassicAiDifficulty.Medium;
 
     public MainWindow(DailyFreePlayQuota freePlayQuota)
     {
@@ -40,7 +42,7 @@ public sealed partial class MainWindow : Window
         InitializeComponent();
 
         simulation = new ClassicGameSimulation(rules);
-        aiController = new ClassicAiController(rules);
+        aiController = new ClassicAiController(rules, aiDifficulty);
         gameLoop = new FixedStepGameLoop(simulation, simulation.CreateInitialState());
         gameTimer = DispatcherQueue.CreateTimer();
         gameTimer.Interval = TimeSpan.FromMilliseconds(8);
@@ -173,6 +175,46 @@ public sealed partial class MainWindow : Window
         await TryStartMatchAsync(onePlayer: true);
     }
 
+    private void EasyDifficultyButton_Click(object sender, RoutedEventArgs e)
+    {
+        SetAiDifficulty(ClassicAiDifficulty.Easy);
+    }
+
+    private void MediumDifficultyButton_Click(object sender, RoutedEventArgs e)
+    {
+        SetAiDifficulty(ClassicAiDifficulty.Medium);
+    }
+
+    private void HardDifficultyButton_Click(object sender, RoutedEventArgs e)
+    {
+        SetAiDifficulty(ClassicAiDifficulty.Hard);
+    }
+
+    private void SetAiDifficulty(ClassicAiDifficulty difficulty)
+    {
+        aiDifficulty = difficulty;
+        aiController = new ClassicAiController(rules, difficulty);
+        AiDifficultyText.Text = $"AI DIFFICULTY  {difficulty.ToString().ToUpperInvariant()}";
+        UpdateDifficultyButtonStyles();
+    }
+
+    private void UpdateDifficultyButtonStyles()
+    {
+        SetDifficultyButtonStyle(EasyDifficultyButton, aiDifficulty == ClassicAiDifficulty.Easy);
+        SetDifficultyButtonStyle(MediumDifficultyButton, aiDifficulty == ClassicAiDifficulty.Medium);
+        SetDifficultyButtonStyle(HardDifficultyButton, aiDifficulty == ClassicAiDifficulty.Hard);
+    }
+
+    private static void SetDifficultyButtonStyle(Button button, bool isSelected)
+    {
+        button.Background = isSelected
+            ? new SolidColorBrush(Colors.WhiteSmoke)
+            : new SolidColorBrush(Colors.Transparent);
+        button.BorderThickness = isSelected ? new Thickness(0) : new Thickness(1);
+        button.BorderBrush = new SolidColorBrush(Colors.LightGray);
+        button.Foreground = new SolidColorBrush(isSelected ? Colors.Black : Colors.White);
+    }
+
     private async Task TryStartMatchAsync(bool onePlayer)
     {
         SetStartButtonsEnabled(false);
@@ -199,6 +241,10 @@ public sealed partial class MainWindow : Window
         isOnePlayer = onePlayer;
         isMatchPaused = false;
         PauseOverlay.Visibility = Visibility.Collapsed;
+        if (onePlayer)
+        {
+            aiController = new ClassicAiController(rules, aiDifficulty);
+        }
         aiController.Reset();
         gameLoop = new FixedStepGameLoop(simulation, simulation.CreateInitialState());
         MenuOverlay.Visibility = Visibility.Collapsed;

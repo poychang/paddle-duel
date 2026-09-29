@@ -112,6 +112,55 @@
                             Foreground="#B8B8B8"
                             Text="RESET  ---- -- --  00:00 UTC" />
                     </StackPanel>
+                    <StackPanel HorizontalAlignment="Center" Spacing="6">
+                        <TextBlock
+                            x:Name="AiDifficultyText"
+                            HorizontalAlignment="Center"
+                            FontFamily="Consolas"
+                            FontSize="11"
+                            Foreground="#B8B8B8"
+                            Text="AI DIFFICULTY  MEDIUM" />
+                        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Spacing="6">
+                            <Button
+                                x:Name="EasyDifficultyButton"
+                                Width="90"
+                                Padding="8,6"
+                                AutomationProperties.Name="Set AI difficulty easy"
+                                Background="Transparent"
+                                BorderBrush="#B8B8B8"
+                                BorderThickness="1"
+                                Click="EasyDifficultyButton_Click"
+                                CornerRadius="0"
+                                FontFamily="Consolas"
+                                Foreground="{StaticResource GameForegroundBrush}"
+                                Content="EASY" />
+                            <Button
+                                x:Name="MediumDifficultyButton"
+                                Width="90"
+                                Padding="8,6"
+                                AutomationProperties.Name="Set AI difficulty medium"
+                                Background="#F4F1E8"
+                                BorderThickness="0"
+                                Click="MediumDifficultyButton_Click"
+                                CornerRadius="0"
+                                FontFamily="Consolas"
+                                Foreground="#050505"
+                                Content="MEDIUM" />
+                            <Button
+                                x:Name="HardDifficultyButton"
+                                Width="90"
+                                Padding="8,6"
+                                AutomationProperties.Name="Set AI difficulty hard"
+                                Background="Transparent"
+                                BorderBrush="#B8B8B8"
+                                BorderThickness="1"
+                                Click="HardDifficultyButton_Click"
+                                CornerRadius="0"
+                                FontFamily="Consolas"
+                                Foreground="{StaticResource GameForegroundBrush}"
+                                Content="HARD" />
+                        </StackPanel>
+                    </StackPanel>
                     <Button
                         x:Name="OnePlayerButton"
                         MinWidth="180"

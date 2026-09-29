@@ -9,13 +9,12 @@
 
 ## 進行中
 
-- [ ] 加入 AI 對手難易度設定，僅調整反應間隔、瞄準誤差等 controller 參數，不改變共用物理規則。
+- [ ] 建立統一設定介面，整合 AI 難度、控制方式與顯示模式。
 
 ## 待辦
 
 ### 遊戲與體驗
 
-- [ ] 建立統一設定介面，整合 AI 難度、控制方式與顯示模式。
 - [ ] 完成主選單、暫停、設定與 Store 畫面的鍵盤導覽、高對比及 Narrator 驗收。
 - [ ] 量測可信的原機參考資料，更新 `Classic1972Rules` 與 golden regression tests。
 
@@ -56,6 +55,7 @@
 
 ## 已完成
 
+- [x] 加入 Easy／Medium／Hard AI 難度選擇；只調整 controller 反應與瞄準參數，不改變共用物理規則。
 - [x] 保存並還原視窗大小、位置與玩家明確選擇的顯示模式，依目前 DisplayArea 工作區校正 DPI／螢幕變更。
 - [x] 將 completed-match 歷史限制在最近 400 個 UTC 日，保留回撥基準日期與跨午夜 session 語義。
 - [x] 以 per-user named mutex 限制 unpackaged App 單一程序，避免多開程序同時操作免費額度 LocalState。

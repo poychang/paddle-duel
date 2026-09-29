@@ -5,6 +5,21 @@ namespace Arcade1972.Tests;
 public sealed class ClassicAiControllerTests
 {
     [Fact]
+    public void DifficultyProfilesBecomeProgressivelyMoreResponsive()
+    {
+        var rules = new Classic1972Rules();
+        var easy = new ClassicAiController(rules, ClassicAiDifficulty.Easy);
+        var medium = new ClassicAiController(rules, ClassicAiDifficulty.Medium);
+        var hard = new ClassicAiController(rules, ClassicAiDifficulty.Hard);
+
+        Assert.Equal(ClassicAiDifficulty.Easy, easy.Difficulty);
+        Assert.True(easy.ReactionIntervalSeconds > medium.ReactionIntervalSeconds);
+        Assert.True(medium.ReactionIntervalSeconds > hard.ReactionIntervalSeconds);
+        Assert.True(Math.Abs(easy.AimOffset) > Math.Abs(medium.AimOffset));
+        Assert.Equal(0, hard.AimOffset);
+    }
+
+    [Fact]
     public void Update_MovesTowardPredictedBallPosition()
     {
         var rules = new Classic1972Rules();
