@@ -97,6 +97,26 @@ public sealed class DailyFreePlayQuotaTests
     }
 
     [Fact]
+    public async Task AvailabilityCompactsOnlyCompletedMatchesOutsideRetentionWindow()
+    {
+        var quotaDate = new DateOnly(2026, 9, 24);
+        var oldDate = quotaDate.AddDays(-DailyFreePlayQuota.CompletedMatchRetentionDays - 1);
+        var recentDate = quotaDate.AddDays(-DailyFreePlayQuota.CompletedMatchRetentionDays);
+        var oldMatch = new CompletedFreePlay(Guid.NewGuid(), oldDate);
+        var recentMatch = new CompletedFreePlay(Guid.NewGuid(), recentDate);
+        var store = new MemoryQuotaStore(new FreePlayQuotaState(
+            quotaDate,
+            [oldMatch, recentMatch]));
+        var quota = new DailyFreePlayQuota(new FakeClock(InitialTime), store);
+
+        await quota.GetAvailabilityAsync();
+
+        Assert.DoesNotContain(store.State!.CompletedMatches, match => match.MatchId == oldMatch.MatchId);
+        Assert.Contains(store.State.CompletedMatches, match => match.MatchId == recentMatch.MatchId);
+        Assert.Equal(quotaDate, store.State.LastObservedUtcDate);
+    }
+
+    [Fact]
     public async Task ANewMatchIsRejectedAfterTheDailyLimit()
     {
         var quota = new DailyFreePlayQuota(new FakeClock(InitialTime), new MemoryQuotaStore());
@@ -126,9 +146,9 @@ public sealed class DailyFreePlayQuotaTests
         public DateTimeOffset UtcNow { get; set; } = utcNow;
     }
 
-    private sealed class MemoryQuotaStore : IFreePlayQuotaStore
+    private sealed class MemoryQuotaStore(FreePlayQuotaState? initialState = null) : IFreePlayQuotaStore
     {
-        public FreePlayQuotaState? State { get; private set; }
+        public FreePlayQuotaState? State { get; private set; } = initialState;
 
         public ValueTask<FreePlayQuotaState?> LoadAsync(
             CancellationToken cancellationToken = default)

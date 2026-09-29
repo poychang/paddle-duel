@@ -41,6 +41,8 @@ public sealed class DailyFreePlayQuota(
     IFreePlayQuotaStore store,
     int dailyLimit = 3)
 {
+    public const int CompletedMatchRetentionDays = 400;
+
     private readonly SemaphoreSlim gate = new(1, 1);
 
     public int DailyLimit { get; } = dailyLimit > 0
@@ -126,14 +128,30 @@ public sealed class DailyFreePlayQuota(
             return newState;
         }
 
-        if (currentUtcDate <= storedState.LastObservedUtcDate)
+        var observedState = currentUtcDate > storedState.LastObservedUtcDate
+            ? storedState with { LastObservedUtcDate = currentUtcDate }
+            : storedState;
+        var compactedState = CompactCompletedMatches(observedState);
+
+        if (ReferenceEquals(compactedState, storedState))
         {
             return storedState;
         }
 
-        var advancedState = storedState with { LastObservedUtcDate = currentUtcDate };
-        await store.SaveAsync(advancedState, cancellationToken);
-        return advancedState;
+        await store.SaveAsync(compactedState, cancellationToken);
+        return compactedState;
+    }
+
+    private static FreePlayQuotaState CompactCompletedMatches(FreePlayQuotaState state)
+    {
+        var cutoffDate = state.LastObservedUtcDate.AddDays(-CompletedMatchRetentionDays);
+        var retainedMatches = state.CompletedMatches
+            .Where(match => match.QuotaDate >= cutoffDate)
+            .ToArray();
+
+        return retainedMatches.Length == state.CompletedMatches.Count
+            ? state
+            : state with { CompletedMatches = retainedMatches };
     }
 
     private FreePlayAvailability GetAvailability(FreePlayQuotaState state, DateOnly quotaDate)

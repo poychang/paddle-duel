@@ -48,3 +48,7 @@ WinUI 3 程序可能已建立可見視窗，但 `Process.MainWindowHandle` 仍�
 開局時建立包含唯一 match ID 與開始日期的 session；比賽完成時才記錄消耗。如此中途離開不扣次、跨午夜仍歸屬開始日期，重複送出相同 session 也能以 match ID 保持冪等。
 
 顯示下一次重置時間時，應由 service 回傳的有效 quota date 加一天，而不是直接使用目前系統日期。時鐘回撥時，兩者可能不同；直接使用系統日期會讓 UI 顯示一個實際不會重置額度的錯誤時間。
+
+### 額度歷史應以最後可信日期裁剪
+
+完成紀錄不是永久帳本；若無界保存，LocalState 會隨每日遊玩次數成長。裁剪 cutoff 應以 `LastObservedUtcDate` 減去保留窗口計算，而不是直接信任當下裝置時間。使用 inclusive cutoff 並先保留 session 的 quota date，可在壓縮歷史的同時維持時鐘回撥防護與跨 UTC 午夜比賽歸屬。
