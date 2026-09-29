@@ -332,5 +332,58 @@
                     TextAlignment="Center" />
             </StackPanel>
         </Grid>
+
+        <Grid
+            x:Name="PauseOverlay"
+            Grid.Row="1"
+            Canvas.ZIndex="25"
+            Background="#F2050505"
+            KeyDown="PauseOverlay_KeyDown"
+            Visibility="Collapsed">
+            <StackPanel
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Spacing="20">
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    FontFamily="Consolas"
+                    FontSize="30"
+                    Foreground="{StaticResource GameForegroundBrush}"
+                    Text="PAUSED" />
+                <Button
+                    x:Name="ResumeMatchButton"
+                    MinWidth="220"
+                    Padding="24,12"
+                    HorizontalAlignment="Center"
+                    AutomationProperties.Name="Resume match"
+                    Background="#F4F1E8"
+                    BorderThickness="0"
+                    Click="ResumeMatchButton_Click"
+                    CornerRadius="0"
+                    FontFamily="Consolas"
+                    Foreground="#050505"
+                    Content="CONTINUE" />
+                <Button
+                    x:Name="AbandonMatchButton"
+                    MinWidth="220"
+                    Padding="24,12"
+                    HorizontalAlignment="Center"
+                    AutomationProperties.Name="Abandon match and return to menu"
+                    Background="Transparent"
+                    BorderBrush="{StaticResource GameForegroundBrush}"
+                    BorderThickness="1"
+                    Click="AbandonMatchButton_Click"
+                    CornerRadius="0"
+                    FontFamily="Consolas"
+                    Foreground="{StaticResource GameForegroundBrush}"
+                    Content="ABANDON MATCH" />
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    FontFamily="Consolas"
+                    FontSize="12"
+                    Foreground="#B8B8B8"
+                    Text="RETURNING TO MENU WILL NOT USE A PLAY" />
+            </StackPanel>
+        </Grid>
     </Grid>
 </Window>

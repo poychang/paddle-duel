@@ -28,6 +28,7 @@ public sealed partial class MainWindow : Window
     private bool rightDownPressed;
     private bool isOnePlayer;
     private bool resumeGameAfterInformation;
+    private bool isMatchPaused;
     private bool isCompletingMatch;
     private FreePlayMatchSession? activeFreePlaySession;
 
@@ -192,6 +193,8 @@ public sealed partial class MainWindow : Window
         }
 
         isOnePlayer = onePlayer;
+        isMatchPaused = false;
+        PauseOverlay.Visibility = Visibility.Collapsed;
         aiController.Reset();
         gameLoop = new FixedStepGameLoop(simulation, simulation.CreateInitialState());
         MenuOverlay.Visibility = Visibility.Collapsed;
@@ -390,7 +393,11 @@ public sealed partial class MainWindow : Window
 
     private void InputSink_KeyDown(object sender, KeyRoutedEventArgs e)
     {
-        if (e.Key == VirtualKey.I)
+        if (e.Key == VirtualKey.Escape)
+        {
+            PauseMatch();
+        }
+        else if (e.Key == VirtualKey.I)
         {
             ShowInformation();
         }
@@ -400,6 +407,65 @@ public sealed partial class MainWindow : Window
         }
 
         e.Handled = true;
+    }
+
+    private void PauseMatch()
+    {
+        if (!gameTimer.IsRunning || activeFreePlaySession is null || isCompletingMatch)
+        {
+            return;
+        }
+
+        gameTimer.Stop();
+        isMatchPaused = true;
+        ClearInput();
+        PauseOverlay.Visibility = Visibility.Visible;
+        ResumeMatchButton.Focus(FocusState.Programmatic);
+    }
+
+    private void ResumeMatchButton_Click(object sender, RoutedEventArgs e)
+    {
+        ResumeMatch();
+    }
+
+    private void ResumeMatch()
+    {
+        if (!isMatchPaused || activeFreePlaySession is null)
+        {
+            return;
+        }
+
+        PauseOverlay.Visibility = Visibility.Collapsed;
+        isMatchPaused = false;
+        ClearInput();
+        frameClock.Restart();
+        InputSink.Focus(FocusState.Programmatic);
+        gameTimer.Start();
+    }
+
+    private async void AbandonMatchButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (!isMatchPaused || activeFreePlaySession is null)
+        {
+            return;
+        }
+
+        gameTimer.Stop();
+        ClearInput();
+        activeFreePlaySession = null;
+        isMatchPaused = false;
+        PauseOverlay.Visibility = Visibility.Collapsed;
+        ShowMenu("MATCH ABANDONED", allowNewMatch: false);
+        await RefreshQuotaDisplayAsync();
+    }
+
+    private void PauseOverlay_KeyDown(object sender, KeyRoutedEventArgs e)
+    {
+        if (e.Key == VirtualKey.Escape)
+        {
+            ResumeMatch();
+            e.Handled = true;
+        }
     }
 
     private void InputSink_KeyUp(object sender, KeyRoutedEventArgs e)
