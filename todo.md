@@ -9,13 +9,12 @@
 
 ## 進行中
 
-- [ ] 限制為單一 App instance，或加入跨程序額度鎖定，避免多開程序重複取得免費額度。
+- [ ] 為額度 completed-match 歷史加入安全的保留與壓縮規則，不破壞跨午夜 session 與回撥保護。
 
 ## 待辦
 
 ### 穩定性與生命週期
 
-- [ ] 為額度 completed-match 歷史加入安全的保留與壓縮規則，不破壞跨午夜 session 與回撥保護。
 - [ ] 保存並還原視窗大小、位置與玩家明確選擇的顯示模式，並處理螢幕／DPI 改變。
 
 ### 遊戲與體驗
@@ -65,6 +64,7 @@
 
 ## 已完成
 
+- [x] 以 per-user named mutex 限制 unpackaged App 單一程序，避免多開程序同時操作免費額度 LocalState。
 - [x] 視窗失焦或最小化時沿用暫停 overlay、清除 held input，回到前景後必須明確按 Continue。
 - [x] 實作 Escape 暫停、繼續與放棄比賽；放棄會捨棄 quota session 且不扣次。
 - [x] 額度耗盡時停用單人／雙人開局，並顯示不含假價格或假交易的 Store 占位畫面。

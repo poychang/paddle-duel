@@ -27,6 +27,10 @@ WinUI 3 程序可能已建立可見視窗，但 `Process.MainWindowHandle` 仍�
 
 `ExtendsContentIntoTitleBar` 與 `SetTitleBar` 會讓標題列區域由 non-client input 處理。畫面上可見的資訊或全螢幕按鈕不一定能收到滑鼠事件，必須透過 `InputNonClientPointerSource.SetRegionRects` 將控制項範圍設為 `Passthrough`。矩形座標須乘上 `XamlRoot.RasterizationScale`，並在標題列尺寸改變時重算。
 
+### Unpackaged 開發版先在 OnLaunched 取得單一程序鎖
+
+目前開發版沒有 package identity，也沒有依賴 MSIX 的 instance redirection。若讓第二個程序先建立 Window 和 quota store，兩個程序可能同時讀寫同一份 LocalState。`App.OnLaunched` 在建立 Window 前取得 per-user named mutex；取得失敗的程序立即退出，第一個程序在 Window 關閉時釋放 mutex。轉為 Packaged App 後仍應重新驗證，並評估是否改用 Windows App SDK `AppInstance` 的啟動轉導功能。
+
 ## 本機狀態持久化
 
 ### 原子替換與損毀隔離
