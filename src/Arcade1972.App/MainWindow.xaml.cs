@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Arcade1972.App.Storage;
 using Arcade1972.Core;
 using Microsoft.UI;
 using Microsoft.UI.Dispatching;
@@ -16,6 +17,7 @@ namespace Arcade1972.App;
 public sealed partial class MainWindow : Window
 {
     private readonly DailyFreePlayQuota freePlayQuota;
+    private readonly WindowStateStore windowStateStore = new();
     private readonly Classic1972Rules rules = new();
     private readonly ClassicGameSimulation simulation;
     private readonly ClassicAiController aiController;
@@ -46,7 +48,7 @@ public sealed partial class MainWindow : Window
 
         ExtendsContentIntoTitleBar = true;
         SetTitleBar(AppTitleBar);
-        AppWindow.Resize(new SizeInt32(1024, 720));
+        RestoreWindowState();
 
         if (AppWindowTitleBar.IsCustomizationSupported())
         {
@@ -62,11 +64,13 @@ public sealed partial class MainWindow : Window
 
     private void FullScreenButton_Click(object sender, RoutedEventArgs e)
     {
+        SaveWindowState();
         var presenter = AppWindow.Presenter.Kind == AppWindowPresenterKind.FullScreen
             ? AppWindowPresenterKind.Overlapped
             : AppWindowPresenterKind.FullScreen;
 
         AppWindow.SetPresenter(presenter);
+        SaveWindowState();
     }
 
     private void AppTitleBar_Loaded(object sender, RoutedEventArgs e)
@@ -536,9 +540,55 @@ public sealed partial class MainWindow : Window
 
     private void MainWindow_Closed(object sender, WindowEventArgs args)
     {
+        SaveWindowState();
         gameTimer.Stop();
         gameTimer.Tick -= GameTimer_Tick;
         Activated -= MainWindow_Activated;
+    }
+
+    private void RestoreWindowState()
+    {
+        var state = windowStateStore.Load();
+        if (state is null)
+        {
+            AppWindow.Resize(new SizeInt32(1024, 720));
+            return;
+        }
+
+        var displayArea = DisplayArea.GetFromWindowId(
+            AppWindow.Id,
+            DisplayAreaFallback.Nearest);
+        var workArea = displayArea.WorkArea;
+        var width = Math.Clamp(state.Width, 480, workArea.Width);
+        var height = Math.Clamp(state.Height, 360, workArea.Height);
+        var x = Math.Clamp(state.X, workArea.X, workArea.X + workArea.Width - width);
+        var y = Math.Clamp(state.Y, workArea.Y, workArea.Y + workArea.Height - height);
+
+        AppWindow.Resize(new SizeInt32(width, height));
+        AppWindow.Move(new PointInt32(x, y));
+        if (state.IsFullScreen)
+        {
+            AppWindow.SetPresenter(AppWindowPresenterKind.FullScreen);
+        }
+    }
+
+    private void SaveWindowState()
+    {
+        try
+        {
+            var isFullScreen = AppWindow.Presenter.Kind == AppWindowPresenterKind.FullScreen;
+            var size = AppWindow.Size;
+            var position = AppWindow.Position;
+            windowStateStore.Save(new WindowStateSnapshot(
+                position.X,
+                position.Y,
+                size.Width,
+                size.Height,
+                isFullScreen));
+        }
+        catch (IOException)
+        {
+        }
     }
 
     private void ClearInput()

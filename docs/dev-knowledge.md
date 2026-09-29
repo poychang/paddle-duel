@@ -52,3 +52,9 @@ WinUI 3 程序可能已建立可見視窗，但 `Process.MainWindowHandle` 仍�
 ### 額度歷史應以最後可信日期裁剪
 
 完成紀錄不是永久帳本；若無界保存，LocalState 會隨每日遊玩次數成長。裁剪 cutoff 應以 `LastObservedUtcDate` 減去保留窗口計算，而不是直接信任當下裝置時間。使用 inclusive cutoff 並先保留 session 的 quota date，可在壓縮歷史的同時維持時鐘回撥防護與跨 UTC 午夜比賽歸屬。
+
+## 視窗狀態
+
+### 還原位置前要依目前 DisplayArea 校正
+
+`AppWindow.Position` 與 `AppWindow.Size` 是實體像素資料；使用者可能已更換螢幕或 DPI，直接還原舊位置可能把視窗放到不可見區域。保存時記錄大小、位置與 fullscreen 偏好；還原時先取得目前 `DisplayArea.WorkArea`，再限制尺寸與位置到工作區範圍內。
