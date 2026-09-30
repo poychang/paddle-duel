@@ -9,15 +9,20 @@
 
 ## 進行中
 
-- [ ] 在 Windows High Contrast 與 Narrator 實際驗收主選單、暫停、設定與 Store 畫面。
+- [ ] 完成 Windows High Contrast 與 Narrator 實際驗收主選單、暫停、設定與 Store 畫面。
+  - 自動化 UI Automation 驗收已完成，詳見 `docs/accessibility-checklist.md`。
+  - 目前阻塞：本機工作階段未啟用 High Contrast，Narrator 也未執行。
 
 ## 待辦
 
-- [ ] 量測可信的原機參考資料，更新 `Classic1972Rules` 與 golden regression tests。
+### 外部資料與歷史驗證
+
+- [ ] 取得可信的原機錄影或硬體資料，量測並更新 `Classic1972Rules` 與 golden regression tests；目前 baseline 仍是 provisional。
 
 ### MSIX 與 Microsoft Store 外部前置
 
 - [ ] 透過 Visual Studio Installer 安裝並驗證 Windows App SDK、MSIX Packaging 與 Windows SDK 工作負載。
+  - 目前阻塞：缺少 Windows App SDK C#、MSIX Packaging 與 Windows 10 SDK 19041 components。
 - [ ] 建立最小 Packaged WinUI 3 spike，驗證 .NET 10、Windows App SDK、x64 簽署、安裝與啟動。
 - [ ] 在 Partner Center 建立 App identity，取得 Publisher、Package identity 與 Store ID。
 - [ ] 建立 1 次與 10 次 Store-managed consumable 測試商品，確認 10 次商品可設定 10 units。
