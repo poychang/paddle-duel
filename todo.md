@@ -9,7 +9,7 @@
 
 ## 進行中
 
-- [ ] 實作賽後 consumable fulfillment、固定 tracking ID 與 pending journal。
+- [ ] 啟動、回前景與恢復網路時，以同一 tracking ID 冪等重試 pending fulfillment。
 
 ## 待辦
 
@@ -30,7 +30,6 @@
 
 ### Store 購買架構
 
-- [ ] 啟動、回前景與恢復網路時，以同一 tracking ID 冪等重試 pending fulfillment。
 
 ### Store 與發行驗收
 
@@ -44,6 +43,7 @@
 
 ## 已完成
 
+- [x] 實作賽後 consumable fulfillment、固定 tracking ID 與 pending journal；失敗紀錄可在 coordinator 重建後重試。
 - [x] 付費局開始前查詢 Store balance，免費耗盡才選擇付費 pool，並將選定 Store ID 保存於 entitlement session。
 - [x] 將購買協調器接入 Store UI，商品名稱／formatted price 由 Store 提供；取消、錯誤與 Store unavailable 狀態安全呈現且不自行加值。
 - [x] 實作購買協調器核心，以原子 busy guard 防止重入，映射 Store 錯誤並允許失敗後重試。

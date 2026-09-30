@@ -74,6 +74,10 @@ Windows `StoreContext` 的 API adapter 可以先在 unpackaged 專案編譯，�
 
 付費局開始與賽後完成可能發生在不同程序生命週期；Store gateway 必須 lazy 建立，且完成既有 paid session 時也要能重新建立 gateway，否則重啟後會遺失 fulfillment 路徑。
 
+### Fulfillment 必須先寫 journal 再呼叫 Store
+
+付費局完成時先保存 `StoreId`、quantity 與固定 tracking ID，再呼叫 Store fulfillment；網路或程序中斷時才不會遺失待履行交易。成功或 Store 回報已履行後才移除 journal，重試使用同一 tracking ID。
+
 ## 視窗狀態
 
 ### 還原位置前要依目前 DisplayArea 校正
