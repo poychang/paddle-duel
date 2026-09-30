@@ -9,7 +9,7 @@
 
 ## 進行中
 
-- [ ] 實作 `IPlayEntitlementService`／`MatchChargeCoordinator`，免費額度優先，免費耗盡才選擇付費商品來源。
+- [ ] 以 fake clock／gateway 測試免費與付費切換、餘額不足、取消、離線、重啟及重複 callback。
 
 ## 待辦
 
@@ -30,7 +30,6 @@
 
 ### Store 購買架構
 
-- [ ] 以 fake clock／gateway 測試免費與付費切換、餘額不足、取消、離線、重啟及重複 callback。
 - [ ] 實作 `StoreContext` adapter，顯示 Store 回傳的商品名稱與 formatted price。
 - [ ] 實作購買防重入及取消、離線、未登入、網路和伺服器錯誤介面；成功後重新查詢餘額，不自行加值。
 - [ ] 付費局開始前必須連線確認 Store 餘額，並將選中的 Store ID 寫入 match session。
@@ -49,6 +48,7 @@
 
 ## 已完成
 
+- [x] 實作 `IPlayEntitlementService`，免費額度優先，付費 fallback 依序選擇 1-play 與 10-play pool，並以固定 tracking ID 回報完成。
 - [x] 定義 Store 商品／餘額／購買／fulfillment 結果模型、`IStoreGateway` 與 fake gateway，含商品查詢錯誤狀態與 tracking ID 冪等測試。
 - [x] 建立 `Classic1972Rules` golden regression baseline。
 - [x] 建立統一設定 overlay，整合 AI 難度與 Windowed／Full Screen 顯示模式。
