@@ -25,6 +25,8 @@
 
 Microsoft Store 消耗型商品、MSIX 封裝與正式商店素材尚未實作；目前 Store 畫面只說明尚未連線，不會執行任何購買流程。
 
+Store commerce 目前已具備平台無關的商品、餘額、購買與 fulfillment gateway fake；真實 `StoreContext` adapter 與 Partner Center 商品尚未接入。
+
 ## 建置與執行
 
 需求：Windows 10 22H2 或 Windows 11，以及 .NET 10 SDK。

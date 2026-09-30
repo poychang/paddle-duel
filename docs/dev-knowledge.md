@@ -56,6 +56,12 @@ WinUI 3 程序可能已建立可見視窗，但 `Process.MainWindowHandle` 仍�
 
 完成紀錄不是永久帳本；若無界保存，LocalState 會隨每日遊玩次數成長。裁剪 cutoff 應以 `LastObservedUtcDate` 減去保留窗口計算，而不是直接信任當下裝置時間。使用 inclusive cutoff 並先保留 session 的 quota date，可在壓縮歷史的同時維持時鐘回撥防護與跨 UTC 午夜比賽歸屬。
 
+## Store commerce
+
+### Gateway 結果必須保留 operation status
+
+商品查詢若只回傳空清單，呼叫端無法區分「沒有商品」與網路／伺服器錯誤。`IStoreGateway` 的商品、餘額、購買與 fulfillment 結果都保留明確 status；fake gateway 以同樣模型模擬錯誤，讓 UI 與 entitlement coordinator 不必依賴真實 Store 才能測試。
+
 ## 視窗狀態
 
 ### 還原位置前要依目前 DisplayArea 校正
