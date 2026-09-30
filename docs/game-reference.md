@@ -26,6 +26,10 @@ The defaults in `Classic1972Rules` are playable engineering values, not claims a
 
 Before describing the game as behaviorally exact, capture a reliable original-hardware reference and record frame-by-frame measurements here. Keep all accepted values centralized in `Classic1972Rules` and add a regression test for each change.
 
+## Provisional golden baseline
+
+`Classic1972GoldenRegressionTests` locks the current deterministic engineering baseline: initial state, paddle bounds, wall bounce, and point reset. These tests protect accidental code changes; they are not measurements of original hardware. When a credible reference is measured, update the rules, this document, and the affected golden expectations together.
+
 ## Product boundary
 
 The local two-player mode is the historical-fidelity target. Single-player AI, keyboard input, window controls, accessibility features, daily plays, and Microsoft Store purchases are modern product additions.

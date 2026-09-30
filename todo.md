@@ -9,11 +9,9 @@
 
 ## 進行中
 
- [ ] 在 Windows High Contrast 與 Narrator 實際驗收主選單、暫停、設定與 Store 畫面。
+- [ ] 在 Windows High Contrast 與 Narrator 實際驗收主選單、暫停、設定與 Store 畫面。
 
 ## 待辦
-
- [x] 以 UI Automation 驗證主選單與設定 overlay 的控制項命名、鍵盤可聚焦性及開關流程。
 
 - [ ] 量測可信的原機參考資料，更新 `Classic1972Rules` 與 golden regression tests。
 
@@ -54,6 +52,8 @@
 
 ## 已完成
 
+- [x] 建立 provisional `Classic1972Rules` golden regression baseline；原機量測仍待可信參考資料。
+- [x] 以 UI Automation 驗證主選單與設定 overlay 的控制項命名、鍵盤可聚焦性及開關流程。
 - [x] 建立統一設定 overlay，整合 AI 難度與 Windowed／Full Screen 顯示模式。
 - [x] 加入 Easy／Medium／Hard AI 難度選擇；只調整 controller 反應與瞄準參數，不改變共用物理規則。
 - [x] 保存並還原視窗大小、位置與玩家明確選擇的顯示模式，依目前 DisplayArea 工作區校正 DPI／螢幕變更。
