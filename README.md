@@ -46,3 +46,4 @@ dotnet run --project src/Arcade1972.App/Arcade1972.App.csproj -c Debug -p:Platfo
 - `tests/Arcade1972.Tests`：物理、勝負、固定步進與 AI 測試。
 - `docs/game-reference.md`：歷史規則依據與尚待量測的參數。
 - `docs/dev-knowledge.md`：開發中經驗證且可重用的技術知識，會隨專案演進汰舊更新。
+- `docs/accessibility-checklist.md`：UI Automation 已驗證項目與待人工驗收的 High Contrast／Narrator 清單。

@@ -220,7 +220,8 @@
                 Width="1"
                 Height="1"
                 Opacity="0"
-                IsTabStop="True"
+                AutomationProperties.Name="Internal game keyboard input"
+                IsTabStop="False"
                 KeyDown="InputSink_KeyDown"
                 KeyUp="InputSink_KeyUp" />
         </Grid>

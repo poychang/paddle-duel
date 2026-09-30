@@ -9,11 +9,11 @@
 
 ## 進行中
 
-- [ ] 完成主選單、暫停、設定與 Store 畫面的鍵盤導覽、高對比及 Narrator 驗收。
+ [ ] 在 Windows High Contrast 與 Narrator 實際驗收主選單、暫停、設定與 Store 畫面。
 
 ## 待辦
 
-### 遊戲與體驗
+ [x] 以 UI Automation 驗證主選單與設定 overlay 的控制項命名、鍵盤可聚焦性及開關流程。
 
 - [ ] 量測可信的原機參考資料，更新 `Classic1972Rules` 與 golden regression tests。
 
