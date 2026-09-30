@@ -9,7 +9,7 @@
 
 ## 進行中
 
-- [ ] 實作 `StoreContext` adapter，顯示 Store 回傳的商品名稱與 formatted price。
+- [ ] 實作購買防重入及取消、離線、未登入、網路和伺服器錯誤介面；成功後重新查詢餘額，不自行加值。
 
 ## 待辦
 
@@ -30,7 +30,6 @@
 
 ### Store 購買架構
 
-- [ ] 實作購買防重入及取消、離線、未登入、網路和伺服器錯誤介面；成功後重新查詢餘額，不自行加值。
 - [ ] 付費局開始前必須連線確認 Store 餘額，並將選中的 Store ID 寫入 match session。
 - [ ] 實作賽後 consumable fulfillment、固定 tracking ID 與 pending journal。
 - [ ] 啟動、回前景與恢復網路時，以同一 tracking ID 冪等重試 pending fulfillment。
@@ -47,6 +46,7 @@
 
 ## 已完成
 
+- [x] 實作 `StoreContext` adapter，將 Store 商品名稱、formatted price、餘額、購買與 fulfillment status 轉成共用 gateway contract；真實 Store runtime 仍待 package identity／private flight。
 - [x] 以 fake clock／gateway 覆蓋免費／付費切換、餘額不足、取消、Store error、重啟 session、pending retry 與重複 callback。
 - [x] 實作 `IPlayEntitlementService`，免費額度優先，付費 fallback 依序選擇 1-play 與 10-play pool，並以固定 tracking ID 回報完成。
 - [x] 定義 Store 商品／餘額／購買／fulfillment 結果模型、`IStoreGateway` 與 fake gateway，含商品查詢錯誤狀態與 tracking ID 冪等測試。
