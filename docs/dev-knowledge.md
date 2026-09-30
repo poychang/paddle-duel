@@ -72,6 +72,8 @@ Windows `StoreContext` 的 API adapter 可以先在 unpackaged 專案編譯，�
 
 免費額度耗盡後，entitlement coordinator 先查詢 1-play pool，再查詢 10-play pool；開局時把選中的 Store ID 寫入 match session。賽後 fulfillment 使用該 Store ID 與由 match ID 產生的固定 tracking ID，避免完成時重新選 pool 造成扣錯商品。
 
+付費局開始與賽後完成可能發生在不同程序生命週期；Store gateway 必須 lazy 建立，且完成既有 paid session 時也要能重新建立 gateway，否則重啟後會遺失 fulfillment 路徑。
+
 ## 視窗狀態
 
 ### 還原位置前要依目前 DisplayArea 校正

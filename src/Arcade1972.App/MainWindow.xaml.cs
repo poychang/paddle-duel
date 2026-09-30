@@ -22,6 +22,7 @@ public sealed partial class MainWindow : Window
     private const string OnePlayStoreId = "arcade1972.play.1";
     private const string TenPlayStoreId = "arcade1972.play.10";
     private readonly DailyFreePlayQuota freePlayQuota;
+    private readonly PlayEntitlementService playEntitlementService;
     private readonly WindowStateStore windowStateStore = new();
     private readonly Classic1972Rules rules = new();
     private readonly ClassicGameSimulation simulation;
@@ -38,7 +39,7 @@ public sealed partial class MainWindow : Window
     private bool resumeGameAfterSettings;
     private bool isMatchPaused;
     private bool isCompletingMatch;
-    private FreePlayMatchSession? activeFreePlaySession;
+    private PlayEntitlementSession? activePlaySession;
     private ClassicAiDifficulty aiDifficulty = ClassicAiDifficulty.Medium;
     private IStoreGateway? storeGateway;
     private StorePurchaseCoordinator? purchaseCoordinator;
@@ -47,6 +48,11 @@ public sealed partial class MainWindow : Window
     public MainWindow(DailyFreePlayQuota freePlayQuota)
     {
         this.freePlayQuota = freePlayQuota;
+        playEntitlementService = new(
+            freePlayQuota,
+            () => new WindowsStoreGateway(),
+            OnePlayStoreId,
+            TenPlayStoreId);
         InitializeComponent();
 
         simulation = new ClassicGameSimulation(rules);
@@ -398,15 +404,17 @@ public sealed partial class MainWindow : Window
         SetStartButtonsEnabled(false);
         try
         {
-            var startResult = await freePlayQuota.TryStartMatchAsync();
-            if (!startResult.IsAllowed)
+            var startResult = await playEntitlementService.TryStartMatchAsync();
+            if (startResult.Status != EntitlementStartStatus.Allowed)
             {
-                MenuHeading.Text = "NO FREE PLAYS";
-                UpdateQuotaDisplay(startResult.Availability);
+                MenuHeading.Text = startResult.Status == EntitlementStartStatus.NoEntitlement
+                    ? "NO PLAYS AVAILABLE"
+                    : "STORE UNAVAILABLE";
+                await RefreshQuotaDisplayAsync();
                 return;
             }
 
-            activeFreePlaySession = startResult.Session;
+            activePlaySession = startResult.Session;
         }
         catch (Exception)
         {
@@ -464,20 +472,25 @@ public sealed partial class MainWindow : Window
     {
         try
         {
-            if (activeFreePlaySession is null)
+            if (activePlaySession is null)
             {
-                throw new InvalidOperationException("The finished match has no quota session.");
+                throw new InvalidOperationException("The finished match has no entitlement session.");
             }
 
-            var completion = await freePlayQuota.CompleteMatchAsync(activeFreePlaySession);
-            if (completion == FreePlayCompletionStatus.QuotaExhausted)
+            var completion = await playEntitlementService.CompleteMatchAsync(activePlaySession);
+            if (completion == EntitlementCompletionStatus.Pending)
             {
-                ShowMenu("FREE PLAY LIMIT REACHED", allowNewMatch: false);
+                ShowMenu("PAYMENT PENDING", allowNewMatch: false);
                 await RefreshQuotaDisplayAsync();
                 return;
             }
+            if (completion == EntitlementCompletionStatus.Failed)
+            {
+                ShowMenu("QUOTA SAVE FAILED", allowNewMatch: false);
+                return;
+            }
 
-            activeFreePlaySession = null;
+            activePlaySession = null;
             var heading = gameLoop.State.Winner == PlayerSide.Left
                 ? "LEFT PLAYER WINS"
                 : "RIGHT PLAYER WINS";
@@ -649,7 +662,7 @@ public sealed partial class MainWindow : Window
 
     private void PauseMatch()
     {
-        if (!gameTimer.IsRunning || activeFreePlaySession is null || isCompletingMatch)
+        if (!gameTimer.IsRunning || activePlaySession is null || isCompletingMatch)
         {
             return;
         }
@@ -668,7 +681,7 @@ public sealed partial class MainWindow : Window
 
     private void ResumeMatch()
     {
-        if (!isMatchPaused || activeFreePlaySession is null)
+        if (!isMatchPaused || activePlaySession is null)
         {
             return;
         }
@@ -683,14 +696,14 @@ public sealed partial class MainWindow : Window
 
     private async void AbandonMatchButton_Click(object sender, RoutedEventArgs e)
     {
-        if (!isMatchPaused || activeFreePlaySession is null)
+        if (!isMatchPaused || activePlaySession is null)
         {
             return;
         }
 
         gameTimer.Stop();
         ClearInput();
-        activeFreePlaySession = null;
+        activePlaySession = null;
         isMatchPaused = false;
         PauseOverlay.Visibility = Visibility.Collapsed;
         ShowMenu("MATCH ABANDONED", allowNewMatch: false);

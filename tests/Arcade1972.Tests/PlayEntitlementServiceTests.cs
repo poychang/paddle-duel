@@ -143,7 +143,7 @@ public sealed class PlayEntitlementServiceTests
     {
         return new PlayEntitlementService(
             new DailyFreePlayQuota(new FakeClock(InitialTime), new MemoryQuotaStore()),
-            gateway,
+            () => gateway,
             OnePlayStoreId,
             TenPlayStoreId);
     }

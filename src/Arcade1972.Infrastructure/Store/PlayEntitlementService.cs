@@ -46,10 +46,12 @@ public interface IPlayEntitlementService
 
 public sealed class PlayEntitlementService(
     DailyFreePlayQuota freePlayQuota,
-    IStoreGateway storeGateway,
+    Func<IStoreGateway> storeGatewayFactory,
     string onePlayStoreId,
     string tenPlayStoreId) : IPlayEntitlementService
 {
+    private IStoreGateway? storeGateway;
+
     public async ValueTask<EntitlementStartResult> TryStartMatchAsync(
         CancellationToken cancellationToken = default)
     {
@@ -67,6 +69,7 @@ public sealed class PlayEntitlementService(
                     CreateTrackingId(freeSession.MatchId)));
         }
 
+        storeGateway ??= storeGatewayFactory();
         var onePlayBalance = await storeGateway.GetBalanceAsync(
             onePlayStoreId,
             cancellationToken);
@@ -123,6 +126,7 @@ public sealed class PlayEntitlementService(
             return EntitlementCompletionStatus.Failed;
         }
 
+        storeGateway ??= storeGatewayFactory();
         var result = await storeGateway.ReportConsumableFulfillmentAsync(
             session.PaidStoreId,
             1,
