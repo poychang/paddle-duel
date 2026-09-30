@@ -1,6 +1,8 @@
 using System.Diagnostics;
 using Arcade1972.App.Storage;
+using Arcade1972.App.Store;
 using Arcade1972.Core;
+using Arcade1972.Infrastructure.Store;
 using Microsoft.UI;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Input;
@@ -17,6 +19,8 @@ namespace Arcade1972.App;
 
 public sealed partial class MainWindow : Window
 {
+    private const string OnePlayStoreId = "arcade1972.play.1";
+    private const string TenPlayStoreId = "arcade1972.play.10";
     private readonly DailyFreePlayQuota freePlayQuota;
     private readonly WindowStateStore windowStateStore = new();
     private readonly Classic1972Rules rules = new();
@@ -36,6 +40,9 @@ public sealed partial class MainWindow : Window
     private bool isCompletingMatch;
     private FreePlayMatchSession? activeFreePlaySession;
     private ClassicAiDifficulty aiDifficulty = ClassicAiDifficulty.Medium;
+    private IStoreGateway? storeGateway;
+    private StorePurchaseCoordinator? purchaseCoordinator;
+    private bool storeProductsLoaded;
 
     public MainWindow(DailyFreePlayQuota freePlayQuota)
     {
@@ -126,6 +133,7 @@ public sealed partial class MainWindow : Window
     {
         PurchasePlaceholderOverlay.Visibility = Visibility.Visible;
         ClosePurchasePlaceholderButton.Focus(FocusState.Programmatic);
+        _ = LoadStoreProductsAsync();
     }
 
     private void ClosePurchasePlaceholderButton_Click(object sender, RoutedEventArgs e)
@@ -137,6 +145,93 @@ public sealed partial class MainWindow : Window
     {
         PurchasePlaceholderOverlay.Visibility = Visibility.Collapsed;
         PurchaseEntryButton.Focus(FocusState.Programmatic);
+    }
+
+    private async Task LoadStoreProductsAsync()
+    {
+        storeProductsLoaded = false;
+        BuyOnePlayButton.IsEnabled = false;
+        BuyTenPlayButton.IsEnabled = false;
+        StorePurchaseStatusText.Text = "CONNECTING TO MICROSOFT STORE...";
+        StoreProductFallbackText.Visibility = Visibility.Collapsed;
+
+        try
+        {
+            storeGateway ??= new WindowsStoreGateway();
+            purchaseCoordinator ??= new StorePurchaseCoordinator(storeGateway);
+            var result = await storeGateway.GetProductsAsync([OnePlayStoreId, TenPlayStoreId]);
+            if (result.Status != StoreOperationStatus.Succeeded)
+            {
+                ShowStoreUnavailable();
+                return;
+            }
+
+            var products = result.Products.ToDictionary(product => product.StoreId, StringComparer.Ordinal);
+            if (!products.TryGetValue(OnePlayStoreId, out var onePlay)
+                || !products.TryGetValue(TenPlayStoreId, out var tenPlay))
+            {
+                ShowStoreUnavailable();
+                return;
+            }
+
+            OnePlayProductText.Text = $"{onePlay.DisplayName}  {onePlay.FormattedPrice}";
+            TenPlayProductText.Text = $"{tenPlay.DisplayName}  {tenPlay.FormattedPrice}";
+            StorePurchaseStatusText.Text = "SELECT A PURCHASE";
+            storeProductsLoaded = true;
+            BuyOnePlayButton.IsEnabled = true;
+            BuyTenPlayButton.IsEnabled = true;
+        }
+        catch (Exception)
+        {
+            ShowStoreUnavailable();
+        }
+    }
+
+    private void ShowStoreUnavailable()
+    {
+        StorePurchaseStatusText.Text = "MICROSOFT STORE UNAVAILABLE";
+        StoreProductFallbackText.Visibility = Visibility.Visible;
+    }
+
+    private async void BuyOnePlayButton_Click(object sender, RoutedEventArgs e)
+    {
+        await PurchaseProductAsync(OnePlayStoreId);
+    }
+
+    private async void BuyTenPlayButton_Click(object sender, RoutedEventArgs e)
+    {
+        await PurchaseProductAsync(TenPlayStoreId);
+    }
+
+    private async Task PurchaseProductAsync(string storeId)
+    {
+        if (!storeProductsLoaded || purchaseCoordinator is null)
+        {
+            return;
+        }
+
+        BuyOnePlayButton.IsEnabled = false;
+        BuyTenPlayButton.IsEnabled = false;
+        StorePurchaseStatusText.Text = "OPENING MICROSOFT STORE...";
+        try
+        {
+            var result = await purchaseCoordinator.RequestPurchaseAsync(storeId);
+            StorePurchaseStatusText.Text = result.Status switch
+            {
+                StorePurchaseUiStatus.Purchased => "PURCHASE COMPLETE",
+                StorePurchaseUiStatus.Cancelled => "PURCHASE CANCELLED",
+                StorePurchaseUiStatus.NetworkError => "NETWORK ERROR - TRY AGAIN",
+                StorePurchaseUiStatus.ServerError => "STORE SERVER ERROR - TRY AGAIN",
+                StorePurchaseUiStatus.NotSignedIn => "SIGN IN TO MICROSOFT STORE",
+                StorePurchaseUiStatus.AlreadyInProgress => "PURCHASE ALREADY IN PROGRESS",
+                _ => "PRODUCT UNAVAILABLE",
+            };
+        }
+        finally
+        {
+            BuyOnePlayButton.IsEnabled = storeProductsLoaded;
+            BuyTenPlayButton.IsEnabled = storeProductsLoaded;
+        }
     }
 
     private void ShowInformation()

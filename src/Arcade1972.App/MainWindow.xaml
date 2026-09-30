@@ -369,23 +369,63 @@
                         <ColumnDefinition Width="200" />
                         <ColumnDefinition Width="200" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock
-                        Grid.Column="0"
-                        HorizontalAlignment="Center"
-                        FontFamily="Consolas"
-                        FontSize="18"
-                        Foreground="{StaticResource GameForegroundBrush}"
-                        Text="1 PLAY" />
-                    <TextBlock
-                        Grid.Column="1"
-                        HorizontalAlignment="Center"
-                        FontFamily="Consolas"
-                        FontSize="18"
-                        Foreground="{StaticResource GameForegroundBrush}"
-                        Text="10 PLAYS" />
+                    <StackPanel Grid.Column="0" Spacing="10">
+                        <TextBlock
+                            x:Name="OnePlayProductText"
+                            HorizontalAlignment="Center"
+                            FontFamily="Consolas"
+                            FontSize="18"
+                            Foreground="{StaticResource GameForegroundBrush}"
+                            Text="1 PLAY" />
+                        <Button
+                            x:Name="BuyOnePlayButton"
+                            Padding="12,8"
+                            HorizontalAlignment="Center"
+                            AutomationProperties.Name="Buy one play"
+                            Background="#F4F1E8"
+                            BorderThickness="0"
+                            Click="BuyOnePlayButton_Click"
+                            CornerRadius="0"
+                            FontFamily="Consolas"
+                            Foreground="#050505"
+                            Content="BUY"
+                            IsEnabled="False" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Spacing="10">
+                        <TextBlock
+                            x:Name="TenPlayProductText"
+                            HorizontalAlignment="Center"
+                            FontFamily="Consolas"
+                            FontSize="18"
+                            Foreground="{StaticResource GameForegroundBrush}"
+                            Text="10 PLAYS" />
+                        <Button
+                            x:Name="BuyTenPlayButton"
+                            Padding="12,8"
+                            HorizontalAlignment="Center"
+                            AutomationProperties.Name="Buy ten plays"
+                            Background="#F4F1E8"
+                            BorderThickness="0"
+                            Click="BuyTenPlayButton_Click"
+                            CornerRadius="0"
+                            FontFamily="Consolas"
+                            Foreground="#050505"
+                            Content="BUY"
+                            IsEnabled="False" />
+                    </StackPanel>
                 </Grid>
                 <TextBlock
+                    x:Name="StorePurchaseStatusText"
                     HorizontalAlignment="Center"
+                    FontFamily="Consolas"
+                    FontSize="12"
+                    Foreground="#B8B8B8"
+                    Text="CONNECTING TO MICROSOFT STORE..."
+                    TextAlignment="Center" />
+                <TextBlock
+                    x:Name="StoreProductFallbackText"
+                        Grid.Column="0"
+                        HorizontalAlignment="Center"
                     FontFamily="Consolas"
                     FontSize="13"
                     Foreground="#B8B8B8"

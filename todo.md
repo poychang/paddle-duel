@@ -9,7 +9,7 @@
 
 ## 進行中
 
-- [ ] 將購買協調器接入 Store UI，顯示取消、離線、未登入、網路與伺服器錯誤；成功後重新查詢餘額。
+- [ ] 付費局開始前必須連線確認 Store 餘額，並將選中的 Store ID 寫入 match session。
 
 ## 待辦
 
@@ -30,7 +30,6 @@
 
 ### Store 購買架構
 
-- [ ] 付費局開始前必須連線確認 Store 餘額，並將選中的 Store ID 寫入 match session。
 - [ ] 實作賽後 consumable fulfillment、固定 tracking ID 與 pending journal。
 - [ ] 啟動、回前景與恢復網路時，以同一 tracking ID 冪等重試 pending fulfillment。
 
@@ -46,6 +45,7 @@
 
 ## 已完成
 
+- [x] 將購買協調器接入 Store UI，商品名稱／formatted price 由 Store 提供；取消、錯誤與 Store unavailable 狀態安全呈現且不自行加值。
 - [x] 實作購買協調器核心，以原子 busy guard 防止重入，映射 Store 錯誤並允許失敗後重試。
 - [x] 實作 `StoreContext` adapter，將 Store 商品名稱、formatted price、餘額、購買與 fulfillment status 轉成共用 gateway contract；真實 Store runtime 仍待 package identity／private flight。
 - [x] 以 fake clock／gateway 覆蓋免費／付費切換、餘額不足、取消、Store error、重啟 session、pending retry 與重複 callback。
