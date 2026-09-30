@@ -39,6 +39,17 @@
                     <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE946;" />
                 </Button>
                 <Button
+                    x:Name="SettingsButton"
+                    Padding="10,0"
+                    AutomationProperties.Name="Show settings"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Click="SettingsButton_Click"
+                    Foreground="{StaticResource GameForegroundBrush}"
+                    ToolTipService.ToolTip="Settings">
+                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE713;" />
+                </Button>
+                <Button
                     x:Name="FullScreenButton"
                     Padding="10,0"
                     AutomationProperties.Name="Toggle full screen"
@@ -432,6 +443,132 @@
                     FontSize="12"
                     Foreground="#B8B8B8"
                     Text="RETURNING TO MENU WILL NOT USE A PLAY" />
+            </StackPanel>
+        </Grid>
+
+        <Grid
+            x:Name="SettingsOverlay"
+            Grid.Row="1"
+            Canvas.ZIndex="35"
+            Background="#F2050505"
+            KeyDown="SettingsOverlay_KeyDown"
+            Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Button
+                x:Name="CloseSettingsButton"
+                Grid.Row="0"
+                Margin="0,16,20,0"
+                Padding="12"
+                HorizontalAlignment="Right"
+                AutomationProperties.Name="Close settings"
+                Background="Transparent"
+                BorderThickness="0"
+                Click="CloseSettingsButton_Click"
+                Foreground="{StaticResource GameForegroundBrush}"
+                ToolTipService.ToolTip="Close">
+                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE711;" />
+            </Button>
+
+            <StackPanel
+                Grid.Row="1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Spacing="26">
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    FontFamily="Consolas"
+                    FontSize="30"
+                    Foreground="{StaticResource GameForegroundBrush}"
+                    Text="SETTINGS" />
+                <StackPanel HorizontalAlignment="Center" Spacing="8">
+                    <TextBlock
+                        x:Name="SettingsAiDifficultyText"
+                        HorizontalAlignment="Center"
+                        FontFamily="Consolas"
+                        FontSize="13"
+                        Foreground="#B8B8B8"
+                        Text="AI DIFFICULTY  MEDIUM" />
+                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Spacing="6">
+                        <Button
+                            x:Name="SettingsEasyDifficultyButton"
+                            Width="90"
+                            Padding="8,6"
+                            AutomationProperties.Name="Set settings AI difficulty easy"
+                            Background="Transparent"
+                            BorderBrush="#B8B8B8"
+                            BorderThickness="1"
+                            Click="SettingsEasyDifficultyButton_Click"
+                            CornerRadius="0"
+                            FontFamily="Consolas"
+                            Foreground="{StaticResource GameForegroundBrush}"
+                            Content="EASY" />
+                        <Button
+                            x:Name="SettingsMediumDifficultyButton"
+                            Width="90"
+                            Padding="8,6"
+                            AutomationProperties.Name="Set settings AI difficulty medium"
+                            Background="#F4F1E8"
+                            BorderThickness="0"
+                            Click="SettingsMediumDifficultyButton_Click"
+                            CornerRadius="0"
+                            FontFamily="Consolas"
+                            Foreground="#050505"
+                            Content="MEDIUM" />
+                        <Button
+                            x:Name="SettingsHardDifficultyButton"
+                            Width="90"
+                            Padding="8,6"
+                            AutomationProperties.Name="Set settings AI difficulty hard"
+                            Background="Transparent"
+                            BorderBrush="#B8B8B8"
+                            BorderThickness="1"
+                            Click="SettingsHardDifficultyButton_Click"
+                            CornerRadius="0"
+                            FontFamily="Consolas"
+                            Foreground="{StaticResource GameForegroundBrush}"
+                            Content="HARD" />
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel HorizontalAlignment="Center" Spacing="8">
+                    <TextBlock
+                        x:Name="SettingsDisplayModeText"
+                        HorizontalAlignment="Center"
+                        FontFamily="Consolas"
+                        FontSize="13"
+                        Foreground="#B8B8B8"
+                        Text="DISPLAY  WINDOWED" />
+                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Spacing="8">
+                        <Button
+                            x:Name="SettingsWindowedButton"
+                            Width="150"
+                            Padding="12,8"
+                            AutomationProperties.Name="Use windowed display mode"
+                            Background="#F4F1E8"
+                            BorderThickness="0"
+                            Click="SettingsWindowedButton_Click"
+                            CornerRadius="0"
+                            FontFamily="Consolas"
+                            Foreground="#050505"
+                            Content="WINDOWED" />
+                        <Button
+                            x:Name="SettingsFullScreenButton"
+                            Width="150"
+                            Padding="12,8"
+                            AutomationProperties.Name="Use full screen display mode"
+                            Background="Transparent"
+                            BorderBrush="#B8B8B8"
+                            BorderThickness="1"
+                            Click="SettingsFullScreenButton_Click"
+                            CornerRadius="0"
+                            FontFamily="Consolas"
+                            Foreground="{StaticResource GameForegroundBrush}"
+                            Content="FULL SCREEN" />
+                    </StackPanel>
+                </StackPanel>
             </StackPanel>
         </Grid>
     </Grid>

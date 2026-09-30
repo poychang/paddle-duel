@@ -31,6 +31,7 @@ public sealed partial class MainWindow : Window
     private bool rightDownPressed;
     private bool isOnePlayer;
     private bool resumeGameAfterInformation;
+    private bool resumeGameAfterSettings;
     private bool isMatchPaused;
     private bool isCompletingMatch;
     private FreePlayMatchSession? activeFreePlaySession;
@@ -111,6 +112,11 @@ public sealed partial class MainWindow : Window
         ShowInformation();
     }
 
+    private void SettingsButton_Click(object sender, RoutedEventArgs e)
+    {
+        ShowSettings();
+    }
+
     private void CloseInformationButton_Click(object sender, RoutedEventArgs e)
     {
         HideInformation();
@@ -165,6 +171,78 @@ public sealed partial class MainWindow : Window
         resumeGameAfterInformation = false;
     }
 
+    private void ShowSettings()
+    {
+        if (SettingsOverlay.Visibility == Visibility.Visible)
+        {
+            return;
+        }
+
+        resumeGameAfterSettings = gameTimer.IsRunning;
+        gameTimer.Stop();
+        ClearInput();
+        SettingsDisplayModeText.Text = AppWindow.Presenter.Kind == AppWindowPresenterKind.FullScreen
+            ? "DISPLAY  FULL SCREEN"
+            : "DISPLAY  WINDOWED";
+        SettingsOverlay.Visibility = Visibility.Visible;
+        CloseSettingsButton.Focus(FocusState.Programmatic);
+    }
+
+    private void CloseSettingsButton_Click(object sender, RoutedEventArgs e)
+    {
+        HideSettings();
+    }
+
+    private void HideSettings()
+    {
+        SettingsOverlay.Visibility = Visibility.Collapsed;
+        if (resumeGameAfterSettings)
+        {
+            frameClock.Restart();
+            gameTimer.Start();
+            InputSink.Focus(FocusState.Programmatic);
+        }
+        else
+        {
+            SettingsButton.Focus(FocusState.Programmatic);
+        }
+
+        resumeGameAfterSettings = false;
+    }
+
+    private void SettingsWindowedButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (AppWindow.Presenter.Kind == AppWindowPresenterKind.FullScreen)
+        {
+            AppWindow.SetPresenter(AppWindowPresenterKind.Overlapped);
+        }
+
+        SettingsDisplayModeText.Text = "DISPLAY  WINDOWED";
+        SaveWindowState();
+    }
+
+    private void SettingsFullScreenButton_Click(object sender, RoutedEventArgs e)
+    {
+        AppWindow.SetPresenter(AppWindowPresenterKind.FullScreen);
+        SettingsDisplayModeText.Text = "DISPLAY  FULL SCREEN";
+        SaveWindowState();
+    }
+
+    private void SettingsEasyDifficultyButton_Click(object sender, RoutedEventArgs e)
+    {
+        SetAiDifficulty(ClassicAiDifficulty.Easy);
+    }
+
+    private void SettingsMediumDifficultyButton_Click(object sender, RoutedEventArgs e)
+    {
+        SetAiDifficulty(ClassicAiDifficulty.Medium);
+    }
+
+    private void SettingsHardDifficultyButton_Click(object sender, RoutedEventArgs e)
+    {
+        SetAiDifficulty(ClassicAiDifficulty.Hard);
+    }
+
     private async void StartButton_Click(object sender, RoutedEventArgs e)
     {
         await TryStartMatchAsync(onePlayer: false);
@@ -194,7 +272,9 @@ public sealed partial class MainWindow : Window
     {
         aiDifficulty = difficulty;
         aiController = new ClassicAiController(rules, difficulty);
-        AiDifficultyText.Text = $"AI DIFFICULTY  {difficulty.ToString().ToUpperInvariant()}";
+        var label = difficulty.ToString().ToUpperInvariant();
+        AiDifficultyText.Text = $"AI DIFFICULTY  {label}";
+        SettingsAiDifficultyText.Text = $"AI DIFFICULTY  {label}";
         UpdateDifficultyButtonStyles();
     }
 
@@ -203,6 +283,9 @@ public sealed partial class MainWindow : Window
         SetDifficultyButtonStyle(EasyDifficultyButton, aiDifficulty == ClassicAiDifficulty.Easy);
         SetDifficultyButtonStyle(MediumDifficultyButton, aiDifficulty == ClassicAiDifficulty.Medium);
         SetDifficultyButtonStyle(HardDifficultyButton, aiDifficulty == ClassicAiDifficulty.Hard);
+        SetDifficultyButtonStyle(SettingsEasyDifficultyButton, aiDifficulty == ClassicAiDifficulty.Easy);
+        SetDifficultyButtonStyle(SettingsMediumDifficultyButton, aiDifficulty == ClassicAiDifficulty.Medium);
+        SetDifficultyButtonStyle(SettingsHardDifficultyButton, aiDifficulty == ClassicAiDifficulty.Hard);
     }
 
     private static void SetDifficultyButtonStyle(Button button, bool isSelected)
@@ -571,6 +654,15 @@ public sealed partial class MainWindow : Window
         if (e.Key is VirtualKey.Escape or VirtualKey.I)
         {
             HideInformation();
+            e.Handled = true;
+        }
+    }
+
+    private void SettingsOverlay_KeyDown(object sender, KeyRoutedEventArgs e)
+    {
+        if (e.Key is VirtualKey.Escape or VirtualKey.I)
+        {
+            HideSettings();
             e.Handled = true;
         }
     }
