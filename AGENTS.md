@@ -3,7 +3,7 @@
 ## Project Intent
 
 - This is a Windows 10/11 PC game inspired by early 1972 coin-operated electronic table-tennis games.
-- Treat the local two-player mode as the historical-fidelity target. Single-player AI, keyboard input, accessibility, window controls, daily plays, and Store purchases are modern additions.
+- Treat the local two-player mode as the historical-fidelity target. Single-player AI, keyboard input, window controls, daily plays, and Store purchases are modern additions.
 - Do not use `Pong` or `Atari` as the product name, or copy their logos, fonts, recordings, screenshots, source code, or other branded assets. See `docs/game-reference.md` for sourced behavior and unverified values.
 
 ## Architecture
@@ -31,7 +31,7 @@
 - Keep the game presentation black and white, geometric, and restrained. Do not introduce standard business-app layouts or decorative cards into the playfield.
 - Custom title-bar controls must have non-client passthrough regions so they remain clickable.
 - Pause and clear held input when an overlay opens, focus is lost, the window is minimized, or a controller disconnects. Resume only when the previous state was actively playing.
-- Preserve keyboard navigation, AutomationProperties names, high-contrast compatibility, and visible focus states for interactive controls.
+- Preserve keyboard navigation and visible focus states for interactive controls.
 
 ## Code Style
 
@@ -71,4 +71,4 @@ dotnet build pong-in-1972.sln -c Release -p:Platform=x64
 
 - The current App is an unpackaged WinUI 3 development build.
 - Packaged MSIX and real Store integration require the Visual Studio Windows App SDK, MSIX Packaging, and Windows SDK workloads plus Partner Center identity and products.
-- Do not claim Store purchasing, gift-card validation, MSIX certification, or exact original-hardware fidelity until the corresponding `todo.md` item and verification are complete.
+- Do not claim Store purchasing, gift-card validation, or MSIX certification until the corresponding `todo.md` item and verification are complete.

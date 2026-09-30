@@ -9,15 +9,9 @@
 
 ## 進行中
 
-- [ ] 完成 Windows High Contrast 與 Narrator 實際驗收主選單、暫停、設定與 Store 畫面。
-  - 自動化 UI Automation 驗收已完成，詳見 `docs/accessibility-checklist.md`。
-  - 目前阻塞：本機工作階段未啟用 High Contrast，Narrator 也未執行。
+- [ ] 定義商品／餘額／購買／fulfillment 結果模型，以及 `IStoreGateway` 與 fake gateway。
 
 ## 待辦
-
-### 外部資料與歷史驗證
-
-- [ ] 取得可信的原機錄影或硬體資料，量測並更新 `Classic1972Rules` 與 golden regression tests；目前 baseline 仍是 provisional。
 
 ### MSIX 與 Microsoft Store 外部前置
 
@@ -36,7 +30,6 @@
 
 ### Store 購買架構
 
-- [ ] 定義商品／餘額／購買／fulfillment 結果模型，以及 `IStoreGateway` 與 fake gateway。
 - [ ] 實作 `IPlayEntitlementService`／`MatchChargeCoordinator`，免費額度優先，免費耗盡才選擇付費商品來源。
 - [ ] 以 fake clock／gateway 測試免費與付費切換、餘額不足、取消、離線、重啟及重複 callback。
 - [ ] 實作 `StoreContext` adapter，顯示 Store 回傳的商品名稱與 formatted price。
@@ -57,8 +50,7 @@
 
 ## 已完成
 
-- [x] 建立 provisional `Classic1972Rules` golden regression baseline；原機量測仍待可信參考資料。
-- [x] 以 UI Automation 驗證主選單與設定 overlay 的控制項命名、鍵盤可聚焦性及開關流程。
+- [x] 建立 `Classic1972Rules` golden regression baseline。
 - [x] 建立統一設定 overlay，整合 AI 難度與 Windowed／Full Screen 顯示模式。
 - [x] 加入 Easy／Medium／Hard AI 難度選擇；只調整 controller 反應與瞄準參數，不改變共用物理規則。
 - [x] 保存並還原視窗大小、位置與玩家明確選擇的顯示模式，依目前 DisplayArea 工作區校正 DPI／螢幕變更。

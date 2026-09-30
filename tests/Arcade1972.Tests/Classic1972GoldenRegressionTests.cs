@@ -7,7 +7,7 @@ public sealed class Classic1972GoldenRegressionTests
     private readonly Classic1972Rules rules = new();
 
     [Fact]
-    public void CreateInitialState_MatchesProvisionalGoldenBaseline()
+    public void CreateInitialState_MatchesGoldenBaseline()
     {
         var simulation = new ClassicGameSimulation(rules);
 
