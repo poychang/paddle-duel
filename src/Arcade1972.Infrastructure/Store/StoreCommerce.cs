@@ -6,6 +6,7 @@ public enum StoreOperationStatus
     Cancelled,
     NetworkError,
     ServerError,
+    NotSignedIn,
     NotAvailable,
     InsufficientQuantity,
     AlreadyFulfilled,

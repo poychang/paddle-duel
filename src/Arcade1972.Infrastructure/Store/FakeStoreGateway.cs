@@ -18,6 +18,8 @@ public sealed class FakeStoreGateway : IStoreGateway
 
     public StoreOperationStatus PurchaseStatus { get; set; } = StoreOperationStatus.Succeeded;
 
+    public TimeSpan PurchaseDelay { get; set; }
+
     public StoreOperationStatus FulfillmentStatus { get; set; } = StoreOperationStatus.Succeeded;
 
     public IReadOnlyList<string> PurchasedStoreIds { get; private set; } = [];
@@ -57,24 +59,29 @@ public sealed class FakeStoreGateway : IStoreGateway
                 : null));
     }
 
-    public ValueTask<StorePurchaseResult> RequestPurchaseAsync(
+    public async ValueTask<StorePurchaseResult> RequestPurchaseAsync(
         string storeId,
         CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
+        if (PurchaseDelay > TimeSpan.Zero)
+        {
+            await Task.Delay(PurchaseDelay, cancellationToken);
+        }
+
         if (!products.TryGetValue(storeId, out var product))
         {
-            return ValueTask.FromResult(new StorePurchaseResult(StoreOperationStatus.NotAvailable));
+            return new StorePurchaseResult(StoreOperationStatus.NotAvailable);
         }
 
         if (PurchaseStatus != StoreOperationStatus.Succeeded)
         {
-            return ValueTask.FromResult(new StorePurchaseResult(PurchaseStatus, product));
+            return new StorePurchaseResult(PurchaseStatus, product);
         }
 
         balances[storeId] += product.UnitsPerPurchase;
         PurchasedStoreIds = PurchasedStoreIds.Append(storeId).ToArray();
-        return ValueTask.FromResult(new StorePurchaseResult(StoreOperationStatus.Succeeded, product));
+        return new StorePurchaseResult(StoreOperationStatus.Succeeded, product);
     }
 
     public ValueTask<StoreFulfillmentResult> ReportConsumableFulfillmentAsync(
