@@ -58,6 +58,20 @@ public sealed class PlayEntitlementServiceTests
     }
 
     [Fact]
+    public async Task StoreBalanceErrorStopsPaidStartWithoutCreatingASession()
+    {
+        var gateway = CreateGateway();
+        var service = CreateService(gateway);
+        await CompleteFreePlaysAsync(service);
+        gateway.BalanceQueryStatus = StoreOperationStatus.NetworkError;
+
+        var start = await service.TryStartMatchAsync();
+
+        Assert.Equal(EntitlementStartStatus.StoreUnavailable, start.Status);
+        Assert.Null(start.Session);
+    }
+
+    [Fact]
     public async Task PaidCompletionReportsOneUnitWithDeterministicTrackingId()
     {
         var gateway = CreateGateway();
@@ -90,6 +104,39 @@ public sealed class PlayEntitlementServiceTests
         var completion = await service.CompleteMatchAsync(start.Session!);
 
         Assert.Equal(EntitlementCompletionStatus.Pending, completion);
+    }
+
+    [Fact]
+    public async Task PendingPaidCompletionCanBeRetriedWithTheSameSession()
+    {
+        var gateway = CreateGateway();
+        var service = CreateService(gateway);
+        await CompleteFreePlaysAsync(service);
+        await gateway.RequestPurchaseAsync(OnePlayStoreId);
+        var start = await service.TryStartMatchAsync();
+        gateway.FulfillmentStatus = StoreOperationStatus.NetworkError;
+
+        var pending = await service.CompleteMatchAsync(start.Session!);
+        gateway.FulfillmentStatus = StoreOperationStatus.Succeeded;
+        var retried = await service.CompleteMatchAsync(start.Session!);
+
+        Assert.Equal(EntitlementCompletionStatus.Pending, pending);
+        Assert.Equal(EntitlementCompletionStatus.Consumed, retried);
+    }
+
+    [Fact]
+    public async Task RecreatedServiceCanCompleteAnExistingPaidSession()
+    {
+        var gateway = CreateGateway();
+        var firstService = CreateService(gateway);
+        await CompleteFreePlaysAsync(firstService);
+        await gateway.RequestPurchaseAsync(OnePlayStoreId);
+        var start = await firstService.TryStartMatchAsync();
+        var recreatedService = CreateService(gateway);
+
+        var completion = await recreatedService.CompleteMatchAsync(start.Session!);
+
+        Assert.Equal(EntitlementCompletionStatus.Consumed, completion);
     }
 
     private static PlayEntitlementService CreateService(FakeStoreGateway gateway)

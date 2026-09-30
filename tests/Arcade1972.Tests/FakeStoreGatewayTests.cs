@@ -70,6 +70,19 @@ public sealed class FakeStoreGatewayTests
     }
 
     [Fact]
+    public async Task CancelledPurchase_DoesNotChangeBalance()
+    {
+        var gateway = CreateGateway();
+        gateway.PurchaseStatus = StoreOperationStatus.Cancelled;
+
+        var purchase = await gateway.RequestPurchaseAsync(OnePlayStoreId);
+        var balance = await gateway.GetBalanceAsync(OnePlayStoreId);
+
+        Assert.Equal(StoreOperationStatus.Cancelled, purchase.Status);
+        Assert.Equal(0u, balance.Balance!.UnitsRemaining);
+    }
+
+    [Fact]
     public async Task FulfillmentIsIdempotentForTheSameTrackingId()
     {
         var gateway = CreateGateway();

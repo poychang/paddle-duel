@@ -27,6 +27,7 @@ Microsoft Store 消耗型商品、MSIX 封裝與正式商店素材尚未實作�
 
 Store commerce 目前已具備平台無關的商品、餘額、購買與 fulfillment gateway fake；真實 `StoreContext` adapter 與 Partner Center 商品尚未接入。
 Entitlement coordinator 已實作免費優先與 1-play／10-play fallback；真實 Store fulfillment 尚未接入。
+Fake commerce tests 已覆蓋取消、餘額錯誤、pending retry、重啟 session 與重複 fulfillment。
 
 ## 建置與執行
 
