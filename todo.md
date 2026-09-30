@@ -9,7 +9,7 @@
 
 ## 進行中
 
-- [ ] 實作購買防重入及取消、離線、未登入、網路和伺服器錯誤介面；成功後重新查詢餘額，不自行加值。
+- [ ] 將購買協調器接入 Store UI，顯示取消、離線、未登入、網路與伺服器錯誤；成功後重新查詢餘額。
 
 ## 待辦
 
@@ -46,6 +46,7 @@
 
 ## 已完成
 
+- [x] 實作購買協調器核心，以原子 busy guard 防止重入，映射 Store 錯誤並允許失敗後重試。
 - [x] 實作 `StoreContext` adapter，將 Store 商品名稱、formatted price、餘額、購買與 fulfillment status 轉成共用 gateway contract；真實 Store runtime 仍待 package identity／private flight。
 - [x] 以 fake clock／gateway 覆蓋免費／付費切換、餘額不足、取消、Store error、重啟 session、pending retry 與重複 callback。
 - [x] 實作 `IPlayEntitlementService`，免費額度優先，付費 fallback 依序選擇 1-play 與 10-play pool，並以固定 tracking ID 回報完成。

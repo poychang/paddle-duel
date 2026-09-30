@@ -114,6 +114,7 @@ public sealed class WindowsStoreGateway : IStoreGateway
         "NotPurchased" => StoreOperationStatus.Cancelled,
         "NetworkError" => StoreOperationStatus.NetworkError,
         "ServerError" => StoreOperationStatus.ServerError,
+        "UserNotSignedIn" => StoreOperationStatus.NotSignedIn,
         "InsufficientQuantity" => StoreOperationStatus.InsufficientQuantity,
         _ => StoreOperationStatus.NotAvailable,
     };

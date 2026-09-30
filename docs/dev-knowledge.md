@@ -64,6 +64,10 @@ WinUI 3 程序可能已建立可見視窗，但 `Process.MainWindowHandle` 仍�
 
 Windows `StoreContext` 的 API adapter 可以先在 unpackaged 專案編譯，但商品 discovery、balance、purchase 與 fulfillment 的 runtime 行為仍需要 package identity、Store account 與 private flight 才能驗證；不能把編譯成功當成真實購買已完成。
 
+### 購買 busy guard 必須在 request 前取得
+
+購買按鈕的防重入不能只依賴 UI disabled 狀態；`StorePurchaseCoordinator` 在呼叫 gateway 前以原子 busy guard 取得唯一執行權，第二個 request 立即回傳 `AlreadyInProgress`。gateway 失敗後 finally 釋放 guard，讓玩家可以重試。
+
 ### 付費 fallback 必須保存選中的 Store pool
 
 免費額度耗盡後，entitlement coordinator 先查詢 1-play pool，再查詢 10-play pool；開局時把選中的 Store ID 寫入 match session。賽後 fulfillment 使用該 Store ID 與由 match ID 產生的固定 tracking ID，避免完成時重新選 pool 造成扣錯商品。
