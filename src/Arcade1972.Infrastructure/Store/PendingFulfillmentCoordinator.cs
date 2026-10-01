@@ -1,9 +1,11 @@
 namespace Arcade1972.Infrastructure.Store;
 
 public sealed class PendingFulfillmentCoordinator(
-    IStoreGateway gateway,
+    Func<IStoreGateway> gatewayFactory,
     IPendingFulfillmentJournal journal)
 {
+    private IStoreGateway? gateway;
+    private readonly SemaphoreSlim retryGate = new(1, 1);
     public async ValueTask<EntitlementCompletionStatus> FulfillAsync(
         string storeId,
         uint quantity,
@@ -21,25 +23,34 @@ public sealed class PendingFulfillmentCoordinator(
     public async ValueTask<int> RetryPendingAsync(
         CancellationToken cancellationToken = default)
     {
-        var pending = await journal.LoadAsync(cancellationToken);
-        var completed = 0;
-        foreach (var fulfillment in pending)
+        await retryGate.WaitAsync(cancellationToken);
+        try
         {
-            var result = await TryFulfillAsync(fulfillment, cancellationToken);
-            if (result is EntitlementCompletionStatus.Consumed
-                or EntitlementCompletionStatus.AlreadyConsumed)
+            var pending = await journal.LoadAsync(cancellationToken);
+        var completed = 0;
+            foreach (var fulfillment in pending)
             {
-                completed++;
+                var result = await TryFulfillAsync(fulfillment, cancellationToken);
+                if (result is EntitlementCompletionStatus.Consumed
+                    or EntitlementCompletionStatus.AlreadyConsumed)
+                {
+                    completed++;
+                }
             }
-        }
 
-        return completed;
+            return completed;
+        }
+        finally
+        {
+            retryGate.Release();
+        }
     }
 
     private async ValueTask<EntitlementCompletionStatus> TryFulfillAsync(
         PendingFulfillment fulfillment,
         CancellationToken cancellationToken)
     {
+        gateway ??= gatewayFactory();
         var result = await gateway.ReportConsumableFulfillmentAsync(
             fulfillment.StoreId,
             fulfillment.Quantity,

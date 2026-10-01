@@ -1,6 +1,8 @@
 using Arcade1972.App.Storage;
+using Arcade1972.App.Store;
 using Arcade1972.Core;
 using Arcade1972.Infrastructure;
+using Arcade1972.Infrastructure.Store;
 using Microsoft.UI.Xaml;
 
 namespace Arcade1972.App;
@@ -28,7 +30,13 @@ public partial class App : Application
         var freePlayQuota = new DailyFreePlayQuota(
             new SystemUtcClock(),
             new LocalStateFreePlayQuotaStore());
-        window = new MainWindow(freePlayQuota);
+        var stateDirectory = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "Arcade1972");
+        var pendingFulfillment = new PendingFulfillmentCoordinator(
+            () => new WindowsStoreGateway(),
+            new JsonPendingFulfillmentJournal(stateDirectory));
+        window = new MainWindow(freePlayQuota, pendingFulfillment);
         window.Closed += Window_Closed;
         window.Activate();
     }

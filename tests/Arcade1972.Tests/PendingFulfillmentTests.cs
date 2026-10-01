@@ -14,7 +14,7 @@ public sealed class PendingFulfillmentTests : IDisposable
     {
         var gateway = CreateGateway();
         var journal = new JsonPendingFulfillmentJournal(directoryPath);
-        var coordinator = new PendingFulfillmentCoordinator(gateway, journal);
+        var coordinator = new PendingFulfillmentCoordinator(() => gateway, journal);
         await gateway.RequestPurchaseAsync("test.play.1");
         gateway.FulfillmentStatus = StoreOperationStatus.NetworkError;
 
@@ -31,7 +31,7 @@ public sealed class PendingFulfillmentTests : IDisposable
     {
         var gateway = CreateGateway();
         var journal = new JsonPendingFulfillmentJournal(directoryPath);
-        var coordinator = new PendingFulfillmentCoordinator(gateway, journal);
+        var coordinator = new PendingFulfillmentCoordinator(() => gateway, journal);
         await gateway.RequestPurchaseAsync("test.play.1");
         gateway.FulfillmentStatus = StoreOperationStatus.NetworkError;
         await coordinator.FulfillAsync("test.play.1", 1, "tracking-2");
@@ -48,14 +48,14 @@ public sealed class PendingFulfillmentTests : IDisposable
     {
         var gateway = CreateGateway();
         var journal = new JsonPendingFulfillmentJournal(directoryPath);
-        var first = new PendingFulfillmentCoordinator(gateway, journal);
+        var first = new PendingFulfillmentCoordinator(() => gateway, journal);
         await gateway.RequestPurchaseAsync("test.play.1");
         gateway.FulfillmentStatus = StoreOperationStatus.NetworkError;
         await first.FulfillAsync("test.play.1", 1, "tracking-3");
 
         gateway.FulfillmentStatus = StoreOperationStatus.Succeeded;
         var recreated = new PendingFulfillmentCoordinator(
-            gateway,
+            () => gateway,
             new JsonPendingFulfillmentJournal(directoryPath));
         var completed = await recreated.RetryPendingAsync();
 

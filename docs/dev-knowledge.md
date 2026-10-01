@@ -78,6 +78,8 @@ Windows `StoreContext` 的 API adapter 可以先在 unpackaged 專案編譯，�
 
 付費局完成時先保存 `StoreId`、quantity 與固定 tracking ID，再呼叫 Store fulfillment；網路或程序中斷時才不會遺失待履行交易。成功或 Store 回報已履行後才移除 journal，重試使用同一 tracking ID。
 
+Lifecycle retry 應在 App 啟動與回前景時執行，但不能讓 Store 初始化錯誤阻塞遊戲。使用 lazy gateway factory，retry 失敗時保留 journal 並吞掉暫時性 Store 例外，讓下一次 lifecycle event 繼續重試。
+
 ## 視窗狀態
 
 ### 還原位置前要依目前 DisplayArea 校正

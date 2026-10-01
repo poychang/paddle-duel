@@ -9,14 +9,13 @@
 
 ## 進行中
 
-- [ ] 啟動、回前景與恢復網路時，以同一 tracking ID 冪等重試 pending fulfillment。
+- [ ] 透過 Visual Studio Installer 安裝並驗證 Windows App SDK、MSIX Packaging 與 Windows SDK 工作負載。
+  - 目前阻塞：缺少 Windows App SDK C#、MSIX Packaging 與 Windows 10 SDK 19041 components。
 
 ## 待辦
 
 ### MSIX 與 Microsoft Store 外部前置
 
-- [ ] 透過 Visual Studio Installer 安裝並驗證 Windows App SDK、MSIX Packaging 與 Windows SDK 工作負載。
-  - 目前阻塞：缺少 Windows App SDK C#、MSIX Packaging 與 Windows 10 SDK 19041 components。
 - [ ] 建立最小 Packaged WinUI 3 spike，驗證 .NET 10、Windows App SDK、x64 簽署、安裝與啟動。
 - [ ] 在 Partner Center 建立 App identity，取得 Publisher、Package identity 與 Store ID。
 - [ ] 建立 1 次與 10 次 Store-managed consumable 測試商品，確認 10 次商品可設定 10 units。
@@ -43,6 +42,7 @@
 
 ## 已完成
 
+- [x] 將 pending fulfillment retry 接入 App 啟動與回前景 lifecycle；Store 不可用時不阻塞啟動，journal 保留待下次重試。
 - [x] 實作賽後 consumable fulfillment、固定 tracking ID 與 pending journal；失敗紀錄可在 coordinator 重建後重試。
 - [x] 付費局開始前查詢 Store balance，免費耗盡才選擇付費 pool，並將選定 Store ID 保存於 entitlement session。
 - [x] 將購買協調器接入 Store UI，商品名稱／formatted price 由 Store 提供；取消、錯誤與 Store unavailable 狀態安全呈現且不自行加值。

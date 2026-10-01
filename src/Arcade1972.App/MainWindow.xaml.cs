@@ -22,6 +22,7 @@ public sealed partial class MainWindow : Window
     private const string OnePlayStoreId = "arcade1972.play.1";
     private const string TenPlayStoreId = "arcade1972.play.10";
     private readonly DailyFreePlayQuota freePlayQuota;
+    private readonly PendingFulfillmentCoordinator pendingFulfillment;
     private readonly PlayEntitlementService playEntitlementService;
     private readonly WindowStateStore windowStateStore = new();
     private readonly Classic1972Rules rules = new();
@@ -45,9 +46,12 @@ public sealed partial class MainWindow : Window
     private StorePurchaseCoordinator? purchaseCoordinator;
     private bool storeProductsLoaded;
 
-    public MainWindow(DailyFreePlayQuota freePlayQuota)
+    public MainWindow(
+        DailyFreePlayQuota freePlayQuota,
+        PendingFulfillmentCoordinator pendingFulfillment)
     {
         this.freePlayQuota = freePlayQuota;
+        this.pendingFulfillment = pendingFulfillment;
         playEntitlementService = new(
             freePlayQuota,
             () => new WindowsStoreGateway(),
@@ -541,6 +545,14 @@ public sealed partial class MainWindow : Window
         if (MenuOverlay.Visibility == Visibility.Visible)
         {
             await RefreshQuotaDisplayAsync();
+        }
+
+        try
+        {
+            await pendingFulfillment.RetryPendingAsync();
+        }
+        catch (Exception)
+        {
         }
 
         if (isMatchPaused && PauseOverlay.Visibility == Visibility.Visible)
