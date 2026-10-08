@@ -18,13 +18,20 @@ GitHub repository：[poychang/paddle-duel](https://github.com/poychang/paddle-du
 
 這些是產品識別資訊，不是登入憑證或簽署私鑰。此處僅記錄已取得的正式 identity；尚未套用到遊戲 App、上傳封裝或驗證 Store runtime。獨立 packaging spike 繼續使用自己的測試 identity，不應以正式值取代。
 
-此 Store ID 屬於遊戲本體，不能當作 1 次／10 次 consumable 的 Store ID。Partner Center 已建立 `plays1`（Store ID `9NGSHZT4WSR1`）與 `plays10`（Store ID `9MZ6KPM0339W`，由產品擁有者於 2026-10-08 提供）；畫面分別顯示 `ManagedConsumable`、Quantity 1／10，Content type 選擇 `Electronic software download`。`plays10` 的 Properties 儲存受必填隱私權聲明阻塞，兩個商品的最終保存狀態仍待確認；不能將畫面輸入值視為已發行或已驗證購買。
+此 Store ID 屬於遊戲本體，不能當作 1 次／10 次 consumable 的 Store ID。Partner Center 已建立以下商品，畫面分別顯示 `ManagedConsumable`、Quantity 1／10，Content type 選擇 `Electronic software download`。產品擁有者於 2026-10-08 回報兩個商品的隱私權政策與以下售價已設定完成：
+
+| Product ID | Store ID | Quantity | USD 售價（每次購買整包） |
+| --- | --- | --- | --- |
+| `plays1` | `9NGSHZT4WSR1` | 1 | 0.99 USD |
+| `plays10` | `9MZ6KPM0339W` | 10 | 1.99 USD |
+
+附加商品政策網址為 `https://project.poychang.net/paddle-duel/privacy.html`；`plays10` 截圖顯示隱私權聲明選擇 Yes。Store listings、銷售市場、可見性與發行排程仍待確認，不能將草稿設定視為已發行或已驗證購買。此表僅記錄 Partner Center 設定；App 必須顯示 Store 回傳的商品名稱與 formatted price，不得硬編碼這些 USD 售價或自行換算其他幣別。
 
 建立產品不代表已公開上架或完成商標查核。遊戲程式尚未套用上述正式附加商品識別。
 
 ### 隱私權政策與官網
 
-已依目前資料處理實作整理 [Paddle Duel 隱私權政策](docs/privacy-policy.md)，聯絡信箱為 `poychang.tw@gmail.com`。產品擁有者確認內容並指定生效日期為 **2026-10-08**；[公開政策頁](https://project.poychang.net/paddle-duel/privacy.html) 已發布，移除內部備註並補充 GitHub Pages 託管資料處理說明。2026-10-08 已確認公開頁可直接讀取且與 [HTML 原始檔](sites/privacy.html) 一致。正式版本核對、Store 欄位與 App 政策入口仍待完成；網站發布不代表 Store 驗收，也不決定 Partner Center 隱私權 Yes／No 的答案。
+已依目前資料處理實作整理 [Paddle Duel 隱私權政策](docs/privacy-policy.md)，聯絡信箱為 `poychang.tw@gmail.com`。產品擁有者確認內容並指定生效日期為 **2026-10-08**；[公開政策頁](https://project.poychang.net/paddle-duel/privacy.html) 已發布，移除內部備註並補充 GitHub Pages 託管資料處理說明。2026-10-08 已確認公開頁可直接讀取且與 [HTML 原始檔](sites/privacy.html) 一致。附加商品政策欄位已由擁有者回報完成；正式版本核對、主 App 的 Store 欄位與 App 政策入口仍待完成。網站發布不代表 Store 驗收，也不決定 Partner Center 隱私權 Yes／No 的答案。
 
 [`sites`](sites) 是不需建置的 HTML／CSS 靜態官網，包含遊戲介紹、鍵盤操作、聯絡資訊、非官方產品聲明與獨立政策頁。沒有 JavaScript、表單、分析追蹤、第三方字型或外部嵌入資源；GitHub 作為託管商仍可能處理訪客連線資料。
 

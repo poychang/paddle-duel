@@ -9,18 +9,11 @@
 
 ## 進行中
 
-- [ ] 將已發布的 Paddle Duel 隱私權政策網址填入 Store，完成附加商品隱私權聲明。
-  - 使用者於 2026-10-08 優先處理此項，以解除附加商品 Properties 的必填欄位阻塞。
-  - [政策內容](docs/privacy-policy.md) 已由擁有者於 2026-10-08 確認，包含聯絡信箱與所述資料處理方式；不額外承諾代管資料、人工清除或服務時限，保留真實資料用途與法定權利。
-  - 生效日期為 2026-10-08，官網與政策頁已發布至 `https://project.poychang.net/paddle-duel/`；已確認公開政策頁可讀。待完成 Store 欄位與 Yes／No 聲明，不代表附加商品已成功儲存或可購買。
+- [ ] 完成 `plays1`／`plays10` 的 Store listings 草稿，確認銷售市場、可見性與發行排程。
+  - 擁有者已回報隱私權政策與 USD 售價設定完成；下一步填入商品名稱、說明與語言。
+  - 目前不送審或公開發布；正式商品查詢、購買與 fulfillment 仍須後續 Store runtime 驗證。
 
 ## 待辦
-
-### MSIX 與 Microsoft Store 外部前置
-
-- [ ] 建立 1 次與 10 次 Store-managed consumable 測試商品，確認 10 次商品可設定 10 units。
-  - `plays1` Store ID：`9NGSHZT4WSR1`；`plays10` Store ID：`9MZ6KPM0339W`（兩者皆已取得）。
-  - 截圖已確認 `ManagedConsumable` 與 Quantity 1／10，Content type 為 `Electronic software download`；仍待成功儲存確認，目前暫停至隱私權聲明處理完成。
 
 ### Packaged App 轉換
 
@@ -42,6 +35,12 @@
 
 ## 已完成
 
+- [x] 在 Partner Center 建立 `plays1`／`plays10` Store-managed consumable，確認 Quantity 1／10 並設定售價。
+  - Store ID 分別為 `9NGSHZT4WSR1`／`9MZ6KPM0339W`；Content type 為 `Electronic software download`。
+  - 2026-10-08 擁有者回報售價設定為 0.99 USD／1.99 USD，分別是整包 1 次／10 次的價格；不代表已發布或可購買。
+- [x] 將已發布的政策網址填入附加商品隱私權設定。
+  - 2026-10-08 擁有者回報 `plays1`／`plays10` 均已設定；`plays10` 截圖顯示 Yes 與 `https://project.poychang.net/paddle-duel/privacy.html`。
+  - 主 App 的政策欄位、App 政策入口與正式版本資料處理驗收仍待完成。
 - [x] 統一 Paddle Duel 專案名稱：`PaddleDuel.sln`、`PaddleDuel.*` 專案／目錄／namespace／assembly、App 顯示名稱與 packaging spike；同步文件與驗證腳本。
   - 保留舊本機資料目錄、互斥鎖與交易占位識別，避免改名造成資料遺失或跨版本多開；新增舊 JSON 額度讀取回歸測試。
   - 53 項 .NET tests 通過，Debug／Release x64 建置零警告、零錯誤；Release App UI Automation 驗證單人／雙人、最小化暫停、繼續、放棄不扣次、設定與正常關閉。
@@ -49,11 +48,11 @@
 - [x] 確認自訂網域官網與隱私權政策已公開發布；首頁、政策、CSS 與 favicon 皆回應 HTTP 200 且與本機內容一致。正式政策網址為 `https://project.poychang.net/paddle-duel/privacy.html`。
 - [x] 配合 GitHub repository 更名為 `poychang/paddle-duel`，更新本機 origin 與文件中的 Pages 網址。
 - [x] 建立 `sites` 靜態官網與隱私權政策頁，包含操作說明、聯絡資訊與非 Atari 官方產品聲明；提供只發布 `sites` 的 GitHub Pages workflow。
-  - 本機網站測試通過，已驗證 320／390／768／1440 像素版面、政策導覽、鍵盤跳轉與 project 子路徑。後續由擁有者完成公開部署，Store 聲明待辦仍保留。
-- [x] 檢視現有本機資料與 Store 呼叫，草擬 Paddle Duel 隱私權政策；內容已確認並發布，Store 聲明仍在進行中。
+  - 本機網站測試通過，已驗證 320／390／768／1440 像素版面、政策導覽、鍵盤跳轉與 project 子路徑；擁有者已完成公開部署。
+- [x] 檢視現有本機資料與 Store 呼叫，草擬 Paddle Duel 隱私權政策；內容已確認並發布，附加商品政策設定已完成。
 - [x] 在 Partner Center 建立 App identity，取得 Publisher、Package identity 與 Store ID。
   - 2026-10-08 由產品擁有者提供 Paddle Duel 的四個識別欄位，原值保存於 [README](README.md#partner-center-產品識別)。
-  - 僅完成 identity 取得與記錄；遊戲 App 關聯、商品建立、封裝上傳及 Store runtime 驗證仍由後續項目處理。
+  - 遊戲 App 關聯、封裝上傳及 Store runtime 驗證仍由後續項目處理；附加商品的建立與草稿設定另列追蹤。
 - [x] 建立最小 Packaged WinUI 3 spike，驗證 .NET 10、Windows App SDK、x64 簽署、安裝與啟動。
   - 獨立 spike 使用 .NET 10／Windows App SDK 2.5.1 self-contained MSIX，不修改遊戲 App 或 solution。
   - 已檢查最終 manifest 的 Windows.Desktop 最低版本 19045；於 OS build 26300 完成本機 SHA-256 簽章、安裝與 UI Automation，runtime 為 `.NET 10.0.12 | X64`。

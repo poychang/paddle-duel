@@ -55,12 +55,13 @@ Windows、Microsoft Store、電子郵件及政策頁面託管服務本身的資�
 - [x] 產品擁有者於 2026-10-08 確認政策內容、聯絡信箱，以及所述資料用途與信件處理方式。
 - [x] 產品擁有者指定生效日期為 2026-10-08，並選擇 GitHub Pages；已製作不含內部備註的 [公開政策頁](../sites/privacy.html)，補充靜態網站與 GitHub 託管資料處理說明。
 - [x] 擁有者已部署網站並設定自訂網域；2026-10-08 確認 `https://project.poychang.net/paddle-duel/privacy.html` 無需登入即可讀取，HTTP 200 且內容與本機 HTML 一致。
+- [x] 2026-10-08 擁有者回報 `plays1`／`plays10` 的隱私權政策設定完成；`plays10` 截圖顯示 Yes 與上述正式政策網址。這不代表商品已發布或 Store 審核通過。
 
 ### 待完成
 
 - [ ] 核對實際發行版本符合本文；完成 Store runtime、正式封裝與解除安裝行為驗收。
 - [ ] 依發行市場與兒少使用情境確認必要告知；內容確認不代表法律審查完成，也不保證免責、各地法律合規或 Store 審核通過。
-- [ ] 將已確認可讀的正式網址填入相關 Store 欄位。隱私權 Yes／No 依實際處理事實填寫，不能由是否具有政策網址推定。
+- [ ] 將已確認可讀的正式網址填入主 App 的相關 Store 欄位。隱私權 Yes／No 依實際處理事實填寫，不能由是否具有政策網址推定。
 - [ ] 在 App 提供正式政策入口。
 
 參考：[Microsoft Store 政策](https://learn.microsoft.com/en-us/windows/apps/publish/store-policies)。發布時應重新核對當時的政策要求。
