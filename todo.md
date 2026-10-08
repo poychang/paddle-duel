@@ -9,15 +9,15 @@
 
 ## 進行中
 
-目前無進行中項目；下一項為 Packaged MSIX 轉換。
+目前無進行中項目；下一項為正式 Partner Center identity 與封裝素材關聯。
 
 ## 待辦
 
 ### Packaged App 轉換
 
-- [ ] 將目前 unpackaged WinUI 3 App 轉為 Packaged MSIX，設定 Windows Desktop `MinVersion=10.0.19045.0`。
 - [ ] 關聯 Partner Center identity，加入正式圖示、啟動畫面與 zh-TW／en-US resources。
 - [ ] 驗證 packaged LocalState 分支、安裝、啟動、升級與解除安裝；移除不再需要的 unpackaged workaround。
+  - 開發 identity 的安裝／啟動、quota／window-state LocalState round-trip、解除安裝 smoke check 已通過；仍需正式 identity 的升級、資料保留／清除語義與交易重試驗收。
 - [ ] 產生 Release x64 MSIX bundle，且不提交開發憑證或 AppPackages 產物。
 
 ### Store 與發行驗收
@@ -34,6 +34,12 @@
 
 ## 已完成
 
+- [x] 將遊戲 App 轉為 single-project MSIX，設定 Windows.Desktop `MinVersion=10.0.19045.0`。
+  - 暫用 `PaddleDuel.Development` identity 與原創幾何占位圖示；x64、.NET／Windows App SDK self-contained，預設不簽署或產生 bundle。
+  - 額度、視窗與 pending journal 共用部署模式感知的 LocalState 路徑；明確選用 unpackaged 時仍讀寫原目錄，不自動遷移舊資料。
+  - 53 項 .NET tests 通過，Debug／Release solution 建置零警告、零錯誤。產物檢查驗證最終 OS 版本與 payload，並拒絕錯誤最低版本／identity／缺少 payload；MSIX 建置仍有既有 symbols 警告。
+  - 本機簽署、安裝、package identity、windowed 首次啟動、overlay、單一程序、LocalState 額度／視窗重啟載入、單人／雙人、最小化暫停／繼續／放棄不扣次通過。
+  - 舊開發資料未受 packaged 測試影響；明確選用 unpackaged 的啟動也通過。已清除測試安裝、信任憑證與私鑰，不代表正式 Store／Windows 10／WACK 驗收。
 - [x] 確認 `plays1`／`plays10` 的銷售市場、可見性與發行排程。
   - 2026-10-08 從 `plays1` 截圖核對全球市場（含未來新增市場）、Public audience、可顯示於主 App 商店頁面與 Never 停止販售；擁有者確認 `plays10` 除售價外設定相同。
   - 開放日期為 `2027-01-01 00:00 UTC`（台灣時間當日 08:00），擁有者確認為預定正式上市日期。

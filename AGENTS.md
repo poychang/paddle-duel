@@ -56,6 +56,7 @@ dotnet build PaddleDuel.sln -c Release -p:Platform=x64
 - Add regression tests for rule, quota, entitlement, AI, or transaction-state changes.
 - For WinUI interaction changes, verify build plus the affected behavior through UI Automation or a manual launch when automation is unavailable.
 - Before finishing, run `get_errors` or the available editor diagnostics for touched C#/XAML files.
+- Build MSIX with Visual Studio MSBuild and validate the resulting package with `scripts/Test-AppPackage.ps1`; source manifest values alone do not prove the generated OS requirements.
 
 ## Task and Git Workflow
 
@@ -69,6 +70,7 @@ dotnet build PaddleDuel.sln -c Release -p:Platform=x64
 
 ## Current Constraints
 
-- The current App is an unpackaged WinUI 3 development build.
+- The current App is a single-project MSIX WinUI 3 development build with a temporary `PaddleDuel.Development` identity, not the official Store identity.
+- Packaged quota, window settings, and fulfillment journals share package LocalState. Explicit unpackaged development builds retain the legacy directory; do not silently migrate data between identities.
 - Packaged MSIX and real Store integration require the Visual Studio Windows App SDK, MSIX Packaging, and Windows SDK workloads plus Partner Center identity and products.
 - Do not claim Store purchasing, gift-card validation, or MSIX certification until the corresponding `todo.md` item and verification are complete.

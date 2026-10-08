@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "PaddleDuel.App (Package)": {
+      "commandName": "MsixPackage"
+    }
+  }
+}

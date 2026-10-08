@@ -16,10 +16,8 @@ public sealed class WindowStateStore
         WriteIndented = true,
     };
 
-    // Preserve saved settings from earlier unpackaged development builds.
     private readonly string filePath = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-        "Arcade1972",
+        LocalStateDirectory.GetPath(),
         "window-state.json");
 
     public WindowStateSnapshot? Load()

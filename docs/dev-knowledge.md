@@ -27,7 +27,7 @@ Windows App SDK C# 支援的元件 ID 是 `Microsoft.VisualStudio.Component.Wind
 
 Single-project MSIX 會依專案的 `TargetPlatformMinVersion`／target framework 產生最終 `TargetDeviceFamily`。Spike 最初在原始 manifest 填入 `MinVersion=10.0.19045.0`，但專案仍使用 19041 設定，實際 MSIX 內卻變為 19041。不可把編輯原始 manifest 或建置成功視為最低版本設定已生效。
 
-Spike 改用 `net10.0-windows10.0.26100.0` 與 `TargetPlatformMinVersion=10.0.19045.0` 後，已確認 MSIX 內只有 Windows.Desktop，最低版本 19045、MaxVersionTested 26100。未來遊戲 App 轉換時應同樣對**產物**做斷言；提高 target SDK 不等於把最低 OS 提高到 Windows 11，也不代表已完成 Windows 10 實機驗收。
+Spike 改用 `net10.0-windows10.0.26100.0` 與 `TargetPlatformMinVersion=10.0.19045.0` 後，已確認 MSIX 內只有 Windows.Desktop，最低版本 19045、MaxVersionTested 26100。遊戲 App 轉換後也已由 [`Test-AppPackage.ps1`](../scripts/Test-AppPackage.ps1) 對**產物**斷言相同條件，並驗證錯誤最低版本會被拒絕；提高 target SDK 不等於把最低 OS 提高到 Windows 11，也不代表已完成 Windows 10 實機驗收。
 
 ### 本機 MSIX 驗證不需要匯出私鑰
 
@@ -41,7 +41,9 @@ Spike 改用 `net10.0-windows10.0.26100.0` 與 `TargetPlatformMinVersion=10.0.19
 
 `Microsoft.Windows.Storage.ApplicationData.GetDefault()` 雖可編譯，但在目前沒有 package identity 的開發執行檔中，曾讓程序在建立視窗前退出。編譯成功不足以證明 LocalState API 可在該部署模式執行。
 
-目前做法位於 `LocalStateFreePlayQuotaStore`：先以 `GetCurrentPackageFullName` 判斷 package identity。Packaged App 使用 `ApplicationData.LocalPath`；unpackaged 開發版使用 `%LocalAppData%\Arcade1972`。完成 MSIX 轉換後，要重新驗證 packaged 分支並評估是否仍需 fallback。
+目前做法集中於 [`LocalStateDirectory`](../src/PaddleDuel.App/Storage/LocalStateDirectory.cs)：先以 `GetCurrentPackageFullName` 判斷 package identity。空 buffer 查詢的預期結果是 `ERROR_INSUFFICIENT_BUFFER`（有 identity）或 `APPMODEL_ERROR_NO_PACKAGE`（無 identity）；其他結果明確拋錯，不當成 packaged 成功。Packaged App 使用 `ApplicationData.LocalPath`；明確選用 unpackaged 的開發版使用 `%LocalAppData%\Arcade1972`。
+
+轉換 MSIX 時不能只處理額度 store：原本視窗設定與 fulfillment journal 另行組合 LocalAppData 路徑，必須一起接到同一個路徑解析器，避免 packaged 狀態分散於不同儲存邊界。2026-10-08 已安裝開發封裝驗證 quota／window-state 出現在 package LocalState 並可重啟載入，舊 unpackaged 檔案逐位元組不變；明確選用 unpackaged 的啟動也已驗證。這不等於驗證正式 identity 升級或跨 identity 資料遷移。
 
 ### WinUI 視窗驗證不要只依賴 Process.MainWindowHandle
 
@@ -56,7 +58,7 @@ WinUI 3 程序可能已建立可見視窗，但 `Process.MainWindowHandle` 仍�
  遊戲需要一個不可見控制項接收程式化鍵盤 focus，但它不應成為玩家 Tab 導覽中的遊戲按鈕。`InputSink` 保留程式化 `Focus`，設定 `IsTabStop="False"`，並提供內部用途的 automation name。
 ### Unpackaged 開發版先在 OnLaunched 取得單一程序鎖
 
-目前開發版沒有 package identity，也沒有依賴 MSIX 的 instance redirection。若讓第二個程序先建立 Window 和 quota store，兩個程序可能同時讀寫同一份 LocalState。`App.OnLaunched` 在建立 Window 前取得 per-user named mutex；取得失敗的程序立即退出，第一個程序在 Window 關閉時釋放 mutex。轉為 Packaged App 後仍應重新驗證，並評估是否改用 Windows App SDK `AppInstance` 的啟動轉導功能。
+原先 unpackaged 開發版沒有 package identity，也沒有依賴 MSIX 的 instance redirection。若讓第二個程序先建立 Window 和 quota store，兩個程序可能同時讀寫同一份 LocalState。`App.OnLaunched` 在建立 Window 前取得 per-user named mutex；取得失敗的程序立即退出，第一個程序在 Window 關閉時釋放 mutex。2026-10-08 轉換後的開發 MSIX 已重新驗證重複啟動仍只保留第一個程序；目前仍保留舊互斥鎖，是否改用 Windows App SDK `AppInstance` 的啟動轉導功能另行評估。
 
 ## 本機狀態持久化
 

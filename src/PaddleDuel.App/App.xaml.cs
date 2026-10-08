@@ -31,13 +31,9 @@ public partial class App : Application
         var freePlayQuota = new DailyFreePlayQuota(
             new SystemUtcClock(),
             new LocalStateFreePlayQuotaStore());
-        // Product renames must not orphan existing fulfillment journals.
-        var stateDirectory = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "Arcade1972");
         var pendingFulfillment = new PendingFulfillmentCoordinator(
             () => new WindowsStoreGateway(),
-            new JsonPendingFulfillmentJournal(stateDirectory));
+            new JsonPendingFulfillmentJournal(LocalStateDirectory.GetPath()));
         window = new MainWindow(freePlayQuota, pendingFulfillment);
         window.Closed += Window_Closed;
         window.Activate();

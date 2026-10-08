@@ -100,10 +100,10 @@ node --test .\tests\site.test.mjs
 - 主選單顯示今日剩餘免費次數與下一個 00:00 UTC 重置日期。
 - 額度耗盡時會停用開局並顯示 Store 占位入口，不顯示假價格或執行假交易。
 
-Microsoft Store 消耗型商品、MSIX 封裝與正式商店素材尚未實作；目前 Store 畫面只說明尚未連線，不會執行任何購買流程。
+遊戲 App 已支援開發用 MSIX 封裝；正式 Store identity、商品識別與商店素材仍待關聯。開發封裝不可視為已能購買正式商品。
 
-Store commerce 目前已具備平台無關的商品、餘額、購買與 fulfillment gateway fake；真實 `StoreContext` adapter 與 Partner Center 商品尚未接入。
-Entitlement coordinator 已實作免費優先與 1-play／10-play fallback；真實 Store fulfillment 尚未接入。
+Store commerce 已具備平台無關的商品、餘額、購買與 fulfillment gateway fake，以及可編譯的 `StoreContext` adapter。
+Entitlement coordinator 已實作免費優先與 1-play／10-play fallback；真實 Store fulfillment 尚未驗收。
 免費額度耗盡時，付費局開始前會先查詢 Store balance，並將選定商品 pool 保存於 entitlement session。
 付費 fulfillment 會先寫入 pending journal；失敗時保留 tracking ID，供之後重試。
 App 啟動與回到前景時會嘗試重試 pending fulfillment；Store 暫時不可用不會阻塞遊戲啟動。
@@ -113,16 +113,78 @@ Fake commerce tests 已覆蓋取消、餘額錯誤、pending retry、重啟 sess
 
 ## 建置與執行
 
-需求：Windows 10 22H2 或 Windows 11，以及 .NET 10 SDK。
+需求：Windows 10 22H2 或 Windows 11、.NET 10 SDK，以及下述 Visual Studio 封裝工具鏈。
 
 ```powershell
 dotnet restore PaddleDuel.sln
 dotnet build PaddleDuel.sln -c Debug -p:Platform=x64
 dotnet test .\tests\PaddleDuel.Tests\PaddleDuel.Tests.csproj -c Debug
-dotnet run --project .\src\PaddleDuel.App\PaddleDuel.App.csproj -c Debug -p:Platform=x64
+dotnet build PaddleDuel.sln -c Release -p:Platform=x64
 ```
 
-目前的遊戲 App 仍是供開發驗證使用的 unpackaged WinUI 3 應用。獨立 Packaged spike 已通過本機簽署、安裝與啟動驗證；正式 MSIX/Store 建置仍需完成遊戲 App 轉換與 Partner Center identity 關聯，不能將 spike 驗證視為 Store 驗收。
+遊戲 App 預設為 single-project MSIX。一般 `dotnet build` 驗證編譯，不代表已產生、安裝或啟動封裝；不要再把無參數的 `dotnet run` 當成 packaged 啟動方式。Visual Studio 提供 `PaddleDuel.App (Package)` launch profile；本次執行驗證使用已簽署 MSIX 安裝及 package activation，而非 IDE F5。
+
+### 遊戲 App 開發封裝
+
+[`Package.appxmanifest`](src/PaddleDuel.App/Package.appxmanifest) 暫用 `PaddleDuel.Development`／`CN=PaddleDuel Development`，不是 Partner Center identity。三張黑白幾何圖示重用本專案 spike 的原創占位素材，正式圖示與 zh-TW／en-US resources 留待下一項。
+
+- target framework：`net10.0-windows10.0.26100.0`；Windows.Desktop 最低版本 `10.0.19045.0`。
+- x64，.NET 與 Windows App SDK 都為 self-contained；不啟用 trimming／ReadyToRun。
+- 預設不簽署、不產生 bundle 或 Store symbols package；不得將開發封裝提交至 Store。
+
+先執行上面的 restore，再從 repository 根目錄使用 **Windows PowerShell 5.1**：
+
+```powershell
+$vs = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" `
+    -latest -products '*' -version '[18.0,19.0)' `
+    -requires Microsoft.VisualStudio.Component.WindowsAppSdkSupport.CSharp `
+              Microsoft.VisualStudio.ComponentGroup.MSIX.Packaging `
+    -property installationPath
+if (-not $vs) { throw '找不到具備封裝工具的 Visual Studio 2026。' }
+& "$vs\MSBuild\Current\Bin\MSBuild.exe" `
+    .\src\PaddleDuel.App\PaddleDuel.App.csproj `
+    -t:Build -p:Configuration=Release -p:Platform=x64 `
+    -p:GenerateAppxPackageOnBuild=true -p:UapAppxPackageBuildMode=SideloadOnly
+if ($LASTEXITCODE -ne 0) { throw 'MSIX 建置失敗。' }
+$package = (Resolve-Path .\src\PaddleDuel.App\AppPackages\PaddleDuel.App_1.0.0.0_x64_Test\PaddleDuel.App_1.0.0.0_x64.msix).Path
+& .\scripts\Test-AppPackage.ps1 -PackagePath $package
+```
+
+[`Test-AppPackage.ps1`](scripts/Test-AppPackage.ps1) 只讀取產物，不簽署、不安裝、不改變系統信任；驗證最終 identity、x64、Windows.Desktop 最低／目標版本、遊戲啟動入口、self-contained runtime 與圖示。它刻意要求開發 identity，正式 Store 關聯時需同步更新驗證契約。
+
+MSIX 必須先以與 Publisher 相符且受本機信任的憑證簽署，才能透過 `Add-AppxPackage -Path $package` 安裝；不要直接安裝未簽署的產物。完成安裝後可透過 package activation 啟動：
+
+```powershell
+$installed = Get-AppxPackage -Name PaddleDuel.Development
+if (-not $installed) { throw '請先完成開發封裝簽署與安裝。' }
+Start-Process explorer.exe -ArgumentList "shell:AppsFolder\$($installed.PackageFamilyName)!App"
+```
+
+簽署、信任憑證與安裝必須先取得操作者同意；測試結束後僅移除該次安裝與憑證。不可使用正式 Store identity 或長期信任的開發憑證取代一次性測試，也不可提交私鑰／憑證。
+
+**資料邊界：** 額度、視窗設定與 pending fulfillment journal 都透過 `LocalStateDirectory` 取得路徑。Packaged 模式使用 `%LocalAppData%\Packages\<PackageFamilyName>\LocalState`；本機開發 identity 與未來正式 identity 各自獨立，不自動匯入舊開發資料。正式版升級／遷移策略仍待驗收，不能將測試封裝的初始額度當成正式升級行為。
+
+**2026-10-08 驗證：**
+
+- 53 項 .NET regression tests 通過，solution Debug／Release x64 均零警告、零錯誤。
+- Release MSIX 通過產物檢查；檢查器也確實拒絕錯誤最低版本、錯誤 identity 與缺少 payload 的測試產物。
+- 本機 SHA-256 簽章驗證、安裝、具 package identity 的可見遊戲視窗、windowed 首次啟動、overlay 與單一程序驗證通過。
+- Package LocalState 額度／視窗設定保存及重啟載入、單人／雙人、最小化暫停、繼續、放棄不扣次及正常退出通過。
+- 舊 unpackaged 資料逐位元組未變；測試安裝、信任憑證與不可匯出私鑰已清除。留下的測試 MSIX 不再受本機信任。
+- MSIX 建置仍有既有 `mspdbcmf.exe` symbols 警告；Windows 10 實機、多 DPI、正式升級／解除安裝資料語義、Store 購買與 WACK 尚未驗收。
+
+### 明確選用 unpackaged 開發模式
+
+僅在需要舊開發資料或不安裝 MSIX 時使用；這不是 Store 驗證方式。輸出另放 `bin\Unpackaged`，不覆蓋預設 packaged 執行檔：
+
+```powershell
+dotnet build .\src\PaddleDuel.App\PaddleDuel.App.csproj -c Debug -p:Platform=x64 `
+    -p:WindowsPackageType=None -p:OutputPath=bin\Unpackaged\ `
+    -p:GenerateAppxPackageOnBuild=false
+& .\src\PaddleDuel.App\bin\Unpackaged\PaddleDuel.App.exe
+```
+
+此模式保留 `%LocalAppData%\Arcade1972` 與既有互斥鎖；已重新驗證建置、啟動、舊額度載入及正常退出。測試後還原原有資料。
 
 ### Paddle Duel 改名與相容性
 
@@ -154,14 +216,14 @@ dotnet build .\src\PaddleDuel.App\PaddleDuel.App.csproj -c Debug -p:Platform=x64
 
 `vswhere` 應回傳安裝路徑；沒有輸出代表尚未找到具備全部元件的 instance。另確認該路徑下的 `MSBuild\Microsoft\DesktopBridge\Microsoft.DesktopBridge.targets`，以及 `%ProgramFiles(x86)%\Windows Kits\10\bin\10.0.26100.0\x64` 下的 `makeappx.exe` 與 `signtool.exe` 存在。
 
-2026-10-08 已在 Visual Studio Enterprise 2026 18.10.3 驗證上述元件、MakeAppx／SignTool 可執行及既有 App 的 Debug／Release x64 建置（零警告、零錯誤）。Windows SDK 26100 是建置工具版本，不會把現有 App 的 `net10.0-windows10.0.19041.0` 目標改為 Windows 11；未來 MSIX 的 Windows Desktop 最低版本仍需另行設定並驗證。
+2026-10-08 已在 Visual Studio Enterprise 2026 18.10.3 驗證上述元件、MakeAppx／SignTool 可執行。後續遊戲 MSIX 轉換已將 target SDK 設為 26100，但最終 Windows.Desktop 最低版本仍為 19045；target SDK 與最低支援 OS 是不同設定。
 
 ### 獨立 Packaged WinUI 3 spike
 
 [`spikes/PaddleDuel.PackagingSpike`](spikes/PaddleDuel.PackagingSpike) 是不加入遊戲 solution 的最小封裝實驗，使用測試 identity，不連線 Store、不讀寫遊戲資料，也不共用遊戲的單一程序鎖。圖示為本專案產生的黑白幾何圖形，並非正式商店素材。
 
 - .NET 10、Windows App SDK 2.5.1、x64；.NET 與 Windows App SDK 皆為 self-contained。
-- Spike 的 target framework 為 `net10.0-windows10.0.26100.0`，`TargetPlatformMinVersion` 與最終 MSIX 的 Windows Desktop 最低版本為 `10.0.19045.0`。遊戲 App 的設定未變更。
+- Spike 的 target framework 為 `net10.0-windows10.0.26100.0`，`TargetPlatformMinVersion` 與最終 MSIX 的 Windows Desktop 最低版本為 `10.0.19045.0`；遊戲 App 的後續轉換也採用相同版本設定。
 - 預設產生未簽署 MSIX，不產生 bundle 或 Store symbols package，不啟用 trimming／ReadyToRun。
 
 從 repository 根目錄使用 **Windows PowerShell 5.1** 建置：
@@ -200,7 +262,7 @@ $package = (Resolve-Path .\spikes\PaddleDuel.PackagingSpike\AppPackages\PaddleDu
 - SignTool 驗證成功（零警告、零錯誤），安裝 status 為 `Ok`。
 - UI Automation 驗證 package identity、`.NET 10.0.12 | X64`、可見 WinUI 視窗與關閉按鈕成功；測試安裝與憑證已清除。
 - 建置仍有 `mspdbcmf.exe` 找不到的符號套件警告；目前 MSIX targets 即使設定不產生 symbols package 仍會探測該工具。此 spike 不驗證 Store symbols，不以關閉其他警告掩蓋結果。
-- 尚未驗證 Windows 10 22H2、多 DPI、遊戲 App 的 packaged LocalState、Store runtime 或 WACK。
+- Spike 本身不驗證遊戲狀態；遊戲 App 的 packaged smoke check 結果另見上節。Windows 10 22H2、多 DPI、Store runtime 與 WACK 仍待驗收。
 
 ## 專案結構
 
