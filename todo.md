@@ -9,9 +9,7 @@
 
 ## 進行中
 
-- [ ] 確認 `plays1`／`plays10` 的銷售市場、可見性與發行排程。
-  - 擁有者已回報隱私權政策、USD 售價與 Store listings 設定完成；尚未取得市場、可見性與排程的實際設定值。
-  - 目前不送審或公開發布；正式商品查詢、購買與 fulfillment 仍須後續 Store runtime 驗證。
+目前無進行中項目；下一項為 Packaged MSIX 轉換。
 
 ## 待辦
 
@@ -25,6 +23,7 @@
 ### Store 與發行驗收
 
 - [ ] 透過 Partner Center private flight 驗證 1／10 units、取消、重複購買、斷線恢復及跨裝置餘額。
+  - 附加商品預定於 `2027-01-01 00:00 UTC` 公開供應；上市前的測試取得方式與排程限制需另行確認，不將 Public audience 視為私人測試設定。
 - [ ] 以可退款的小額真實交易驗證 Microsoft 帳戶禮品卡可由 Store checkout 使用；App 不接觸卡號。
 - [ ] 完成 IARC 分級，並將已部署的聯絡／政策網址及非官方產品聲明填入適用的 Store 欄位。
 - [ ] 核對正式版資料處理與已發布隱私權政策一致，加入 App 政策入口並完成 Store 欄位驗收。
@@ -35,6 +34,10 @@
 
 ## 已完成
 
+- [x] 確認 `plays1`／`plays10` 的銷售市場、可見性與發行排程。
+  - 2026-10-08 從 `plays1` 截圖核對全球市場（含未來新增市場）、Public audience、可顯示於主 App 商店頁面與 Never 停止販售；擁有者確認 `plays10` 除售價外設定相同。
+  - 開放日期為 `2027-01-01 00:00 UTC`（台灣時間當日 08:00），擁有者確認為預定正式上市日期。
+  - 目前保留草稿、不送審或公開發布；主 App 排程、正式商品查詢、購買與 fulfillment 仍待後續驗證。
 - [x] 完成 `plays1`／`plays10` 的 Store listings 草稿設定。
   - 2026-10-08 擁有者回報已完成上一階段的商品名稱、說明與語言設定；尚未確認送審、發布或實際購買。
 - [x] 在 Partner Center 建立 `plays1`／`plays10` Store-managed consumable，確認 Quantity 1／10 並設定售價。

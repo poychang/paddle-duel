@@ -25,7 +25,16 @@ GitHub repository：[poychang/paddle-duel](https://github.com/poychang/paddle-du
 | `plays1` | `9NGSHZT4WSR1` | 1 | 0.99 USD |
 | `plays10` | `9MZ6KPM0339W` | 10 | 1.99 USD |
 
-附加商品政策網址為 `https://project.poychang.net/paddle-duel/privacy.html`；`plays10` 截圖顯示隱私權聲明選擇 Yes。產品擁有者於 2026-10-08 回報兩個商品的 Store listings 設定完成；銷售市場、可見性與發行排程仍待確認，不能將草稿設定視為已發行或已驗證購買。此表僅記錄 Partner Center 設定；App 必須顯示 Store 回傳的商品名稱與 formatted price，不得硬編碼這些 USD 售價或自行換算其他幣別。
+附加商品政策網址為 `https://project.poychang.net/paddle-duel/privacy.html`；`plays10` 截圖顯示隱私權聲明選擇 Yes。產品擁有者於 2026-10-08 回報兩個商品的 Store listings 設定完成。此表僅記錄 Partner Center 設定；App 必須顯示 Store 回傳的商品名稱與 formatted price，不得硬編碼這些 USD 售價或自行換算其他幣別。
+
+2026-10-08 已從 `plays1` 截圖核對以下設定，擁有者確認 `plays10` 除售價外採用相同設定：
+
+- Markets：全球市場，包含自動加入未來新增市場。
+- Visibility：`Public audience`，可顯示於主 App 的 Microsoft Store 頁面。
+- Release：`2027-01-01 00:00 UTC`（台灣時間 `2027-01-01 08:00`）；擁有者確認是預定正式上市日期，不是暫時阻擋購買的日期。
+- Stop acquisition：`Never`。
+
+目前仍保留草稿，不送審或公開發布；設定排程不保證當日上市，仍須完成審核與發布。這些是附加商品的公開供應設定，不代表主 App 排程或私人測試已設定，也不代表已驗證購買。上市前的測試取得方式與排程限制須在 Store runtime 驗收時另行確認。
 
 建立產品不代表已公開上架或完成商標查核。遊戲程式尚未套用上述正式附加商品識別。
 
