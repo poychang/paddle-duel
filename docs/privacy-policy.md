@@ -1,6 +1,6 @@
-# Paddle Duel 隱私權政策（內容已確認，待發布）
+# Paddle Duel 隱私權政策
 
-> 內容確認日期：2026-10-08。產品擁有者已確認政策內容、聯絡信箱與所述資料處理方式，並指定生效日期為 2026-10-08。公開頁尚待部署；正式版本核對與 Store 驗收仍待完成。
+> 內容確認日期與生效日期：2026-10-08。[公開政策頁](https://project.poychang.net/paddle-duel/privacy.html) 已發布並確認可讀，公開內容與本機 HTML 一致。正式版本核對與 Store 驗收仍待完成。
 
 ## 1. 適用範圍與聯絡方式
 
@@ -54,13 +54,13 @@ Windows、Microsoft Store、電子郵件及政策頁面託管服務本身的資�
 
 - [x] 產品擁有者於 2026-10-08 確認政策內容、聯絡信箱，以及所述資料用途與信件處理方式。
 - [x] 產品擁有者指定生效日期為 2026-10-08，並選擇 GitHub Pages；已製作不含內部備註的 [公開政策頁](../sites/privacy.html)，補充靜態網站與 GitHub 託管資料處理說明。
+- [x] 擁有者已部署網站並設定自訂網域；2026-10-08 確認 `https://project.poychang.net/paddle-duel/privacy.html` 無需登入即可讀取，HTTP 200 且內容與本機 HTML 一致。
 
 ### 待完成
 
 - [ ] 核對實際發行版本符合本文；完成 Store runtime、正式封裝與解除安裝行為驗收。
 - [ ] 依發行市場與兒少使用情境確認必要告知；內容確認不代表法律審查完成，也不保證免責、各地法律合規或 Store 審核通過。
-- [ ] 由擁有者啟用 GitHub Pages 並部署 `sites`；目前只有本機驗證，不代表公開網址已可使用。
-- [ ] 確認正式網址可讀並填入相關 Store 欄位。隱私權 Yes／No 依實際處理事實填寫，不能由是否具有政策網址推定。
+- [ ] 將已確認可讀的正式網址填入相關 Store 欄位。隱私權 Yes／No 依實際處理事實填寫，不能由是否具有政策網址推定。
 - [ ] 在 App 提供正式政策入口。
 
 參考：[Microsoft Store 政策](https://learn.microsoft.com/en-us/windows/apps/publish/store-policies)。發布時應重新核對當時的政策要求。

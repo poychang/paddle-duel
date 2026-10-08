@@ -24,7 +24,7 @@ GitHub repository：[poychang/paddle-duel](https://github.com/poychang/paddle-du
 
 ### 隱私權政策與官網
 
-已依目前資料處理實作整理 [Paddle Duel 隱私權政策（內容已確認，待發布）](docs/privacy-policy.md)，聯絡信箱為 `poychang.tw@gmail.com`。產品擁有者確認內容並指定生效日期為 **2026-10-08**；已製作 [網站公開版](sites/privacy.html)，移除內部備註並補充 GitHub Pages 託管資料處理說明。公開部署、正式版本核對與 App 政策入口仍待完成，不能當作已發布的政策或 Store 驗收結果。內容確認也不決定 Partner Center 隱私權 Yes／No 的答案，仍須依實際資料用途填寫。
+已依目前資料處理實作整理 [Paddle Duel 隱私權政策](docs/privacy-policy.md)，聯絡信箱為 `poychang.tw@gmail.com`。產品擁有者確認內容並指定生效日期為 **2026-10-08**；[公開政策頁](https://project.poychang.net/paddle-duel/privacy.html) 已發布，移除內部備註並補充 GitHub Pages 託管資料處理說明。2026-10-08 已確認公開頁可直接讀取且與 [HTML 原始檔](sites/privacy.html) 一致。正式版本核對、Store 欄位與 App 政策入口仍待完成；網站發布不代表 Store 驗收，也不決定 Partner Center 隱私權 Yes／No 的答案。
 
 [`sites`](sites) 是不需建置的 HTML／CSS 靜態官網，包含遊戲介紹、鍵盤操作、聯絡資訊、非官方產品聲明與獨立政策頁。沒有 JavaScript、表單、分析追蹤、第三方字型或外部嵌入資源；GitHub 作為託管商仍可能處理訪客連線資料。
 
@@ -38,13 +38,13 @@ GitHub Pages 的 **Deploy from a branch** 只接受分支根目錄或 `/docs`，
 4. workflow 先執行網站測試，再部署。若 repository 設定了 environment approval，依 GitHub 提示核准 `github-pages`。
 5. 部署成功後，以 GitHub 顯示的實際網址確認首頁與政策頁可在未登入狀態閱讀，再填入 Partner Center。
 
-若未設定自訂網域，預期網址為：
+目前使用擁有者設定的自訂網域：
 
-- 官網：`https://poychang.github.io/paddle-duel/`
-- 政策：`https://poychang.github.io/paddle-duel/privacy.html`
-- 聯絡區：`https://poychang.github.io/paddle-duel/#contact`
+- 官網：[https://project.poychang.net/paddle-duel/](https://project.poychang.net/paddle-duel/)
+- 政策：[https://project.poychang.net/paddle-duel/privacy.html](https://project.poychang.net/paddle-duel/privacy.html)
+- 聯絡區：[https://project.poychang.net/paddle-duel/#contact](https://project.poychang.net/paddle-duel/#contact)
 
-**以上是預期位置，不是已部署成功的宣告。** 本機的 `sites` 內容會成為網站根目錄，所以公開網址不包含 `/sites/`。若帳戶或 repository 設定自訂網域，以 Pages 顯示的網址為準。
+2026-10-08 已透過無登入的 HTTPS 請求確認首頁、政策、CSS 與 favicon 均回應 HTTP 200，且內容與本機檔案一致。本機 `sites` 的內容發布於 `/paddle-duel/`，公開網址不包含 `/sites/`。網站使用相對連結，不需因網域變更修改資源路徑；保留既有 DNS／Pages 設定，不為此新增會改變專案路徑的 `CNAME`。
 
 #### 本機預覽與驗證
 

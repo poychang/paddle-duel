@@ -9,10 +9,10 @@
 
 ## 進行中
 
-- [ ] 確認並發布 Paddle Duel 隱私權政策，取得可公開閱讀的 HTTPS 網址，完成附加商品隱私權聲明。
+- [ ] 將已發布的 Paddle Duel 隱私權政策網址填入 Store，完成附加商品隱私權聲明。
   - 使用者於 2026-10-08 優先處理此項，以解除附加商品 Properties 的必填欄位阻塞。
   - [政策內容](docs/privacy-policy.md) 已由擁有者於 2026-10-08 確認，包含聯絡信箱與所述資料處理方式；不額外承諾代管資料、人工清除或服務時限，保留真實資料用途與法定權利。
-  - 已指定生效日期 2026-10-08，製作 `sites` 官網與公開政策頁及 GitHub Actions Pages workflow；待擁有者 push、啟用 Pages 並驗證公開網址，尚未發布或判定 Yes／No。
+  - 生效日期為 2026-10-08，官網與政策頁已發布至 `https://project.poychang.net/paddle-duel/`；已確認公開政策頁可讀。待完成 Store 欄位與 Yes／No 聲明，不代表附加商品已成功儲存或可購買。
 
 ## 待辦
 
@@ -42,10 +42,11 @@
 
 ## 已完成
 
+- [x] 確認自訂網域官網與隱私權政策已公開發布；首頁、政策、CSS 與 favicon 皆回應 HTTP 200 且與本機內容一致。正式政策網址為 `https://project.poychang.net/paddle-duel/privacy.html`。
 - [x] 配合 GitHub repository 更名為 `poychang/paddle-duel`，更新本機 origin 與文件中的 Pages 網址；保留既有 solution 和本機目錄名稱。
 - [x] 建立 `sites` 靜態官網與隱私權政策頁，包含操作說明、聯絡資訊與非 Atari 官方產品聲明；提供只發布 `sites` 的 GitHub Pages workflow。
-  - 本機網站測試通過，已驗證 320／390／768／1440 像素版面、政策導覽、鍵盤跳轉與 project 子路徑。未 push 或執行公開部署；政策發布待辦仍保留。
-- [x] 檢視現有本機資料與 Store 呼叫，草擬 Paddle Duel 隱私權政策；政策確認、發布與 Store 聲明仍在進行中。
+  - 本機網站測試通過，已驗證 320／390／768／1440 像素版面、政策導覽、鍵盤跳轉與 project 子路徑。後續由擁有者完成公開部署，Store 聲明待辦仍保留。
+- [x] 檢視現有本機資料與 Store 呼叫，草擬 Paddle Duel 隱私權政策；內容已確認並發布，Store 聲明仍在進行中。
 - [x] 在 Partner Center 建立 App identity，取得 Publisher、Package identity 與 Store ID。
   - 2026-10-08 由產品擁有者提供 Paddle Duel 的四個識別欄位，原值保存於 [README](README.md#partner-center-產品識別)。
   - 僅完成 identity 取得與記錄；遊戲 App 關聯、商品建立、封裝上傳及 Store runtime 驗證仍由後續項目處理。
