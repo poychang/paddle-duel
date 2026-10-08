@@ -16,7 +16,7 @@
 
 這些是產品識別資訊，不是登入憑證或簽署私鑰。此處僅記錄已取得的正式 identity；尚未套用到遊戲 App、上傳封裝或驗證 Store runtime。獨立 packaging spike 繼續使用自己的測試 identity，不應以正式值取代。
 
-此 Store ID 屬於遊戲本體，不能當作 1 次／10 次 consumable 的 Store ID。Partner Center 已建立 `plays1`（Store ID `9NGSHZT4WSR1`）與 `plays10`（Store ID 待提供）；畫面分別顯示 `ManagedConsumable`、Quantity 1／10，Content type 選擇 `Electronic software download`。`plays10` 的 Properties 儲存受必填隱私權聲明阻塞，兩個商品的最終保存狀態仍待確認；不能將畫面輸入值視為已發行或已驗證購買。
+此 Store ID 屬於遊戲本體，不能當作 1 次／10 次 consumable 的 Store ID。Partner Center 已建立 `plays1`（Store ID `9NGSHZT4WSR1`）與 `plays10`（Store ID `9MZ6KPM0339W`，由產品擁有者於 2026-10-08 提供）；畫面分別顯示 `ManagedConsumable`、Quantity 1／10，Content type 選擇 `Electronic software download`。`plays10` 的 Properties 儲存受必填隱私權聲明阻塞，兩個商品的最終保存狀態仍待確認；不能將畫面輸入值視為已發行或已驗證購買。
 
 建立產品不代表已公開上架或完成商標查核。遊戲程式尚未套用上述正式附加商品識別。
 

@@ -18,7 +18,7 @@
 ### MSIX 與 Microsoft Store 外部前置
 
 - [ ] 建立 1 次與 10 次 Store-managed consumable 測試商品，確認 10 次商品可設定 10 units。
-  - `plays1` Store ID：`9NGSHZT4WSR1`；`plays10` Store ID 待提供。
+  - `plays1` Store ID：`9NGSHZT4WSR1`；`plays10` Store ID：`9MZ6KPM0339W`（兩者皆已取得）。
   - 截圖已確認 `ManagedConsumable` 與 Quantity 1／10，Content type 為 `Electronic software download`；仍待成功儲存確認，目前暫停至隱私權聲明處理完成。
 
 ### Packaged App 轉換
