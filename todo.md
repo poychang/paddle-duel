@@ -9,13 +9,12 @@
 
 ## 進行中
 
-目前無進行中的項目；下一項為最小 Packaged WinUI 3 spike。
+目前無進行中的項目；下一項需要在 Partner Center 建立正式 App identity。
 
 ## 待辦
 
 ### MSIX 與 Microsoft Store 外部前置
 
-- [ ] 建立最小 Packaged WinUI 3 spike，驗證 .NET 10、Windows App SDK、x64 簽署、安裝與啟動。
 - [ ] 在 Partner Center 建立 App identity，取得 Publisher、Package identity 與 Store ID。
 - [ ] 建立 1 次與 10 次 Store-managed consumable 測試商品，確認 10 次商品可設定 10 units。
 
@@ -38,6 +37,10 @@
 
 ## 已完成
 
+- [x] 建立最小 Packaged WinUI 3 spike，驗證 .NET 10、Windows App SDK、x64 簽署、安裝與啟動。
+  - 獨立 spike 使用 .NET 10／Windows App SDK 2.5.1 self-contained MSIX，不修改遊戲 App 或 solution。
+  - 已檢查最終 manifest 的 Windows.Desktop 最低版本 19045；於 OS build 26300 完成本機 SHA-256 簽章、安裝與 UI Automation，runtime 為 `.NET 10.0.12 | X64`。
+  - 驗證腳本與重跑步驟已保存；測試安裝、憑證與私鑰已移除，未提交封裝或憑證。建置有不影響此 spike 的 `mspdbcmf.exe` symbols 警告；Windows 10／Store 驗收仍待後續項目。
 - [x] 透過 Visual Studio Installer 安裝並驗證 Windows App SDK C#、MSIX Packaging 與 Windows SDK 26100。
   - Visual Studio 2026 18.10.3 安裝成功且不需重開機；以 `.vsconfig` 保存可重用的元件 ID。
   - 已驗證 WinUI 範本、DesktopBridge targets、x64 MakeAppx／SignTool 可執行及 App Debug／Release x64 建置（零警告、零錯誤）。

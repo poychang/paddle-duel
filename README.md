@@ -45,7 +45,7 @@ dotnet test tests/Arcade1972.Tests/Arcade1972.Tests.csproj -c Debug
 dotnet run --project src/Arcade1972.App/Arcade1972.App.csproj -c Debug -p:Platform=x64
 ```
 
-目前的 App 是供開發驗證使用的 unpackaged WinUI 3 應用。正式 MSIX/Store 建置仍需完成 Packaged spike、App 轉換與 Partner Center identity 關聯；安裝封裝工具不代表已通過簽署、安裝或 Store 驗證。
+目前的遊戲 App 仍是供開發驗證使用的 unpackaged WinUI 3 應用。獨立 Packaged spike 已通過本機簽署、安裝與啟動驗證；正式 MSIX/Store 建置仍需完成遊戲 App 轉換與 Partner Center identity 關聯，不能將 spike 驗證視為 Store 驗收。
 
 ### Visual Studio 封裝工具鏈
 
@@ -64,11 +64,58 @@ dotnet build .\src\Arcade1972.App\Arcade1972.App.csproj -c Debug -p:Platform=x64
 
 2026-10-08 已在 Visual Studio Enterprise 2026 18.10.3 驗證上述元件、MakeAppx／SignTool 可執行及既有 App 的 Debug／Release x64 建置（零警告、零錯誤）。Windows SDK 26100 是建置工具版本，不會把現有 App 的 `net10.0-windows10.0.19041.0` 目標改為 Windows 11；未來 MSIX 的 Windows Desktop 最低版本仍需另行設定並驗證。
 
+### 獨立 Packaged WinUI 3 spike
+
+[`spikes/Arcade1972.PackagingSpike`](spikes/Arcade1972.PackagingSpike) 是不加入遊戲 solution 的最小封裝實驗，使用測試 identity，不連線 Store、不讀寫遊戲資料，也不共用遊戲的單一程序鎖。圖示為本專案產生的黑白幾何圖形，並非正式商店素材。
+
+- .NET 10、Windows App SDK 2.5.1、x64；.NET 與 Windows App SDK 皆為 self-contained。
+- Spike 的 target framework 為 `net10.0-windows10.0.26100.0`，`TargetPlatformMinVersion` 與最終 MSIX 的 Windows Desktop 最低版本為 `10.0.19045.0`。遊戲 App 的設定未變更。
+- 預設產生未簽署 MSIX，不產生 bundle 或 Store symbols package，不啟用 trimming／ReadyToRun。
+
+從 repository 根目錄使用 **Windows PowerShell 5.1** 建置：
+
+```powershell
+$vs = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" `
+    -latest -products '*' -version '[18.0,19.0)' `
+    -requires Microsoft.VisualStudio.Component.WindowsAppSdkSupport.CSharp `
+              Microsoft.VisualStudio.ComponentGroup.MSIX.Packaging `
+    -property installationPath
+if (-not $vs) { throw '找不到具備封裝工具的 Visual Studio 2026。' }
+& "$vs\MSBuild\Current\Bin\MSBuild.exe" `
+    .\spikes\Arcade1972.PackagingSpike\Arcade1972.PackagingSpike.csproj `
+    -restore -t:Rebuild -p:Configuration=Release -p:Platform=x64 `
+    -p:GenerateAppxPackageOnBuild=true -p:UapAppxPackageBuildMode=SideloadOnly
+if ($LASTEXITCODE -ne 0) { throw 'MSIX 建置失敗。' }
+```
+
+實際簽署、安裝與 UI Automation 驗證：
+
+```powershell
+$package = (Resolve-Path .\spikes\Arcade1972.PackagingSpike\AppPackages\Arcade1972.PackagingSpike_1.0.0.0_x64_Test\Arcade1972.PackagingSpike_1.0.0.0_x64.msix).Path
+& .\spikes\Arcade1972.PackagingSpike\Verify-Package.ps1 -PackagePath $package
+```
+
+**執行前須同意本機測試的系統變更：** 驗證腳本建立有效一天且不可匯出的 code-signing 私鑰，以 SHA-256 簽署指定 MSIX；僅匯出公開憑證，透過 UAC 暫時加入 `LocalMachine\TrustedPeople`。請在有互動桌面的 Windows PowerShell 執行並同意匯入與清除時的 UAC 提示；不要在無人值守 CI 執行。
+
+腳本會拒絕覆蓋既有 spike 安裝或同名憑證檔，檢查 **MSIX 內**的 identity、x64、OS 版本與 self-contained payload，驗證簽章後安裝 App。以 package family name 啟動，透過 UI Automation 確認可見視窗、完整 package identity、`.NET 10.x.x | X64`，最後操作 `CLOSE` 按鈕確認退出。
+
+`finally` 會解除安裝 spike，移除本次的 TrustedPeople 憑證、CurrentUser 私鑰與 `.cer`。不要中途強制終止 PowerShell；若清除遭取消或失敗，依輸出的 certificate thumbprint／package full name 清除該次資源，不要廣泛刪除憑證。未匯出 PFX，憑證與 `AppPackages` 均不提交。清除信任後留下的測試 MSIX 不再受本機信任；再次驗證請重新建置並執行腳本。
+
+**2026-10-08 驗證結果：**
+
+- 主機 OS build `26300`、Visual Studio 2026 18.10.3；Release x64 MSIX 建置成功。
+- 最終 manifest 為 Windows.Desktop `MinVersion=10.0.19045.0`、`MaxVersionTested=10.0.26100.0`。
+- SignTool 驗證成功（零警告、零錯誤），安裝 status 為 `Ok`。
+- UI Automation 驗證 package identity、`.NET 10.0.12 | X64`、可見 WinUI 視窗與關閉按鈕成功；測試安裝與憑證已清除。
+- 建置仍有 `mspdbcmf.exe` 找不到的符號套件警告；目前 MSIX targets 即使設定不產生 symbols package 仍會探測該工具。此 spike 不驗證 Store symbols，不以關閉其他警告掩蓋結果。
+- 尚未驗證 Windows 10 22H2、多 DPI、遊戲 App 的 packaged LocalState、Store runtime 或 WACK。
+
 ## 專案結構
 
 - `src/Arcade1972.Core`：不依賴 Windows UI 的 deterministic 遊戲規則。
 - `src/Arcade1972.Infrastructure`：可測試的檔案持久化與平台邊界實作。
 - `src/Arcade1972.App`：WinUI 3 視窗、輸入與 XAML 畫面。
 - `tests/Arcade1972.Tests`：物理、勝負、固定步進與 AI 測試。
+- `spikes/Arcade1972.PackagingSpike`：獨立的本機 MSIX 簽署、安裝與 WinUI 啟動驗證，不屬於遊戲 solution。
 - `docs/game-reference.md`：歷史規則依據與目前 deterministic baseline。
 - `docs/dev-knowledge.md`：開發中經驗證且可重用的技術知識，會隨專案演進汰舊更新。

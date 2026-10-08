@@ -7,3 +7,4 @@ TestResults/
 AppPackages/
 BundleArtifacts/
 *.pfx
+*.cer

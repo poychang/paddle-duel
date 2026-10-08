@@ -21,6 +21,20 @@ Windows App SDK C# 支援的元件 ID 是 `Microsoft.VisualStudio.Component.Wind
 
 可重用的元件清單位於 [`.vsconfig`](../.vsconfig)。升級 Visual Studio 後應重新確認元件 ID；實際 MSIX 簽署、安裝與啟動仍需獨立驗證，不能由 unpackaged 建置成功推論。
 
+### MSIX 最低版本要檢查最終封裝，不只看原始 manifest
+
+**已驗證環境：** .NET 10、Windows App SDK 2.5.1、MSIX BuildTools 1.7.251221100、2026-10-08。
+
+Single-project MSIX 會依專案的 `TargetPlatformMinVersion`／target framework 產生最終 `TargetDeviceFamily`。Spike 最初在原始 manifest 填入 `MinVersion=10.0.19045.0`，但專案仍使用 19041 設定，實際 MSIX 內卻變為 19041。不可把編輯原始 manifest 或建置成功視為最低版本設定已生效。
+
+Spike 改用 `net10.0-windows10.0.26100.0` 與 `TargetPlatformMinVersion=10.0.19045.0` 後，已確認 MSIX 內只有 Windows.Desktop，最低版本 19045、MaxVersionTested 26100。未來遊戲 App 轉換時應同樣對**產物**做斷言；提高 target SDK 不等於把最低 OS 提高到 Windows 11，也不代表已完成 Windows 10 實機驗收。
+
+### 本機 MSIX 驗證不需要匯出私鑰
+
+測試簽章可使用 `CurrentUser\My` 中的不可匯出 code-signing 私鑰，透過 SignTool `/sha1 <thumbprint> /s My` 簽署。Subject 必須與 manifest Publisher 完全一致；安裝端只需要公開 `.cer` 加入 `LocalMachine\TrustedPeople`，不需要保存 PFX 或密碼。
+
+已以 [spike 驗證腳本](../spikes/Arcade1972.PackagingSpike/Verify-Package.ps1) 完成簽署、信任、安裝、package activation、UI Automation 與清除。腳本透過啟動回傳的 PID 找視窗，確認 UI 的 package identity 與 runtime，再操作關閉按鈕；不以程序出現或 `MainWindowHandle` 代替 WinUI 啟動成功。測試憑證、私鑰與安裝應在驗證後清除，不能留作正式發行 identity。
+
 ### Unpackaged App 不可假設具有 package identity
 
 **已驗證環境：** Windows App SDK 2.5.1、unpackaged WinUI 3、2026-09-24。
