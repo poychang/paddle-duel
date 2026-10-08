@@ -2,6 +2,8 @@
 
 一款受 1972 年早期投幣式電子桌球遊戲啟發的 Windows 遊戲。Partner Center 產品名稱為 **Paddle Duel**；現有 App 顯示名稱與視覺仍待正式封裝項目更新。本專案與 Atari 無關，也不使用原始遊戲的商標、程式、美術、字型或錄音。
 
+GitHub repository：[poychang/paddle-duel](https://github.com/poychang/paddle-duel)，Git remote URL 為 `https://github.com/poychang/paddle-duel.git`。Repository 更名不影響本機目錄與既有 `pong-in-1972.sln` 檔名。
+
 ## Partner Center 產品識別
 
 以下值由產品擁有者於 2026-10-08 從 Partner Center 提供，保留原始大小寫與標點：
@@ -38,9 +40,9 @@ GitHub Pages 的 **Deploy from a branch** 只接受分支根目錄或 `/docs`，
 
 若未設定自訂網域，預期網址為：
 
-- 官網：`https://poychang.github.io/pong-in-1972/`
-- 政策：`https://poychang.github.io/pong-in-1972/privacy.html`
-- 聯絡區：`https://poychang.github.io/pong-in-1972/#contact`
+- 官網：`https://poychang.github.io/paddle-duel/`
+- 政策：`https://poychang.github.io/paddle-duel/privacy.html`
+- 聯絡區：`https://poychang.github.io/paddle-duel/#contact`
 
 **以上是預期位置，不是已部署成功的宣告。** 本機的 `sites` 內容會成為網站根目錄，所以公開網址不包含 `/sites/`。若帳戶或 repository 設定自訂網域，以 Pages 顯示的網址為準。
 

@@ -42,6 +42,7 @@
 
 ## 已完成
 
+- [x] 配合 GitHub repository 更名為 `poychang/paddle-duel`，更新本機 origin 與文件中的 Pages 網址；保留既有 solution 和本機目錄名稱。
 - [x] 建立 `sites` 靜態官網與隱私權政策頁，包含操作說明、聯絡資訊與非 Atari 官方產品聲明；提供只發布 `sites` 的 GitHub Pages workflow。
   - 本機網站測試通過，已驗證 320／390／768／1440 像素版面、政策導覽、鍵盤跳轉與 project 子路徑。未 push 或執行公開部署；政策發布待辦仍保留。
 - [x] 檢視現有本機資料與 Store 呼叫，草擬 Paddle Duel 隱私權政策；政策確認、發布與 Store 聲明仍在進行中。
