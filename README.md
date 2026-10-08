@@ -16,7 +16,13 @@
 
 這些是產品識別資訊，不是登入憑證或簽署私鑰。此處僅記錄已取得的正式 identity；尚未套用到遊戲 App、上傳封裝或驗證 Store runtime。獨立 packaging spike 繼續使用自己的測試 identity，不應以正式值取代。
 
-此 Store ID 屬於遊戲本體，不能當作 1 次／10 次 consumable 的 Store ID；兩個附加商品仍需分別建立並取得自己的識別資訊。建立產品不代表已公開上架或完成商標查核。
+此 Store ID 屬於遊戲本體，不能當作 1 次／10 次 consumable 的 Store ID。Partner Center 已建立 `plays1`（Store ID `9NGSHZT4WSR1`）與 `plays10`（Store ID 待提供）；畫面分別顯示 `ManagedConsumable`、Quantity 1／10，Content type 選擇 `Electronic software download`。`plays10` 的 Properties 儲存受必填隱私權聲明阻塞，兩個商品的最終保存狀態仍待確認；不能將畫面輸入值視為已發行或已驗證購買。
+
+建立產品不代表已公開上架或完成商標查核。遊戲程式尚未套用上述正式附加商品識別。
+
+### 隱私權政策草稿
+
+已依目前資料處理實作整理 [Paddle Duel 隱私權政策草稿](docs/privacy-policy.md)，聯絡信箱由產品擁有者指定為 `poychang.tw@gmail.com`。目前尚待擁有者確認、公開網址與正式版本核對，不能當作已發布的政策或 Store 驗收結果。準備政策本身也不決定 Partner Center 隱私權 Yes／No 的答案，仍須依實際資料用途填寫。
 
 ## 目前進度
 

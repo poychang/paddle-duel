@@ -9,13 +9,17 @@
 
 ## 進行中
 
-目前無進行中的項目；下一項需要在 Partner Center 建立 1 次與 10 次 Store-managed consumable 測試商品。
+- [ ] 確認並發布 Paddle Duel 隱私權政策，取得可公開閱讀的 HTTPS 網址，完成附加商品隱私權聲明。
+  - 使用者於 2026-10-08 優先處理此項，以解除附加商品 Properties 的必填欄位阻塞。
+  - [草稿](docs/privacy-policy.md) 已依現有資料處理程式整理；聯絡信箱由擁有者提供。待擁有者確認營運承諾、選定發布位置與生效日期，尚未發布或判定 Yes／No。
 
 ## 待辦
 
 ### MSIX 與 Microsoft Store 外部前置
 
 - [ ] 建立 1 次與 10 次 Store-managed consumable 測試商品，確認 10 次商品可設定 10 units。
+  - `plays1` Store ID：`9NGSHZT4WSR1`；`plays10` Store ID 待提供。
+  - 截圖已確認 `ManagedConsumable` 與 Quantity 1／10，Content type 為 `Electronic software download`；仍待成功儲存確認，目前暫停至隱私權聲明處理完成。
 
 ### Packaged App 轉換
 
@@ -28,7 +32,8 @@
 
 - [ ] 透過 Partner Center private flight 驗證 1／10 units、取消、重複購買、斷線恢復及跨裝置餘額。
 - [ ] 以可退款的小額真實交易驗證 Microsoft 帳戶禮品卡可由 Store checkout 使用；App 不接觸卡號。
-- [ ] 建立隱私權政策、支援頁、IARC 分級與非 Atari 官方產品聲明。
+- [ ] 建立支援頁、IARC 分級與非 Atari 官方產品聲明。
+- [ ] 核對正式版資料處理與已發布隱私權政策一致，加入 App 政策入口並完成 Store 欄位驗收。
 - [ ] 製作 Store 圖示、螢幕截圖、商品文案及價格／市場設定。
 - [ ] 建立 Windows CI：restore、tests、Release x64 build 與 MSIX bundle artifact；簽署資訊只存於受保護 secrets。
 - [ ] 在 Windows 10 22H2、Windows 11 與 100／150／200% DPI 執行安裝、升級與操作驗收。
@@ -36,6 +41,7 @@
 
 ## 已完成
 
+- [x] 檢視現有本機資料與 Store 呼叫，草擬 Paddle Duel 隱私權政策；政策確認、發布與 Store 聲明仍在進行中。
 - [x] 在 Partner Center 建立 App identity，取得 Publisher、Package identity 與 Store ID。
   - 2026-10-08 由產品擁有者提供 Paddle Duel 的四個識別欄位，原值保存於 [README](README.md#partner-center-產品識別)。
   - 僅完成 identity 取得與記錄；遊戲 App 關聯、商品建立、封裝上傳及 Store runtime 驗證仍由後續項目處理。
