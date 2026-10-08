@@ -11,6 +11,16 @@
 
 ## WinUI 3 與 Windows App SDK
 
+### Visual Studio 元件 ID 與 SDK 版本要以目前 catalog 驗證
+
+**已驗證環境：** Visual Studio Enterprise 2026 18.10.3、.NET SDK 10.0.401、2026-10-08。
+
+Windows App SDK C# 支援的元件 ID 是 `Microsoft.VisualStudio.Component.WindowsAppSdkSupport.CSharp`，不是 `Microsoft.VisualStudio.Component.WindowsAppSDK.CSharp`。使用不存在的 ID 執行 `vswhere -requires` 也會得到空結果，因此不能只靠舊 ID 判定缺少工具；先確認目前 Installer catalog 中的 ID，再查詢安裝狀態。
+
+此版本 catalog 不提供 `Microsoft.VisualStudio.Component.Windows10SDK.19041`。已透過 Installer 安裝 Windows SDK 26100、C# 支援與 MSIX Packaging，確認 DesktopBridge targets、WinUI 範本及 x64 MakeAppx／SignTool 存在，且現有 `net10.0-windows10.0.19041.0` App 的 Debug x64 建置通過。工具 SDK 版本與 App 最低 OS 版本是不同設定；不應為了取得舊 SDK 而直接提高 App 最低版本。
+
+可重用的元件清單位於 [`.vsconfig`](../.vsconfig)。升級 Visual Studio 後應重新確認元件 ID；實際 MSIX 簽署、安裝與啟動仍需獨立驗證，不能由 unpackaged 建置成功推論。
+
 ### Unpackaged App 不可假設具有 package identity
 
 **已驗證環境：** Windows App SDK 2.5.1、unpackaged WinUI 3、2026-09-24。

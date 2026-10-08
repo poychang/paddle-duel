@@ -45,7 +45,24 @@ dotnet test tests/Arcade1972.Tests/Arcade1972.Tests.csproj -c Debug
 dotnet run --project src/Arcade1972.App/Arcade1972.App.csproj -c Debug -p:Platform=x64
 ```
 
-目前的 App 是供開發驗證使用的 unpackaged WinUI 3 應用。正式 MSIX/Store 建置仍需要安裝 Visual Studio 的 Windows App SDK 與 MSIX 工作負載，並與 Partner Center 的應用程式識別建立關聯。
+目前的 App 是供開發驗證使用的 unpackaged WinUI 3 應用。正式 MSIX/Store 建置仍需完成 Packaged spike、App 轉換與 Partner Center identity 關聯；安裝封裝工具不代表已通過簽署、安裝或 Store 驗證。
+
+### Visual Studio 封裝工具鏈
+
+使用 Visual Studio 2026，在 Visual Studio Installer 的「匯入組態」選擇 repository 根目錄的 [`.vsconfig`](.vsconfig)，安裝 Windows App SDK C# 支援、MSIX Packaging 與 Windows SDK 26100。需要系統管理員權限；此組態只列出封裝前置元件，不取代 .NET 10 SDK 或專案的 NuGet 參考。
+
+安裝後可在 PowerShell 驗證同一個 Visual Studio instance 具有所有必要元件：
+
+```powershell
+$config = Get-Content .\.vsconfig -Raw | ConvertFrom-Json
+& "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" `
+    -products '*' -requires $config.components -property installationPath
+dotnet build .\src\Arcade1972.App\Arcade1972.App.csproj -c Debug -p:Platform=x64
+```
+
+`vswhere` 應回傳安裝路徑；沒有輸出代表尚未找到具備全部元件的 instance。另確認該路徑下的 `MSBuild\Microsoft\DesktopBridge\Microsoft.DesktopBridge.targets`，以及 `%ProgramFiles(x86)%\Windows Kits\10\bin\10.0.26100.0\x64` 下的 `makeappx.exe` 與 `signtool.exe` 存在。
+
+2026-10-08 已在 Visual Studio Enterprise 2026 18.10.3 驗證上述元件、MakeAppx／SignTool 可執行及既有 App 的 Debug／Release x64 建置（零警告、零錯誤）。Windows SDK 26100 是建置工具版本，不會把現有 App 的 `net10.0-windows10.0.19041.0` 目標改為 Windows 11；未來 MSIX 的 Windows Desktop 最低版本仍需另行設定並驗證。
 
 ## 專案結構
 

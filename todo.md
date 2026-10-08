@@ -9,8 +9,7 @@
 
 ## 進行中
 
-- [ ] 透過 Visual Studio Installer 安裝並驗證 Windows App SDK、MSIX Packaging 與 Windows SDK 工作負載。
-  - 目前阻塞：缺少 Windows App SDK C#、MSIX Packaging 與 Windows 10 SDK 19041 components。
+目前無進行中的項目；下一項為最小 Packaged WinUI 3 spike。
 
 ## 待辦
 
@@ -27,9 +26,6 @@
 - [ ] 驗證 packaged LocalState 分支、安裝、啟動、升級與解除安裝；移除不再需要的 unpackaged workaround。
 - [ ] 產生 Release x64 MSIX bundle，且不提交開發憑證或 AppPackages 產物。
 
-### Store 購買架構
-
-
 ### Store 與發行驗收
 
 - [ ] 透過 Partner Center private flight 驗證 1／10 units、取消、重複購買、斷線恢復及跨裝置餘額。
@@ -42,6 +38,10 @@
 
 ## 已完成
 
+- [x] 透過 Visual Studio Installer 安裝並驗證 Windows App SDK C#、MSIX Packaging 與 Windows SDK 26100。
+  - Visual Studio 2026 18.10.3 安裝成功且不需重開機；以 `.vsconfig` 保存可重用的元件 ID。
+  - 已驗證 WinUI 範本、DesktopBridge targets、x64 MakeAppx／SignTool 可執行及 App Debug／Release x64 建置（零警告、零錯誤）。
+  - 目前 catalog 不提供舊 SDK 19041；使用 SDK 26100 工具且保留既有 App 目標版本。實際 MSIX 簽署、安裝與啟動由下一個 spike 驗證。
 - [x] 將 pending fulfillment retry 接入 App 啟動與回前景 lifecycle；Store 不可用時不阻塞啟動，journal 保留待下次重試。
 - [x] 實作賽後 consumable fulfillment、固定 tracking ID 與 pending journal；失敗紀錄可在 coordinator 重建後重試。
 - [x] 付費局開始前查詢 Store balance，免費耗盡才選擇付費 pool，並將選定 Store ID 保存於 entitlement session。
