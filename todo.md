@@ -12,7 +12,7 @@
 - [ ] 確認並發布 Paddle Duel 隱私權政策，取得可公開閱讀的 HTTPS 網址，完成附加商品隱私權聲明。
   - 使用者於 2026-10-08 優先處理此項，以解除附加商品 Properties 的必填欄位阻塞。
   - [政策內容](docs/privacy-policy.md) 已由擁有者於 2026-10-08 確認，包含聯絡信箱與所述資料處理方式；不額外承諾代管資料、人工清除或服務時限，保留真實資料用途與法定權利。
-  - 待選定發布位置、填寫生效日期並驗證公開網址；尚未發布或判定 Yes／No。內容確認不代表正式版本、Store 或法律驗收完成。
+  - 已指定生效日期 2026-10-08，製作 `sites` 官網與公開政策頁及 GitHub Actions Pages workflow；待擁有者 push、啟用 Pages 並驗證公開網址，尚未發布或判定 Yes／No。
 
 ## 待辦
 
@@ -33,7 +33,7 @@
 
 - [ ] 透過 Partner Center private flight 驗證 1／10 units、取消、重複購買、斷線恢復及跨裝置餘額。
 - [ ] 以可退款的小額真實交易驗證 Microsoft 帳戶禮品卡可由 Store checkout 使用；App 不接觸卡號。
-- [ ] 建立支援頁、IARC 分級與非 Atari 官方產品聲明。
+- [ ] 完成 IARC 分級，並將已部署的聯絡／政策網址及非官方產品聲明填入適用的 Store 欄位。
 - [ ] 核對正式版資料處理與已發布隱私權政策一致，加入 App 政策入口並完成 Store 欄位驗收。
 - [ ] 製作 Store 圖示、螢幕截圖、商品文案及價格／市場設定。
 - [ ] 建立 Windows CI：restore、tests、Release x64 build 與 MSIX bundle artifact；簽署資訊只存於受保護 secrets。
@@ -42,6 +42,8 @@
 
 ## 已完成
 
+- [x] 建立 `sites` 靜態官網與隱私權政策頁，包含操作說明、聯絡資訊與非 Atari 官方產品聲明；提供只發布 `sites` 的 GitHub Pages workflow。
+  - 本機網站測試通過，已驗證 320／390／768／1440 像素版面、政策導覽、鍵盤跳轉與 project 子路徑。未 push 或執行公開部署；政策發布待辦仍保留。
 - [x] 檢視現有本機資料與 Store 呼叫，草擬 Paddle Duel 隱私權政策；政策確認、發布與 Store 聲明仍在進行中。
 - [x] 在 Partner Center 建立 App identity，取得 Publisher、Package identity 與 Store ID。
   - 2026-10-08 由產品擁有者提供 Paddle Duel 的四個識別欄位，原值保存於 [README](README.md#partner-center-產品識別)。

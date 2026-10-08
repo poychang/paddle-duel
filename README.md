@@ -20,9 +20,46 @@
 
 建立產品不代表已公開上架或完成商標查核。遊戲程式尚未套用上述正式附加商品識別。
 
-### 隱私權政策草稿
+### 隱私權政策與官網
 
-已依目前資料處理實作整理 [Paddle Duel 隱私權政策（內容已確認，待發布）](docs/privacy-policy.md)，聯絡信箱為 `poychang.tw@gmail.com`。產品擁有者於 2026-10-08 確認內容、聯絡信箱與所述資料處理方式；公開網址、生效日期、正式版本核對與 App 政策入口仍待完成，不能當作已發布的政策或 Store 驗收結果。內容確認也不決定 Partner Center 隱私權 Yes／No 的答案，仍須依實際資料用途填寫。
+已依目前資料處理實作整理 [Paddle Duel 隱私權政策（內容已確認，待發布）](docs/privacy-policy.md)，聯絡信箱為 `poychang.tw@gmail.com`。產品擁有者確認內容並指定生效日期為 **2026-10-08**；已製作 [網站公開版](sites/privacy.html)，移除內部備註並補充 GitHub Pages 託管資料處理說明。公開部署、正式版本核對與 App 政策入口仍待完成，不能當作已發布的政策或 Store 驗收結果。內容確認也不決定 Partner Center 隱私權 Yes／No 的答案，仍須依實際資料用途填寫。
+
+[`sites`](sites) 是不需建置的 HTML／CSS 靜態官網，包含遊戲介紹、鍵盤操作、聯絡資訊、非官方產品聲明與獨立政策頁。沒有 JavaScript、表單、分析追蹤、第三方字型或外部嵌入資源；GitHub 作為託管商仍可能處理訪客連線資料。
+
+#### 發布到 GitHub Pages
+
+GitHub Pages 的 **Deploy from a branch** 只接受分支根目錄或 `/docs`，不能直接選 `/sites`。本專案因此提供 [Pages workflow](.github/workflows/pages.yml)，只上傳 `sites`，不發布程式碼、測試或政策內部備註。
+
+1. 由擁有者將本次 commit push 到 `main`（開發助手不自動 push）。
+2. 在 GitHub repository → **Settings → Pages → Build and deployment → Source** 選 **GitHub Actions**，不必再產生另一份 workflow。
+3. 在 **Actions → Deploy Paddle Duel website → Run workflow** 選 `main` 執行。之後 `main` 上的網站、政策或網站測試變更也會自動觸發。
+4. workflow 先執行網站測試，再部署。若 repository 設定了 environment approval，依 GitHub 提示核准 `github-pages`。
+5. 部署成功後，以 GitHub 顯示的實際網址確認首頁與政策頁可在未登入狀態閱讀，再填入 Partner Center。
+
+若未設定自訂網域，預期網址為：
+
+- 官網：`https://poychang.github.io/pong-in-1972/`
+- 政策：`https://poychang.github.io/pong-in-1972/privacy.html`
+- 聯絡區：`https://poychang.github.io/pong-in-1972/#contact`
+
+**以上是預期位置，不是已部署成功的宣告。** 本機的 `sites` 內容會成為網站根目錄，所以公開網址不包含 `/sites/`。若帳戶或 repository 設定自訂網域，以 Pages 顯示的網址為準。
+
+#### 本機預覽與驗證
+
+```powershell
+python -m http.server 8765 --bind 127.0.0.1 --directory .\sites
+# 瀏覽 http://127.0.0.1:8765/，按 Ctrl+C 停止。
+```
+
+測試使用 Node.js 24 內建 test runner，不需 npm install：
+
+```powershell
+node --test .\tests\site.test.mjs
+```
+
+政策更新時，同步修改 [Markdown 內容](docs/privacy-policy.md) 與 [公開 HTML](sites/privacy.html)；測試會比較公開正文的段落、表格、日期與連結，避免兩份內容不同步，也檢查本機連結、錨點與不載入外部資源。生效日期變更時需同步更新測試中的預期日期。
+
+已在本機驗證 320／390／768／1440 像素視窗、首頁與政策往返、鍵盤跳至主內容及 project 子路徑資源載入。公開頁只提供資訊，沒有購買或下載功能；Store 上架後再更新首頁狀態與正式入口。
 
 ## 目前進度
 
