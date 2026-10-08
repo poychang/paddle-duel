@@ -9,8 +9,8 @@
 
 ## 進行中
 
-- [ ] 完成 `plays1`／`plays10` 的 Store listings 草稿，確認銷售市場、可見性與發行排程。
-  - 擁有者已回報隱私權政策與 USD 售價設定完成；下一步填入商品名稱、說明與語言。
+- [ ] 確認 `plays1`／`plays10` 的銷售市場、可見性與發行排程。
+  - 擁有者已回報隱私權政策、USD 售價與 Store listings 設定完成；尚未取得市場、可見性與排程的實際設定值。
   - 目前不送審或公開發布；正式商品查詢、購買與 fulfillment 仍須後續 Store runtime 驗證。
 
 ## 待辦
@@ -35,6 +35,8 @@
 
 ## 已完成
 
+- [x] 完成 `plays1`／`plays10` 的 Store listings 草稿設定。
+  - 2026-10-08 擁有者回報已完成上一階段的商品名稱、說明與語言設定；尚未確認送審、發布或實際購買。
 - [x] 在 Partner Center 建立 `plays1`／`plays10` Store-managed consumable，確認 Quantity 1／10 並設定售價。
   - Store ID 分別為 `9NGSHZT4WSR1`／`9MZ6KPM0339W`；Content type 為 `Electronic software download`。
   - 2026-10-08 擁有者回報售價設定為 0.99 USD／1.99 USD，分別是整包 1 次／10 次的價格；不代表已發布或可購買。

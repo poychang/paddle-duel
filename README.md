@@ -25,7 +25,7 @@ GitHub repository：[poychang/paddle-duel](https://github.com/poychang/paddle-du
 | `plays1` | `9NGSHZT4WSR1` | 1 | 0.99 USD |
 | `plays10` | `9MZ6KPM0339W` | 10 | 1.99 USD |
 
-附加商品政策網址為 `https://project.poychang.net/paddle-duel/privacy.html`；`plays10` 截圖顯示隱私權聲明選擇 Yes。Store listings、銷售市場、可見性與發行排程仍待確認，不能將草稿設定視為已發行或已驗證購買。此表僅記錄 Partner Center 設定；App 必須顯示 Store 回傳的商品名稱與 formatted price，不得硬編碼這些 USD 售價或自行換算其他幣別。
+附加商品政策網址為 `https://project.poychang.net/paddle-duel/privacy.html`；`plays10` 截圖顯示隱私權聲明選擇 Yes。產品擁有者於 2026-10-08 回報兩個商品的 Store listings 設定完成；銷售市場、可見性與發行排程仍待確認，不能將草稿設定視為已發行或已驗證購買。此表僅記錄 Partner Center 設定；App 必須顯示 Store 回傳的商品名稱與 formatted price，不得硬編碼這些 USD 售價或自行換算其他幣別。
 
 建立產品不代表已公開上架或完成商標查核。遊戲程式尚未套用上述正式附加商品識別。
 
