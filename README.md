@@ -22,7 +22,7 @@
 
 ### 隱私權政策草稿
 
-已依目前資料處理實作整理 [Paddle Duel 隱私權政策草稿](docs/privacy-policy.md)，聯絡信箱由產品擁有者指定為 `poychang.tw@gmail.com`。目前尚待擁有者確認、公開網址與正式版本核對，不能當作已發布的政策或 Store 驗收結果。準備政策本身也不決定 Partner Center 隱私權 Yes／No 的答案，仍須依實際資料用途填寫。
+已依目前資料處理實作整理 [Paddle Duel 隱私權政策（內容已確認，待發布）](docs/privacy-policy.md)，聯絡信箱為 `poychang.tw@gmail.com`。產品擁有者於 2026-10-08 確認內容、聯絡信箱與所述資料處理方式；公開網址、生效日期、正式版本核對與 App 政策入口仍待完成，不能當作已發布的政策或 Store 驗收結果。內容確認也不決定 Partner Center 隱私權 Yes／No 的答案，仍須依實際資料用途填寫。
 
 ## 目前進度
 
