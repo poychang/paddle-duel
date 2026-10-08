@@ -1,0 +1,12 @@
+<Application
+    x:Class="PaddleDuel.App.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <Color x:Key="GameBackgroundColor">#050505</Color>
+            <SolidColorBrush x:Key="GameBackgroundBrush" Color="{StaticResource GameBackgroundColor}" />
+            <SolidColorBrush x:Key="GameForegroundBrush" Color="#F4F1E8" />
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

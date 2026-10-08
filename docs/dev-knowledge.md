@@ -33,7 +33,7 @@ Spike 改用 `net10.0-windows10.0.26100.0` 與 `TargetPlatformMinVersion=10.0.19
 
 測試簽章可使用 `CurrentUser\My` 中的不可匯出 code-signing 私鑰，透過 SignTool `/sha1 <thumbprint> /s My` 簽署。Subject 必須與 manifest Publisher 完全一致；安裝端只需要公開 `.cer` 加入 `LocalMachine\TrustedPeople`，不需要保存 PFX 或密碼。
 
-已以 [spike 驗證腳本](../spikes/Arcade1972.PackagingSpike/Verify-Package.ps1) 完成簽署、信任、安裝、package activation、UI Automation 與清除。腳本透過啟動回傳的 PID 找視窗，確認 UI 的 package identity 與 runtime，再操作關閉按鈕；不以程序出現或 `MainWindowHandle` 代替 WinUI 啟動成功。測試憑證、私鑰與安裝應在驗證後清除，不能留作正式發行 identity。
+已以 [spike 驗證腳本](../spikes/PaddleDuel.PackagingSpike/Verify-Package.ps1) 完成簽署、信任、安裝、package activation、UI Automation 與清除。腳本透過啟動回傳的 PID 找視窗，確認 UI 的 package identity 與 runtime，再操作關閉按鈕；不以程序出現或 `MainWindowHandle` 代替 WinUI 啟動成功。測試憑證、私鑰與安裝應在驗證後清除，不能留作正式發行 identity。
 
 ### Unpackaged App 不可假設具有 package identity
 
@@ -59,6 +59,14 @@ WinUI 3 程序可能已建立可見視窗，但 `Process.MainWindowHandle` 仍�
 目前開發版沒有 package identity，也沒有依賴 MSIX 的 instance redirection。若讓第二個程序先建立 Window 和 quota store，兩個程序可能同時讀寫同一份 LocalState。`App.OnLaunched` 在建立 Window 前取得 per-user named mutex；取得失敗的程序立即退出，第一個程序在 Window 關閉時釋放 mutex。轉為 Packaged App 後仍應重新驗證，並評估是否改用 Windows App SDK `AppInstance` 的啟動轉導功能。
 
 ## 本機狀態持久化
+
+### 產品改名不代表持久化識別也應改名
+
+**已驗證：** 2026-10-08，專案／assembly／namespace 改為 `PaddleDuel.*`。
+
+JSON 額度資料使用欄位值而非 assembly-qualified type name；改名後仍可讀取原有 payload。但儲存目錄與互斥鎖是跨版本協定，必須保留 `%LocalAppData%\Arcade1972` 與 `Local\Arcade1972.SingleInstance`，否則資料會看似消失，或讓舊版與新版同時操作同一份狀態。此次以舊 JSON fixture、既有額度載入與持有原互斥鎖時的新執行檔啟動驗證相容性。
+
+專案改名時應只搬移來源檔，讓新路徑重新產生 `bin`／`obj`；舊 XAML 產物與 NuGet assets 可能帶有原 namespace 或路徑，不應作為新專案驗證的依據。
 
 ### 原子替換與損毀隔離
 

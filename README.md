@@ -1,8 +1,8 @@
 # Paddle Duel
 
-一款受 1972 年早期投幣式電子桌球遊戲啟發的 Windows 遊戲。Partner Center 產品名稱為 **Paddle Duel**；現有 App 顯示名稱與視覺仍待正式封裝項目更新。本專案與 Atari 無關，也不使用原始遊戲的商標、程式、美術、字型或錄音。
+一款受 1972 年早期投幣式電子桌球遊戲啟發的 Windows 遊戲。Partner Center 產品名稱與 App 顯示名稱皆為 **Paddle Duel**；正式封裝素材仍待後續項目完成。本專案與 Atari 無關，也不使用原始遊戲的商標、程式、美術、字型或錄音。
 
-GitHub repository：[poychang/paddle-duel](https://github.com/poychang/paddle-duel)，Git remote URL 為 `https://github.com/poychang/paddle-duel.git`。Repository 更名不影響本機目錄與既有 `pong-in-1972.sln` 檔名。
+GitHub repository：[poychang/paddle-duel](https://github.com/poychang/paddle-duel)，Git remote URL 為 `https://github.com/poychang/paddle-duel.git`。Solution 為 [`PaddleDuel.sln`](PaddleDuel.sln)，專案目錄、`.csproj`、assembly 與 namespace 使用 `PaddleDuel.*`。本機 checkout 目錄名稱不影響建置，開啟中的工作目錄不在此次改名範圍。
 
 ## Partner Center 產品識別
 
@@ -100,13 +100,28 @@ Fake commerce tests 已覆蓋取消、餘額錯誤、pending retry、重啟 sess
 需求：Windows 10 22H2 或 Windows 11，以及 .NET 10 SDK。
 
 ```powershell
-dotnet restore pong-in-1972.sln
-dotnet build pong-in-1972.sln -c Debug -p:Platform=x64
-dotnet test tests/Arcade1972.Tests/Arcade1972.Tests.csproj -c Debug
-dotnet run --project src/Arcade1972.App/Arcade1972.App.csproj -c Debug -p:Platform=x64
+dotnet restore PaddleDuel.sln
+dotnet build PaddleDuel.sln -c Debug -p:Platform=x64
+dotnet test .\tests\PaddleDuel.Tests\PaddleDuel.Tests.csproj -c Debug
+dotnet run --project .\src\PaddleDuel.App\PaddleDuel.App.csproj -c Debug -p:Platform=x64
 ```
 
 目前的遊戲 App 仍是供開發驗證使用的 unpackaged WinUI 3 應用。獨立 Packaged spike 已通過本機簽署、安裝與啟動驗證；正式 MSIX/Store 建置仍需完成遊戲 App 轉換與 Partner Center identity 關聯，不能將 spike 驗證視為 Store 驗收。
+
+### Paddle Duel 改名與相容性
+
+改名後請開啟 `PaddleDuel.sln`，執行檔為 `PaddleDuel.App.exe`。App 視窗標題與檔案產品資訊為 `Paddle Duel`，自訂標題列與主選單為 `PADDLE DUEL`；spike 為 `PaddleDuel.PackagingSpike`，仍使用獨立測試 identity。
+
+以下不是顯示名稱，刻意不隨專案改名：
+
+- `%LocalAppData%\Arcade1972`：既有 unpackaged 免費額度、視窗設定與 pending fulfillment journal；直接改路徑會讓既有資料看似遺失。
+- `Local\Arcade1972.SingleInstance`：保留與舊版的互斥關係，避免新舊 App 同時寫入相同資料。
+- `arcade1972.play.1`／`arcade1972.play.10`：原有開發占位商品 ID，待正式 Store 關聯項目替換為已取得的真實 Store ID；此次不改變交易行為或追蹤 ID。
+- `Classic1972Rules` 與 golden regression 名稱：描述歷史規則，不是產品名稱。
+
+2026-10-08 改名驗證：53 項 .NET 測試通過（含改名前 JSON 額度資料的回歸測試），solution Debug／Release x64 均零警告、零錯誤。Release App 已透過 UI Automation 驗證名稱、既有額度載入、舊互斥鎖、新版重複啟動、資訊／設定 overlay、全螢幕切換、單人／雙人開局、最小化暫停、繼續、放棄不扣次與正常退出；測試後還原原有本機檔案。Escape 鍵自動化受焦點影響，未列為此次通過項目，未為此改動輸入邏輯。
+
+改名後 spike 也已重新完成 MSIX 建置、SHA-256 簽署、安裝、package identity／視窗驗證與清除。既有 `mspdbcmf.exe` symbols 警告仍在，不影響此次 spike；不代表正式遊戲已轉成 packaged 或 Store 驗收完成。
 
 ### Visual Studio 封裝工具鏈
 
@@ -118,7 +133,7 @@ dotnet run --project src/Arcade1972.App/Arcade1972.App.csproj -c Debug -p:Platfo
 $config = Get-Content .\.vsconfig -Raw | ConvertFrom-Json
 & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" `
     -products '*' -requires $config.components -property installationPath
-dotnet build .\src\Arcade1972.App\Arcade1972.App.csproj -c Debug -p:Platform=x64
+dotnet build .\src\PaddleDuel.App\PaddleDuel.App.csproj -c Debug -p:Platform=x64
 ```
 
 `vswhere` 應回傳安裝路徑；沒有輸出代表尚未找到具備全部元件的 instance。另確認該路徑下的 `MSBuild\Microsoft\DesktopBridge\Microsoft.DesktopBridge.targets`，以及 `%ProgramFiles(x86)%\Windows Kits\10\bin\10.0.26100.0\x64` 下的 `makeappx.exe` 與 `signtool.exe` 存在。
@@ -127,7 +142,7 @@ dotnet build .\src\Arcade1972.App\Arcade1972.App.csproj -c Debug -p:Platform=x64
 
 ### 獨立 Packaged WinUI 3 spike
 
-[`spikes/Arcade1972.PackagingSpike`](spikes/Arcade1972.PackagingSpike) 是不加入遊戲 solution 的最小封裝實驗，使用測試 identity，不連線 Store、不讀寫遊戲資料，也不共用遊戲的單一程序鎖。圖示為本專案產生的黑白幾何圖形，並非正式商店素材。
+[`spikes/PaddleDuel.PackagingSpike`](spikes/PaddleDuel.PackagingSpike) 是不加入遊戲 solution 的最小封裝實驗，使用測試 identity，不連線 Store、不讀寫遊戲資料，也不共用遊戲的單一程序鎖。圖示為本專案產生的黑白幾何圖形，並非正式商店素材。
 
 - .NET 10、Windows App SDK 2.5.1、x64；.NET 與 Windows App SDK 皆為 self-contained。
 - Spike 的 target framework 為 `net10.0-windows10.0.26100.0`，`TargetPlatformMinVersion` 與最終 MSIX 的 Windows Desktop 最低版本為 `10.0.19045.0`。遊戲 App 的設定未變更。
@@ -143,7 +158,7 @@ $vs = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
     -property installationPath
 if (-not $vs) { throw '找不到具備封裝工具的 Visual Studio 2026。' }
 & "$vs\MSBuild\Current\Bin\MSBuild.exe" `
-    .\spikes\Arcade1972.PackagingSpike\Arcade1972.PackagingSpike.csproj `
+    .\spikes\PaddleDuel.PackagingSpike\PaddleDuel.PackagingSpike.csproj `
     -restore -t:Rebuild -p:Configuration=Release -p:Platform=x64 `
     -p:GenerateAppxPackageOnBuild=true -p:UapAppxPackageBuildMode=SideloadOnly
 if ($LASTEXITCODE -ne 0) { throw 'MSIX 建置失敗。' }
@@ -152,8 +167,8 @@ if ($LASTEXITCODE -ne 0) { throw 'MSIX 建置失敗。' }
 實際簽署、安裝與 UI Automation 驗證：
 
 ```powershell
-$package = (Resolve-Path .\spikes\Arcade1972.PackagingSpike\AppPackages\Arcade1972.PackagingSpike_1.0.0.0_x64_Test\Arcade1972.PackagingSpike_1.0.0.0_x64.msix).Path
-& .\spikes\Arcade1972.PackagingSpike\Verify-Package.ps1 -PackagePath $package
+$package = (Resolve-Path .\spikes\PaddleDuel.PackagingSpike\AppPackages\PaddleDuel.PackagingSpike_1.0.0.0_x64_Test\PaddleDuel.PackagingSpike_1.0.0.0_x64.msix).Path
+& .\spikes\PaddleDuel.PackagingSpike\Verify-Package.ps1 -PackagePath $package
 ```
 
 **執行前須同意本機測試的系統變更：** 驗證腳本建立有效一天且不可匯出的 code-signing 私鑰，以 SHA-256 簽署指定 MSIX；僅匯出公開憑證，透過 UAC 暫時加入 `LocalMachine\TrustedPeople`。請在有互動桌面的 Windows PowerShell 執行並同意匯入與清除時的 UAC 提示；不要在無人值守 CI 執行。
@@ -173,10 +188,10 @@ $package = (Resolve-Path .\spikes\Arcade1972.PackagingSpike\AppPackages\Arcade19
 
 ## 專案結構
 
-- `src/Arcade1972.Core`：不依賴 Windows UI 的 deterministic 遊戲規則。
-- `src/Arcade1972.Infrastructure`：可測試的檔案持久化與平台邊界實作。
-- `src/Arcade1972.App`：WinUI 3 視窗、輸入與 XAML 畫面。
-- `tests/Arcade1972.Tests`：物理、勝負、固定步進與 AI 測試。
-- `spikes/Arcade1972.PackagingSpike`：獨立的本機 MSIX 簽署、安裝與 WinUI 啟動驗證，不屬於遊戲 solution。
+- `src/PaddleDuel.Core`：不依賴 Windows UI 的 deterministic 遊戲規則。
+- `src/PaddleDuel.Infrastructure`：可測試的檔案持久化與平台邊界實作。
+- `src/PaddleDuel.App`：WinUI 3 視窗、輸入與 XAML 畫面。
+- `tests/PaddleDuel.Tests`：物理、勝負、固定步進與 AI 測試。
+- `spikes/PaddleDuel.PackagingSpike`：獨立的本機 MSIX 簽署、安裝與 WinUI 啟動驗證，不屬於遊戲 solution。
 - `docs/game-reference.md`：歷史規則依據與目前 deterministic baseline。
 - `docs/dev-knowledge.md`：開發中經驗證且可重用的技術知識，會隨專案演進汰舊更新。

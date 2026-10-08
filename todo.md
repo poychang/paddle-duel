@@ -42,8 +42,12 @@
 
 ## 已完成
 
+- [x] 統一 Paddle Duel 專案名稱：`PaddleDuel.sln`、`PaddleDuel.*` 專案／目錄／namespace／assembly、App 顯示名稱與 packaging spike；同步文件與驗證腳本。
+  - 保留舊本機資料目錄、互斥鎖與交易占位識別，避免改名造成資料遺失或跨版本多開；新增舊 JSON 額度讀取回歸測試。
+  - 53 項 .NET tests 通過，Debug／Release x64 建置零警告、零錯誤；Release App UI Automation 驗證單人／雙人、最小化暫停、繼續、放棄不扣次、設定與正常關閉。
+  - 改名後 spike 的簽署、安裝與啟動通過，測試憑證與安裝已清除；仍有既有 symbols 警告。Escape 鍵自動化受焦點影響，未列為通過項目；遊戲輸入邏輯未變更。
 - [x] 確認自訂網域官網與隱私權政策已公開發布；首頁、政策、CSS 與 favicon 皆回應 HTTP 200 且與本機內容一致。正式政策網址為 `https://project.poychang.net/paddle-duel/privacy.html`。
-- [x] 配合 GitHub repository 更名為 `poychang/paddle-duel`，更新本機 origin 與文件中的 Pages 網址；保留既有 solution 和本機目錄名稱。
+- [x] 配合 GitHub repository 更名為 `poychang/paddle-duel`，更新本機 origin 與文件中的 Pages 網址。
 - [x] 建立 `sites` 靜態官網與隱私權政策頁，包含操作說明、聯絡資訊與非 Atari 官方產品聲明；提供只發布 `sites` 的 GitHub Pages workflow。
   - 本機網站測試通過，已驗證 320／390／768／1440 像素版面、政策導覽、鍵盤跳轉與 project 子路徑。後續由擁有者完成公開部署，Store 聲明待辦仍保留。
 - [x] 檢視現有本機資料與 Store 呼叫，草擬 Paddle Duel 隱私權政策；內容已確認並發布，Store 聲明仍在進行中。

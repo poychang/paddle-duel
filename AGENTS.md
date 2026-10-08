@@ -8,9 +8,9 @@
 
 ## Architecture
 
-- `src/Arcade1972.Core` owns deterministic game rules and must remain independent of WinUI, Windows storage, and Microsoft Store APIs.
-- `src/Arcade1972.App` owns WinUI 3 rendering, input, windowing, persistence adapters, and Store adapters.
-- `tests/Arcade1972.Tests` exercises Core behavior and platform-independent service abstractions with fake clocks and fake gateways.
+- `src/PaddleDuel.Core` owns deterministic game rules and must remain independent of WinUI, Windows storage, and Microsoft Store APIs.
+- `src/PaddleDuel.App` owns WinUI 3 rendering, input, windowing, persistence adapters, and Store adapters.
+- `tests/PaddleDuel.Tests` exercises Core behavior and platform-independent service abstractions with fake clocks and fake gateways.
 - Keep game constants in `Classic1972Rules`; do not hide physics values in XAML or code-behind.
 - Preserve the 120 Hz fixed-step simulation. Rendering frequency, DPI, and window size must not alter game results.
 - Add abstractions at platform boundaries such as time, storage, and Store commerce. Do not add abstractions around simple in-memory game state.
@@ -46,10 +46,10 @@
 Use PowerShell from the repository root:
 
 ```powershell
-dotnet restore pong-in-1972.sln
-dotnet build pong-in-1972.sln -c Debug -p:Platform=x64
-dotnet test tests/Arcade1972.Tests/Arcade1972.Tests.csproj -c Debug
-dotnet build pong-in-1972.sln -c Release -p:Platform=x64
+dotnet restore PaddleDuel.sln
+dotnet build PaddleDuel.sln -c Debug -p:Platform=x64
+dotnet test .\tests\PaddleDuel.Tests\PaddleDuel.Tests.csproj -c Debug
+dotnet build PaddleDuel.sln -c Release -p:Platform=x64
 ```
 
 - After the first substantive edit, run the narrowest relevant test or App build before making adjacent changes.
