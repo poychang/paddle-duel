@@ -1,6 +1,22 @@
-# 1972 Arcade
+# Paddle Duel
 
-一款受 1972 年早期投幣式電子桌球遊戲啟發的 Windows 遊戲。目前名稱與視覺皆為開發階段素材；本專案與 Atari 無關，也不使用原始遊戲的商標、程式、美術、字型或錄音。
+一款受 1972 年早期投幣式電子桌球遊戲啟發的 Windows 遊戲。Partner Center 產品名稱為 **Paddle Duel**；現有 App 顯示名稱與視覺仍待正式封裝項目更新。本專案與 Atari 無關，也不使用原始遊戲的商標、程式、美術、字型或錄音。
+
+## Partner Center 產品識別
+
+以下值由產品擁有者於 2026-10-08 從 Partner Center 提供，保留原始大小寫與標點：
+
+| 欄位 | 值 |
+| --- | --- |
+| 產品名稱 | `Paddle Duel` |
+| Package/Identity/Name | `25526PoyChang.PaddleDuel` |
+| Package/Identity/Publisher | `CN=DC46547E-28C9-45C1-91CC-5380ACD55B44` |
+| Package/Properties/PublisherDisplayName | `Poy Chang` |
+| Store ID | `9NJ180X2R7TF` |
+
+這些是產品識別資訊，不是登入憑證或簽署私鑰。此處僅記錄已取得的正式 identity；尚未套用到遊戲 App、上傳封裝或驗證 Store runtime。獨立 packaging spike 繼續使用自己的測試 identity，不應以正式值取代。
+
+此 Store ID 屬於遊戲本體，不能當作 1 次／10 次 consumable 的 Store ID；兩個附加商品仍需分別建立並取得自己的識別資訊。建立產品不代表已公開上架或完成商標查核。
 
 ## 目前進度
 

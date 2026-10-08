@@ -9,13 +9,12 @@
 
 ## 進行中
 
-目前無進行中的項目；下一項需要在 Partner Center 建立正式 App identity。
+目前無進行中的項目；下一項需要在 Partner Center 建立 1 次與 10 次 Store-managed consumable 測試商品。
 
 ## 待辦
 
 ### MSIX 與 Microsoft Store 外部前置
 
-- [ ] 在 Partner Center 建立 App identity，取得 Publisher、Package identity 與 Store ID。
 - [ ] 建立 1 次與 10 次 Store-managed consumable 測試商品，確認 10 次商品可設定 10 units。
 
 ### Packaged App 轉換
@@ -37,6 +36,9 @@
 
 ## 已完成
 
+- [x] 在 Partner Center 建立 App identity，取得 Publisher、Package identity 與 Store ID。
+  - 2026-10-08 由產品擁有者提供 Paddle Duel 的四個識別欄位，原值保存於 [README](README.md#partner-center-產品識別)。
+  - 僅完成 identity 取得與記錄；遊戲 App 關聯、商品建立、封裝上傳及 Store runtime 驗證仍由後續項目處理。
 - [x] 建立最小 Packaged WinUI 3 spike，驗證 .NET 10、Windows App SDK、x64 簽署、安裝與啟動。
   - 獨立 spike 使用 .NET 10／Windows App SDK 2.5.1 self-contained MSIX，不修改遊戲 App 或 solution。
   - 已檢查最終 manifest 的 Windows.Desktop 最低版本 19045；於 OS build 26300 完成本機 SHA-256 簽章、安裝與 UI Automation，runtime 為 `.NET 10.0.12 | X64`。
