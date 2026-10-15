@@ -9,13 +9,9 @@
 
 ## 進行中
 
-目前無進行中項目；下一項為 Release x64 MSIX bundle。
+目前無進行中項目；下一項為真實 Store 商品接線與 Partner Center private flight 驗收。
 
 ## 待辦
-
-### Packaged App 轉換
-
-- [ ] 產生 Release x64 MSIX bundle，且不提交開發憑證或 AppPackages 產物。
 
 ### Store 與發行驗收
 
@@ -32,6 +28,11 @@
 
 ## 已完成
 
+- [x] 產生 Release x64 MSIX bundle 與 Store upload，且不提交憑證或封裝產物。
+  - 2026-10-15 使用 Visual Studio 2026 MSBuild 產生未簽署 `1.0.0.0` x64 bundle／msixupload，存於 Git 忽略的 `BundleArtifacts\Release-x64\<run-id>\`；不自動增版、簽署、安裝或上傳。
+  - 同時驗證兩種容器的實際內層 App：正式 identity、相同版號、x64、Windows.Desktop 19045／26100、自包含 runtime、兩種語言與全部圖示尺寸。
+  - 10 個容器／簽章拒絕案例在 Windows PowerShell 5.1 與 PowerShell 7 通過；SDK 26100 MakeAppx unbundle／unpack 驗證通過，保留一般 build 與明確選用 unpackaged 的既有預設。
+  - 僅剩既有缺少 mspdbcmf.exe 的 symbols 警告，不提供 Store symbols；未驗證真實交易、Store 發布或 WACK，商品 ID 仍待接線。
 - [x] 驗證正式 identity 的 LocalState、安裝、啟動、原地升級、一般解除安裝與重新安裝。
   - 2026-10-15，Windows build 26300，本機同 schema fixture `1.0.0.0` → `1.0.1.0`；逐位元組保留 quota／window-state／pending journal／損毀隔離檔，升級版 UI 正常載入與維持單一程序。
   - production persistence + fake gateway 驗證最後日期、完成 match ID、時鐘回撥防護、原 tracking ID 重試及 AlreadyFulfilled 去重；不執行真實 Store 購買／扣次。
@@ -42,7 +43,7 @@
   - 2026-10-15 依擁有者選擇，製作黑白雙球拍／方形球與多 scale／targetsize／ICO；啟動畫面不加動畫、固定延遲或額外視窗。
   - 套用正式 Name／Publisher／PublisherDisplayName；最終 MSIX 核對 Windows.Desktop 19045、自包含 runtime、圖示尺寸、兩語言宣告與 PRI 內每個字串。
   - 56 項測試通過。兩語言本機簽署安裝／UI Automation 驗證選單、輔助名稱、動態設定、操作、暫停及放棄不扣次，另驗證繁中 Store unavailable；測試安裝及憑證已清除，不更改全域語言或舊開發資料。
-  - 正式 identity 不等於 Store 送審或交易驗收；正式升級、解除安裝資料語義、多 DPI、Windows 10 實機與 WACK 仍待完成。
+  - 正式 identity 不等於 Store 送審或交易驗收；Store 更新通路、多 DPI、Windows 10 實機與 WACK 仍待完成。
 - [x] 將遊戲 App 轉為 single-project MSIX，設定 Windows.Desktop `MinVersion=10.0.19045.0`。
   - 暫用 `PaddleDuel.Development` identity 與原創幾何占位圖示；x64、.NET／Windows App SDK self-contained，預設不簽署或產生 bundle。
   - 額度、視窗與 pending journal 共用部署模式感知的 LocalState 路徑；明確選用 unpackaged 時仍讀寫原目錄，不自動遷移舊資料。

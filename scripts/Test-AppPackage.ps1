@@ -1,5 +1,8 @@
 #requires -Version 5.1
-param([Parameter(Mandatory = $true)][string]$PackagePath)
+param(
+    [Parameter(Mandatory = $true)][string]$PackagePath,
+    [switch]$RequireUnsigned
+)
 
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
@@ -14,6 +17,68 @@ try {
         try { return $reader.ReadToEnd() } finally { $reader.Dispose() }
     }
 
+    if ($RequireUnsigned -and $archive.GetEntry('AppxSignature.p7x')) {
+        throw 'Expected an unsigned Store submission artifact.'
+    }
+    $extension = [IO.Path]::GetExtension($PackagePath)
+    if ($extension -in @('.msixbundle', '.msixupload')) {
+        $temporaryDirectory = Join-Path ([IO.Path]::GetTempPath()) "PaddleDuel-Bundle-$([Guid]::NewGuid().ToString('N'))"
+        $payloadPath = $null
+        New-Item -ItemType Directory -Path $temporaryDirectory | Out-Null
+        try {
+            if ($extension -eq '.msixupload') {
+                $bundles = @($archive.Entries | Where-Object { $_.FullName.EndsWith('.msixbundle') })
+                if ($bundles.Count -ne 1 -or $archive.Entries.Count -ne 1) {
+                    throw 'Expected a Store upload containing exactly one bundle and no symbols.'
+                }
+                $entry = $bundles[0]
+                $payloadPath = Join-Path $temporaryDirectory 'payload.msixbundle'
+            } else {
+                [xml]$bundle = Read-PackageText 'AppxMetadata/AppxBundleManifest.xml'
+                if ($bundle.Bundle.Identity.Name -ne '25526PoyChang.PaddleDuel' -or
+                    $bundle.Bundle.Identity.Publisher -ne 'CN=DC46547E-28C9-45C1-91CC-5380ACD55B44') {
+                    throw 'Unexpected bundle identity.'
+                }
+                $packages = @($bundle.Bundle.Packages.Package)
+                if ($packages.Count -ne 1 -or $packages[0].Type -ne 'application' -or
+                    $packages[0].Architecture -ne 'x64') {
+                    throw 'Expected exactly one x64 application with all resources embedded.'
+                }
+                $families = @($packages[0].SelectNodes("*[local-name()='Dependencies']/*[local-name()='TargetDeviceFamily']"))
+                if ($families.Count -ne 1 -or $families[0].Name -ne 'Windows.Desktop' -or
+                    $families[0].MinVersion -ne '10.0.19045.0' -or
+                    $families[0].MaxVersionTested -ne '10.0.26100.0') {
+                    throw 'Incorrect bundle Windows.Desktop OS requirements.'
+                }
+                $entry = $archive.GetEntry($packages[0].FileName)
+                $embeddedPackages = @($archive.Entries | Where-Object { $_.FullName -match '\.(msix|appx)$' })
+                if (-not $entry -or $embeddedPackages.Count -ne 1 -or
+                    $entry.Length -ne [long]$packages[0].Size) {
+                    throw 'Bundle payload is missing or differs from its manifest.'
+                }
+                $payloadPath = Join-Path $temporaryDirectory 'payload.msix'
+            }
+            [IO.Compression.ZipFileExtensions]::ExtractToFile($entry, $payloadPath)
+            if ($extension -eq '.msixbundle') {
+                $payload = [IO.Compression.ZipFile]::OpenRead($payloadPath)
+                try {
+                    $reader = [IO.StreamReader]::new($payload.GetEntry('AppxManifest.xml').Open())
+                    try { [xml]$appManifest = $reader.ReadToEnd() } finally { $reader.Dispose() }
+                    if ($appManifest.Package.Identity.Version -ne $packages[0].Version -or
+                        $appManifest.Package.Identity.Version -ne $bundle.Bundle.Identity.Version) {
+                        throw 'Bundle and application versions must agree.'
+                    }
+                } finally { $payload.Dispose() }
+            }
+            & $PSCommandPath -PackagePath $payloadPath -RequireUnsigned:$RequireUnsigned
+            Write-Output "PASS: $extension container and embedded payload."
+        } finally {
+            if ($payloadPath -and (Test-Path -LiteralPath $payloadPath)) { Remove-Item -LiteralPath $payloadPath }
+            Remove-Item -LiteralPath $temporaryDirectory
+        }
+        return
+    }
+
     [xml]$manifest = Read-PackageText 'AppxManifest.xml'
     if ($manifest.Package.Identity.Name -ne '25526PoyChang.PaddleDuel' -or
         $manifest.Package.Identity.Publisher -ne 'CN=DC46547E-28C9-45C1-91CC-5380ACD55B44' -or
@@ -24,7 +89,9 @@ try {
         $manifest.Package.Properties.DisplayName -ne 'ms-resource:AppDisplayName') {
         throw 'Incorrect publisher or localized package name.'
     }
-    $languages = @($manifest.Package.Resources.Resource | ForEach-Object { $_.Language.ToLowerInvariant() })
+    $languages = @($manifest.Package.Resources.Resource |
+        Where-Object { $_.HasAttribute('Language') } |
+        ForEach-Object { $_.Language.ToLowerInvariant() })
     if ($languages.Count -ne 2 -or $languages -notcontains 'en-us' -or $languages -notcontains 'zh-tw') {
         throw 'The generated package must declare en-US and zh-TW.'
     }

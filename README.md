@@ -130,7 +130,7 @@ dotnet build PaddleDuel.sln -c Release -p:Platform=x64
 
 - target framework：`net10.0-windows10.0.26100.0`；Windows.Desktop 最低版本 `10.0.19045.0`。
 - x64，.NET 與 Windows App SDK 都為 self-contained；不啟用 trimming／ReadyToRun。
-- 預設不簽署、不產生 bundle 或 Store symbols package；本節產物為本機 sideload 驗證用途，Store 提交用 bundle 另列待辦。
+- 預設不簽署、不產生 bundle 或 Store symbols package；以下命令產生本機 sideload 驗證用 MSIX，Store 提交用 bundle 使用下一節的獨立命令。
 
 先執行上面的 restore，再從 repository 根目錄使用 **Windows PowerShell 5.1**：
 
@@ -163,6 +163,38 @@ Start-Process explorer.exe -ArgumentList "shell:AppsFolder\$($installed.PackageF
 簽署、信任憑證與安裝必須先取得操作者同意；測試結束後僅移除該次安裝與憑證。使用正式 identity 做本機測試前，必須確認沒有既有同 identity 的 App 或資料，不能覆蓋／清除使用者安裝。本機一次性自簽憑證不是 Store 簽章，不應留作長期信任，也不可提交私鑰／憑證。
 
 **資料邊界：** 額度、視窗設定與 pending fulfillment journal 都透過 `LocalStateDirectory` 取得路徑。Packaged 模式使用 `%LocalAppData%\Packages\<PackageFamilyName>\LocalState`；先前 `PaddleDuel.Development` 與目前正式 identity 各自獨立，不自動匯入舊開發資料。同 identity、同資料格式的本機原地升級已驗證保留狀態；跨 identity 遷移、未來資料格式變更與 Store 更新通路不包含在此結果內。
+
+### Release x64 bundle 與 Store upload
+
+完成相同的 restore／工具鏈準備後，從 repository 根目錄執行：
+
+```powershell
+& .\scripts\Build-AppBundle.ps1
+```
+
+[`Build-AppBundle.ps1`](scripts/Build-AppBundle.ps1) 使用 Visual Studio 2026 MSBuild 重新建置 Release x64，以 `AppxBundle=Always`／`UapAppxPackageBuildMode=StoreUpload` 產生兩種檔案，並自動驗證、輸出完整路徑與 SHA-256：
+
+| 產物 | 用途 |
+| --- | --- |
+| `PaddleDuel.App_1.0.0.0_x64.msixbundle` | 含一個自包含 x64 App 的未簽署 bundle；不是可直接雙擊安裝的已信任封裝 |
+| `PaddleDuel.App_1.0.0.0_x64_bundle.msixupload` | 含 Store 版本 bundle 的上傳容器，留待 Partner Center 測試提交；不把檔案產生視為已上傳／送審 |
+
+每次輸出至新的 `BundleArtifacts\Release-x64\<run-id>\`，避免將舊產物誤認為此次建置結果；路徑與檔名以腳本輸出為準，版號來自 manifest，不自動遞增。此目錄已由 Git 忽略，勿強制加入版本控制。
+
+- 不簽署、不建立或匯出憑證、不安裝 App、不呼叫 Partner Center，也不更動一般 build／unpackaged 的專案預設。
+- 不按 Language／Scale 分包，保留兩種語言與所有圖示尺寸在同一 App；保留 SDK 的 DXFeatureLevel 分包能力，目前無此類獨立資源包。預設語言 qualifier 包含 en-US／zh-TW，英文仍排在前面。
+- [`Test-AppPackage.ps1`](scripts/Test-AppPackage.ps1) 可檢查 `.msix`、`.msixbundle` 與 `.msixupload`。它解出**容器內的實際檔案**，核對 bundle／App identity、版號、架構、OS 要求、payload 大小、自包含 runtime、美術及全部中英字串。`-RequireUnsigned` 另拒絕外層或內層測試簽章。
+- 同時檢查 sideload bundle 與 upload 內的 Store bundle，不假設兩條打包路徑的產物相同。暫存解包檔在檢查結束後清除。
+- 不產生 symbols package；工具鏈仍會回報既有的 `mspdbcmf.exe` 缺少警告。此版本不提供 Store crash symbols，並非零警告建置。
+
+可獨立重跑檢查器的 10 個拒絕案例（不需憑證／安裝，僅建立小型暫存 ZIP fixture）：
+
+```powershell
+& .\tests\AppPackage.Tests.ps1
+& .\scripts\Test-AppPackage.ps1 -PackagePath '<實際 .msixbundle 或 .msixupload 路徑>' -RequireUnsigned
+```
+
+**2026-10-15：** Release x64 `1.0.0.0` bundle／upload 已建置並通過上述內容檢查；Windows PowerShell 5.1／PowerShell 7 的拒絕測試均通過。SDK 26100 MakeAppx 亦在未停用驗證下成功 unbundle／unpack。這不取代真實 Store 商品接線、private flight、WACK 或支援 OS／DPI 驗收；目前商品 ID 仍為開發占位，**不要將此產物直接當成已完成交易功能的正式上市版本**。
 
 ### 安裝、升級與解除安裝驗收
 

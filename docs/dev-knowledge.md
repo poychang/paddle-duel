@@ -29,6 +29,16 @@ Single-project MSIX 會依專案的 `TargetPlatformMinVersion`／target framewor
 
 Spike 改用 `net10.0-windows10.0.26100.0` 與 `TargetPlatformMinVersion=10.0.19045.0` 後，已確認 MSIX 內只有 Windows.Desktop，最低版本 19045、MaxVersionTested 26100。遊戲 App 轉換後也已由 [`Test-AppPackage.ps1`](../scripts/Test-AppPackage.ps1) 對**產物**斷言相同條件，並驗證錯誤最低版本會被拒絕；提高 target SDK 不等於把最低 OS 提高到 Windows 11，也不代表已完成 Windows 10 實機驗收。
 
+### Bundle 的資源 qualifiers 與命令列輸出目錄有額外限制
+
+**已驗證：** 2026-10-15，Visual Studio 2026、MSIX BuildTools 1.7.251221100、SDK 26100，Release x64 bundle／upload。
+
+`AppxBundleAutoResourcePackageQualifiers=none` 不代表關閉分包；會產生不支援的 qualifier 並在 MakePri splitting 階段出現 PRI175／PRI222。空 `<packaging />` 雖可建置，仍有 PRI230 警告。目前只移除 Language／Scale，保留合法的 `DXFeatureLevel`，並設定 `AppxDefaultResourceQualifiers=Language=en-US;zh-TW`；命令列用 `%3B` 傳遞分號。實際 bundle 只有一個 x64 App，包含所有中英字串與美術，無 PRI 警告。參考 [Microsoft 資源分包設定](https://learn.microsoft.com/windows/uwp/app-resources/build-resources-into-app-package)。
+
+Bundle 生成的 App manifest 在 `Resources` 中同時包含 Language 與 Scale 節點；檢查語言前必須篩選 `HasAttribute('Language')`，不能假設每個 Resource 都有 Language。也必須驗證 upload **內部**的 bundle，不能只檢查同次建置旁邊的 sideload bundle。
+
+命令列指定 `AppxPackageDir` 時必須自己附上尾端 `\`。MSBuild 全域屬性不能靠 imported targets 改寫補齊；缺少分隔符時，實際路徑曾直接串接目錄名稱與 package 檔名。[`Build-AppBundle.ps1`](../scripts/Build-AppBundle.ps1) 使用獨立 run 目錄及 Rebuild，避免舊資源分包設定的增量輸出干擾本次驗證。
+
 ### 本機 MSIX 驗證不需要匯出私鑰
 
 測試簽章可使用 `CurrentUser\My` 中的不可匯出 code-signing 私鑰，透過 SignTool `/sha1 <thumbprint> /s My` 簽署。Subject 必須與 manifest Publisher 完全一致；安裝端只需要公開 `.cer` 加入 `LocalMachine\TrustedPeople`，不需要保存 PFX 或密碼。
