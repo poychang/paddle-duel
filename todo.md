@@ -9,14 +9,12 @@
 
 ## 進行中
 
-目前無進行中項目；下一項為正式 identity 的 LocalState、升級與解除安裝驗收。
+目前無進行中項目；下一項為 Release x64 MSIX bundle。
 
 ## 待辦
 
 ### Packaged App 轉換
 
-- [ ] 驗證 packaged LocalState 分支、安裝、啟動、升級與解除安裝；移除不再需要的 unpackaged workaround。
-  - 開發 identity 的安裝／啟動、quota／window-state LocalState round-trip、解除安裝 smoke check 已通過；仍需正式 identity 的升級、資料保留／清除語義與交易重試驗收。
 - [ ] 產生 Release x64 MSIX bundle，且不提交開發憑證或 AppPackages 產物。
 
 ### Store 與發行驗收
@@ -34,6 +32,12 @@
 
 ## 已完成
 
+- [x] 驗證正式 identity 的 LocalState、安裝、啟動、原地升級、一般解除安裝與重新安裝。
+  - 2026-10-15，Windows build 26300，本機同 schema fixture `1.0.0.0` → `1.0.1.0`；逐位元組保留 quota／window-state／pending journal／損毀隔離檔，升級版 UI 正常載入與維持單一程序。
+  - production persistence + fake gateway 驗證最後日期、完成 match ID、時鐘回撥防護、原 tracking ID 重試及 AlreadyFulfilled 去重；不執行真實 Store 購買／扣次。
+  - 一般解除安裝移除 package 資料，重新安裝取得新本機額度／預設設定；不保證解除安裝後防重置或繼續 pending 重試，Store 帳戶餘額不屬於本機清除範圍。
+  - 加入可重跑的生命週期工具與重試回歸測試，57 項測試通過；測試 App／資料／憑證／暫存封裝已清除，舊 unpackaged 資料未變。
+  - 擁有者選擇保留明確選用的 unpackaged 模式，因此仍需 identity 偵測、舊路徑與互斥鎖；不移除有用途的相容處理。跨 identity／schema 遷移、Windows 10、多 DPI、Store 更新與 WACK 仍另列驗收。
 - [x] 關聯 Partner Center identity，加入原創正式封裝圖示、啟動畫面與完整 zh-TW／en-US 介面。
   - 2026-10-15 依擁有者選擇，製作黑白雙球拍／方形球與多 scale／targetsize／ICO；啟動畫面不加動畫、固定延遲或額外視窗。
   - 套用正式 Name／Publisher／PublisherDisplayName；最終 MSIX 核對 Windows.Desktop 19045、自包含 runtime、圖示尺寸、兩語言宣告與 PRI 內每個字串。

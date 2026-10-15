@@ -63,6 +63,32 @@ public sealed class PendingFulfillmentTests : IDisposable
         Assert.Empty(await journal.LoadAsync());
     }
 
+    [Fact]
+    public async Task RetryAfterStoreSuccessBeforeJournalRemovalDoesNotConsumeTwice()
+    {
+        var gateway = CreateGateway();
+        await gateway.RequestPurchaseAsync("test.play.1");
+        await gateway.RequestPurchaseAsync("test.play.1");
+        var journal = new JsonPendingFulfillmentJournal(directoryPath);
+        var fulfillment = new PendingFulfillment("test.play.1", 1, Guid.NewGuid().ToString());
+        await journal.UpsertAsync(fulfillment);
+
+        var first = await gateway.ReportConsumableFulfillmentAsync(
+            fulfillment.StoreId, fulfillment.Quantity, fulfillment.TrackingId);
+        Assert.Equal(StoreOperationStatus.Succeeded, first.Status);
+        Assert.Equal(1u, first.BalanceRemaining);
+
+        var recreated = new PendingFulfillmentCoordinator(
+            () => gateway,
+            new JsonPendingFulfillmentJournal(directoryPath));
+        Assert.Equal(1, await recreated.RetryPendingAsync());
+        Assert.Equal(0, await recreated.RetryPendingAsync());
+        Assert.Empty(await new JsonPendingFulfillmentJournal(directoryPath).LoadAsync());
+        Assert.Equal(fulfillment.TrackingId, Assert.Single(gateway.FulfillmentTrackingIds));
+        var balance = await gateway.GetBalanceAsync(fulfillment.StoreId);
+        Assert.Equal(1u, balance.Balance!.UnitsRemaining);
+    }
+
     public void Dispose()
     {
         if (Directory.Exists(directoryPath))

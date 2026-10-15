@@ -76,6 +76,16 @@ WinUI 3 程序可能已建立可見視窗，但 `Process.MainWindowHandle` 仍�
 
 ## 本機狀態持久化
 
+### 原地升級保留狀態，不代表解除安裝後仍可防重置或重試
+
+**已驗證：** 2026-10-15，Windows build 26300，正式 package family，以相同程式和 schema 的 `1.0.0.0` → `1.0.1.0` 本機 MSIX fixture。
+
+原地升級逐位元組保留 quota、window-state、pending journal 與 `.corrupt` 隔離檔；一般 `Remove-AppxPackage` 則移除 package 資料目錄，重新安裝取得新資料。不可將同 identity 更新的資料保留性外推到解除安裝、Reset、跨 identity 或未來 schema 遷移。
+
+本機每日額度的時鐘回撥防護只在資料存在時有效；解除安裝也會遺失 pending journal，不能承諾之後仍可重試。這不是 Store 付費餘額被刪除，也不能靠本機 JSON 模擬餘額來補救。
+
+可重跑的 [`Test-AppLifecycle.ps1`](../scripts/Test-AppLifecycle.ps1) 使用 [`LifecycleProbe.cs`](../scripts/LifecycleProbe.cs) 與 fake gateway，先證明非空 journal 經升級保留，再用同 tracking ID 重試與去重；合成 journal 未清空前禁止啟動真實 App，避免把測試 fixture 傳給 Store。解除安裝的資料消失斷言在任何手動清除之前執行。
+
 ### 產品改名不代表持久化識別也應改名
 
 **已驗證：** 2026-10-08，專案／assembly／namespace 改為 `PaddleDuel.*`。

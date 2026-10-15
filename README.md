@@ -162,7 +162,42 @@ Start-Process explorer.exe -ArgumentList "shell:AppsFolder\$($installed.PackageF
 
 簽署、信任憑證與安裝必須先取得操作者同意；測試結束後僅移除該次安裝與憑證。使用正式 identity 做本機測試前，必須確認沒有既有同 identity 的 App 或資料，不能覆蓋／清除使用者安裝。本機一次性自簽憑證不是 Store 簽章，不應留作長期信任，也不可提交私鑰／憑證。
 
-**資料邊界：** 額度、視窗設定與 pending fulfillment journal 都透過 `LocalStateDirectory` 取得路徑。Packaged 模式使用 `%LocalAppData%\Packages\<PackageFamilyName>\LocalState`；先前 `PaddleDuel.Development` 與目前正式 identity 各自獨立，不自動匯入舊開發資料。正式版升級／遷移策略仍待驗收，不能將測試封裝的初始額度當成正式升級行為。
+**資料邊界：** 額度、視窗設定與 pending fulfillment journal 都透過 `LocalStateDirectory` 取得路徑。Packaged 模式使用 `%LocalAppData%\Packages\<PackageFamilyName>\LocalState`；先前 `PaddleDuel.Development` 與目前正式 identity 各自獨立，不自動匯入舊開發資料。同 identity、同資料格式的本機原地升級已驗證保留狀態；跨 identity 遷移、未來資料格式變更與 Store 更新通路不包含在此結果內。
+
+### 安裝、升級與解除安裝驗收
+
+[`Test-AppLifecycle.ps1`](scripts/Test-AppLifecycle.ps1) 是**會變更本機系統狀態**的互動驗收工具。執行前先完成上面的 MSIX 建置；需要 Windows 互動桌面、.NET 10 或更新 SDK、SDK 26100 封裝工具，以及匯入／移除信任憑證的 UAC 同意。不要在無人值守 CI 執行。
+
+```powershell
+$package = (Resolve-Path .\src\PaddleDuel.App\AppPackages\PaddleDuel.App_1.0.0.0_x64_Test\PaddleDuel.App_1.0.0.0_x64.msix).Path
+& .\scripts\Test-AppLifecycle.ps1 -PackagePath $package -AllowTemporaryInstall
+```
+
+安全限制與流程：
+
+- 必須明確傳入 `-AllowTemporaryInstall`；存在同 identity 的 App／package 資料或遊戲程序時拒絕執行，不覆蓋玩家安裝。
+- 只在獨立暫存目錄複製輸入封裝，使用 MakeAppx 建立較高版號的升級 fixture；不修改輸入 MSIX、來源 manifest 或產品版號。
+- 以有效一天、不可匯出的私鑰簽署兩個 fixture，暫時信任公開憑證；完成或失敗後清除本次安裝、信任、私鑰與暫存封裝。不要中途強制終止；若 UAC 清除失敗，依輸出的 thumbprint 處理該次憑證。
+- [`LifecycleProbe.cs`](scripts/LifecycleProbe.cs) 是 .NET file-based 測試程式，只接受有本次 run ID 標記的正式 package LocalState。它直接使用 production quota／journal 實作與**純記憶體 fake gateway**，不保存付費餘額、不連線 Store。
+- 非空的合成 pending journal 存在時，工具拒絕啟動遊戲 App，避免測試 tracking ID 被真實 Store adapter 回報；fake 重試清空 journal 後才驗證升級版 UI。
+- 此驗收採一般 `Remove-AppxPackage`，不使用保留資料選項；不手動刪除 LocalState 來製造解除安裝成功的結果。
+
+**2026-10-15 驗證結果（Windows build 26300，正式 package family `25526PoyChang.PaddleDuel_hwmjejkjqxx7e`）：**
+
+| 情境 | 已驗證結果 |
+| --- | --- |
+| 首次安裝 `1.0.0.0` | 可見 1024×720 視窗、3 次免費額度，quota／window-state 寫入 package LocalState |
+| 原地升級至 fixture `1.0.1.0` | 所有 LocalState 檔案逐位元組保留，包含完成比賽 ID、最後日期、視窗設定、pending journal 與損毀隔離檔 |
+| 升級後重新建立服務 | 保留 1 次剩餘額度及時鐘回撥保護；相同比賽 ID 不重複扣次 |
+| fake fulfillment 重試 | 原 tracking ID 成功扣 1 unit 後清除 journal；模擬 Store 已成功但 journal 尚未清除，再重試也不重複扣次 |
+| 升級版 App 重啟 | 載入 1 次額度及 960×680 設定，重複啟動仍只保留第一個程序 |
+| 一般解除安裝 | 註冊與整個 package 資料目錄消失，包含仍待處理的合成 journal |
+| 重新安裝 | 不復原舊 LocalState；重新取得 3 次本機免費額度及預設視窗 |
+| 測試清除 | 本次 App、資料、憑證、私鑰及暫存封裝移除；舊 unpackaged 資料雜湊與檔案集合不變 |
+
+**已知邊界：** 本機免費額度與時鐘回撥保護依賴仍存在的本機資料，不具解除安裝／重裝後的防重置保證。解除安裝也會遺失未完成交易的本機重試紀錄；不能宣稱它會繼續重試。Microsoft 管理的帳戶、訂單與付費餘額並非這些本機檔案，此次沒有真實交易或跨裝置餘額驗證。
+
+這是同程式／同 schema、只提高封裝版號的本機升級驗收，不代表任何未來 schema 遷移都安全。Windows 10 實機、多 DPI、Store 安裝／更新、Reset／保留資料移除選項與 WACK 仍未驗收。回歸測試目前共 57 項通過。
 
 ### 雙語介面與原創素材
 
@@ -198,7 +233,7 @@ dotnet build .\src\PaddleDuel.App\PaddleDuel.App.csproj -c Debug -p:Platform=x64
 & .\src\PaddleDuel.App\bin\Unpackaged\PaddleDuel.App.exe
 ```
 
-此模式保留 `%LocalAppData%\Arcade1972` 與既有互斥鎖；已重新驗證建置、啟動、舊額度載入及正常退出。測試後還原原有資料。
+此模式保留 `%LocalAppData%\Arcade1972` 與既有互斥鎖；已重新驗證建置、啟動、舊額度載入及正常退出。測試後還原原有資料。2026-10-15 擁有者明確選擇繼續保留此模式，因此 identity 偵測、舊路徑 fallback 與互斥鎖仍有用途，不以完成 packaged 驗收為由移除。
 
 ### Paddle Duel 改名與相容性
 
