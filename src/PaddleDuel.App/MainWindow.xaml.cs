@@ -59,6 +59,7 @@ public sealed partial class MainWindow : Window
             OnePlayStoreId,
             TenPlayStoreId);
         InitializeComponent();
+        AppWindow.SetIcon(Path.Combine(AppContext.BaseDirectory, "Assets", "PaddleDuel.ico"));
 
         simulation = new ClassicGameSimulation(rules);
         aiController = new ClassicAiController(rules, aiDifficulty);
@@ -163,7 +164,7 @@ public sealed partial class MainWindow : Window
         storeProductsLoaded = false;
         BuyOnePlayButton.IsEnabled = false;
         BuyTenPlayButton.IsEnabled = false;
-        StorePurchaseStatusText.Text = "CONNECTING TO MICROSOFT STORE...";
+        StorePurchaseStatusText.Text = AppStrings.Get("StoreConnecting");
         StoreProductFallbackText.Visibility = Visibility.Collapsed;
 
         try
@@ -187,7 +188,7 @@ public sealed partial class MainWindow : Window
 
             OnePlayProductText.Text = $"{onePlay.DisplayName}  {onePlay.FormattedPrice}";
             TenPlayProductText.Text = $"{tenPlay.DisplayName}  {tenPlay.FormattedPrice}";
-            StorePurchaseStatusText.Text = "SELECT A PURCHASE";
+            StorePurchaseStatusText.Text = AppStrings.Get("StoreSelectPurchase");
             storeProductsLoaded = true;
             BuyOnePlayButton.IsEnabled = true;
             BuyTenPlayButton.IsEnabled = true;
@@ -200,7 +201,7 @@ public sealed partial class MainWindow : Window
 
     private void ShowStoreUnavailable()
     {
-        StorePurchaseStatusText.Text = "MICROSOFT STORE UNAVAILABLE";
+        StorePurchaseStatusText.Text = AppStrings.Get("StoreUnavailable");
         StoreProductFallbackText.Visibility = Visibility.Visible;
     }
 
@@ -223,19 +224,19 @@ public sealed partial class MainWindow : Window
 
         BuyOnePlayButton.IsEnabled = false;
         BuyTenPlayButton.IsEnabled = false;
-        StorePurchaseStatusText.Text = "OPENING MICROSOFT STORE...";
+        StorePurchaseStatusText.Text = AppStrings.Get("StoreOpening");
         try
         {
             var result = await purchaseCoordinator.RequestPurchaseAsync(storeId);
             StorePurchaseStatusText.Text = result.Status switch
             {
-                StorePurchaseUiStatus.Purchased => "PURCHASE COMPLETE",
-                StorePurchaseUiStatus.Cancelled => "PURCHASE CANCELLED",
-                StorePurchaseUiStatus.NetworkError => "NETWORK ERROR - TRY AGAIN",
-                StorePurchaseUiStatus.ServerError => "STORE SERVER ERROR - TRY AGAIN",
-                StorePurchaseUiStatus.NotSignedIn => "SIGN IN TO MICROSOFT STORE",
-                StorePurchaseUiStatus.AlreadyInProgress => "PURCHASE ALREADY IN PROGRESS",
-                _ => "PRODUCT UNAVAILABLE",
+                StorePurchaseUiStatus.Purchased => AppStrings.Get("PurchaseComplete"),
+                StorePurchaseUiStatus.Cancelled => AppStrings.Get("PurchaseCancelled"),
+                StorePurchaseUiStatus.NetworkError => AppStrings.Get("PurchaseNetworkError"),
+                StorePurchaseUiStatus.ServerError => AppStrings.Get("PurchaseServerError"),
+                StorePurchaseUiStatus.NotSignedIn => AppStrings.Get("PurchaseSignIn"),
+                StorePurchaseUiStatus.AlreadyInProgress => AppStrings.Get("PurchaseInProgress"),
+                _ => AppStrings.Get("ProductUnavailable"),
             };
         }
         finally
@@ -288,8 +289,8 @@ public sealed partial class MainWindow : Window
         gameTimer.Stop();
         ClearInput();
         SettingsDisplayModeText.Text = AppWindow.Presenter.Kind == AppWindowPresenterKind.FullScreen
-            ? "DISPLAY  FULL SCREEN"
-            : "DISPLAY  WINDOWED";
+            ? AppStrings.Get("DisplayFullScreen")
+            : AppStrings.Get("DisplayWindowed");
         SettingsOverlay.Visibility = Visibility.Visible;
         CloseSettingsButton.Focus(FocusState.Programmatic);
     }
@@ -323,14 +324,14 @@ public sealed partial class MainWindow : Window
             AppWindow.SetPresenter(AppWindowPresenterKind.Overlapped);
         }
 
-        SettingsDisplayModeText.Text = "DISPLAY  WINDOWED";
+        SettingsDisplayModeText.Text = AppStrings.Get("DisplayWindowed");
         SaveWindowState();
     }
 
     private void SettingsFullScreenButton_Click(object sender, RoutedEventArgs e)
     {
         AppWindow.SetPresenter(AppWindowPresenterKind.FullScreen);
-        SettingsDisplayModeText.Text = "DISPLAY  FULL SCREEN";
+        SettingsDisplayModeText.Text = AppStrings.Get("DisplayFullScreen");
         SaveWindowState();
     }
 
@@ -378,9 +379,9 @@ public sealed partial class MainWindow : Window
     {
         aiDifficulty = difficulty;
         aiController = new ClassicAiController(rules, difficulty);
-        var label = difficulty.ToString().ToUpperInvariant();
-        AiDifficultyText.Text = $"AI DIFFICULTY  {label}";
-        SettingsAiDifficultyText.Text = $"AI DIFFICULTY  {label}";
+        var label = AppStrings.Get($"Difficulty{difficulty}");
+        AiDifficultyText.Text = AppStrings.Format("AiDifficulty", label);
+        SettingsAiDifficultyText.Text = AppStrings.Format("AiDifficulty", label);
         UpdateDifficultyButtonStyles();
     }
 
@@ -413,8 +414,8 @@ public sealed partial class MainWindow : Window
             if (startResult.Status != EntitlementStartStatus.Allowed)
             {
                 MenuHeading.Text = startResult.Status == EntitlementStartStatus.NoEntitlement
-                    ? "NO PLAYS AVAILABLE"
-                    : "STORE UNAVAILABLE";
+                    ? AppStrings.Get("NoPlaysAvailable")
+                    : AppStrings.Get("EntitlementStoreUnavailable");
                 await RefreshQuotaDisplayAsync();
                 return;
             }
@@ -423,7 +424,7 @@ public sealed partial class MainWindow : Window
         }
         catch (Exception)
         {
-            MenuHeading.Text = "QUOTA UNAVAILABLE";
+            MenuHeading.Text = AppStrings.Get("QuotaUnavailable");
             SetStartButtonsEnabled(false);
             PurchaseEntryButton.Visibility = Visibility.Collapsed;
             return;
@@ -485,26 +486,26 @@ public sealed partial class MainWindow : Window
             var completion = await playEntitlementService.CompleteMatchAsync(activePlaySession);
             if (completion == EntitlementCompletionStatus.Pending)
             {
-                ShowMenu("PAYMENT PENDING", allowNewMatch: false);
+                ShowMenu(AppStrings.Get("PaymentPending"), allowNewMatch: false);
                 await RefreshQuotaDisplayAsync();
                 return;
             }
             if (completion == EntitlementCompletionStatus.Failed)
             {
-                ShowMenu("QUOTA SAVE FAILED", allowNewMatch: false);
+                ShowMenu(AppStrings.Get("QuotaSaveFailed"), allowNewMatch: false);
                 return;
             }
 
             activePlaySession = null;
             var heading = gameLoop.State.Winner == PlayerSide.Left
-                ? "LEFT PLAYER WINS"
-                : "RIGHT PLAYER WINS";
+                ? AppStrings.Get("LeftPlayerWins")
+                : AppStrings.Get("RightPlayerWins");
             ShowMenu(heading, allowNewMatch: true);
             await RefreshQuotaDisplayAsync();
         }
         catch (Exception)
         {
-            ShowMenu("QUOTA SAVE FAILED", allowNewMatch: false);
+            ShowMenu(AppStrings.Get("QuotaSaveFailed"), allowNewMatch: false);
         }
         finally
         {
@@ -515,7 +516,7 @@ public sealed partial class MainWindow : Window
     private void ShowMenu(string heading, bool allowNewMatch)
     {
         MenuHeading.Text = heading;
-        StartButton.Content = "PLAY AGAIN";
+        StartButton.Content = AppStrings.Get("PlayAgain");
         SetStartButtonsEnabled(allowNewMatch);
         MenuOverlay.Visibility = Visibility.Visible;
         if (allowNewMatch)
@@ -532,7 +533,14 @@ public sealed partial class MainWindow : Window
 
     private async void MenuOverlay_Loaded(object sender, RoutedEventArgs e)
     {
-        await RefreshQuotaDisplayAsync();
+        try
+        {
+            await RefreshQuotaDisplayAsync();
+        }
+        finally
+        {
+            StartupOverlay.Visibility = Visibility.Collapsed;
+        }
     }
 
     private async void MainWindow_Activated(object sender, WindowActivatedEventArgs args)
@@ -570,8 +578,8 @@ public sealed partial class MainWindow : Window
         }
         catch (Exception)
         {
-            QuotaStatusText.Text = $"FREE PLAYS  -- / {freePlayQuota.DailyLimit}";
-            QuotaResetText.Text = "RESET TIME UNAVAILABLE";
+            QuotaStatusText.Text = AppStrings.Format("FreePlaysUnavailable", freePlayQuota.DailyLimit);
+            QuotaResetText.Text = AppStrings.Get("ResetUnavailable");
             SetStartButtonsEnabled(false);
             PurchaseEntryButton.Visibility = Visibility.Collapsed;
         }
@@ -581,8 +589,8 @@ public sealed partial class MainWindow : Window
     {
         var resetDate = availability.QuotaDate.AddDays(1);
         QuotaStatusText.Text =
-            $"FREE PLAYS  {availability.RemainingPlays} / {freePlayQuota.DailyLimit}";
-        QuotaResetText.Text = $"RESET  {resetDate:yyyy-MM-dd}  00:00 UTC";
+            AppStrings.Format("FreePlays", availability.RemainingPlays, freePlayQuota.DailyLimit);
+        QuotaResetText.Text = AppStrings.Format("QuotaReset", resetDate.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture));
         var hasFreePlays = availability.RemainingPlays > 0;
         SetStartButtonsEnabled(hasFreePlays);
         PurchaseEntryButton.Visibility = hasFreePlays
@@ -719,7 +727,7 @@ public sealed partial class MainWindow : Window
         activePlaySession = null;
         isMatchPaused = false;
         PauseOverlay.Visibility = Visibility.Collapsed;
-        ShowMenu("MATCH ABANDONED", allowNewMatch: false);
+        ShowMenu(AppStrings.Get("MatchAbandoned"), allowNewMatch: false);
         await RefreshQuotaDisplayAsync();
     }
 

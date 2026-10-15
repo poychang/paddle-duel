@@ -70,7 +70,8 @@ dotnet build PaddleDuel.sln -c Release -p:Platform=x64
 
 ## Current Constraints
 
-- The current App is a single-project MSIX WinUI 3 development build with a temporary `PaddleDuel.Development` identity, not the official Store identity.
+- The current App is a single-project MSIX WinUI 3 build using the official `25526PoyChang.PaddleDuel` identity; local signing and installation do not prove Store certification or commerce.
+- Keep en-US and zh-TW resource keys and format arguments in sync. Use x:Uid for XAML and AppStrings for dynamic UI; retain Store-provided names and prices.
 - Packaged quota, window settings, and fulfillment journals share package LocalState. Explicit unpackaged development builds retain the legacy directory; do not silently migrate data between identities.
 - Packaged MSIX and real Store integration require the Visual Studio Windows App SDK, MSIX Packaging, and Windows SDK workloads plus Partner Center identity and products.
 - Do not claim Store purchasing, gift-card validation, or MSIX certification until the corresponding `todo.md` item and verification are complete.

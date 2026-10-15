@@ -9,13 +9,12 @@
 
 ## 進行中
 
-目前無進行中項目；下一項為正式 Partner Center identity 與封裝素材關聯。
+目前無進行中項目；下一項為正式 identity 的 LocalState、升級與解除安裝驗收。
 
 ## 待辦
 
 ### Packaged App 轉換
 
-- [ ] 關聯 Partner Center identity，加入正式圖示、啟動畫面與 zh-TW／en-US resources。
 - [ ] 驗證 packaged LocalState 分支、安裝、啟動、升級與解除安裝；移除不再需要的 unpackaged workaround。
   - 開發 identity 的安裝／啟動、quota／window-state LocalState round-trip、解除安裝 smoke check 已通過；仍需正式 identity 的升級、資料保留／清除語義與交易重試驗收。
 - [ ] 產生 Release x64 MSIX bundle，且不提交開發憑證或 AppPackages 產物。
@@ -23,6 +22,7 @@
 ### Store 與發行驗收
 
 - [ ] 透過 Partner Center private flight 驗證 1／10 units、取消、重複購買、斷線恢復及跨裝置餘額。
+  - 接入已取得的 `plays1`／`plays10` 真實 Store ID；目前僅封裝 identity 已關聯，商品 ID 仍為開發占位，不宣稱已能購買。
   - 附加商品預定於 `2027-01-01 00:00 UTC` 公開供應；上市前的測試取得方式與排程限制需另行確認，不將 Public audience 視為私人測試設定。
 - [ ] 以可退款的小額真實交易驗證 Microsoft 帳戶禮品卡可由 Store checkout 使用；App 不接觸卡號。
 - [ ] 完成 IARC 分級，並將已部署的聯絡／政策網址及非官方產品聲明填入適用的 Store 欄位。
@@ -34,6 +34,11 @@
 
 ## 已完成
 
+- [x] 關聯 Partner Center identity，加入原創正式封裝圖示、啟動畫面與完整 zh-TW／en-US 介面。
+  - 2026-10-15 依擁有者選擇，製作黑白雙球拍／方形球與多 scale／targetsize／ICO；啟動畫面不加動畫、固定延遲或額外視窗。
+  - 套用正式 Name／Publisher／PublisherDisplayName；最終 MSIX 核對 Windows.Desktop 19045、自包含 runtime、圖示尺寸、兩語言宣告與 PRI 內每個字串。
+  - 56 項測試通過。兩語言本機簽署安裝／UI Automation 驗證選單、輔助名稱、動態設定、操作、暫停及放棄不扣次，另驗證繁中 Store unavailable；測試安裝及憑證已清除，不更改全域語言或舊開發資料。
+  - 正式 identity 不等於 Store 送審或交易驗收；正式升級、解除安裝資料語義、多 DPI、Windows 10 實機與 WACK 仍待完成。
 - [x] 將遊戲 App 轉為 single-project MSIX，設定 Windows.Desktop `MinVersion=10.0.19045.0`。
   - 暫用 `PaddleDuel.Development` identity 與原創幾何占位圖示；x64、.NET／Windows App SDK self-contained，預設不簽署或產生 bundle。
   - 額度、視窗與 pending journal 共用部署模式感知的 LocalState 路徑；明確選用 unpackaged 時仍讀寫原目錄，不自動遷移舊資料。

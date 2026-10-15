@@ -35,6 +35,20 @@ Spike 改用 `net10.0-windows10.0.26100.0` 與 `TargetPlatformMinVersion=10.0.19
 
 已以 [spike 驗證腳本](../spikes/PaddleDuel.PackagingSpike/Verify-Package.ps1) 完成簽署、信任、安裝、package activation、UI Automation 與清除。腳本透過啟動回傳的 PID 找視窗，確認 UI 的 package identity 與 runtime，再操作關閉按鈕；不以程序出現或 `MainWindowHandle` 代替 WinUI 啟動成功。測試憑證、私鑰與安裝應在驗證後清除，不能留作正式發行 identity。
 
+### XAML 附加屬性的資源名稱與 PRI 路徑不同
+
+**已驗證：** 2026-10-15，Windows App SDK 2.5.1，en-US／zh-TW 安裝版 UI Automation。
+
+`x:Uid` 的輔助使用名稱必須使用 `Control.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name`；ToolTip 對應 `[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip`。只把一般的 `AutomationProperties.Name` 當作普通屬性名稱，不是可靠的 resw 寫法。
+
+MakePri dump 的 URI 將屬性分隔點改為 `/`，但保留 `[using:...]` 內的 namespace 點號。產物檢查器必須遵守這個差異，不能將所有點號一律取代；[`Test-AppPackage.ps1`](../scripts/Test-AppPackage.ps1) 已逐項驗證封裝內兩語言的實際 candidate 值。
+
+MakePri dump 是 UTF-8 XML。Windows PowerShell 5.1 的 `Get-Content` 預設編碼可能將非 ASCII 翻譯誤讀，甚至造成 XML 轉換失敗；必須明確指定 `-Encoding UTF8`。同一份封裝已在 PowerShell 7 與 Windows PowerShell 5.1 通過逐項比較。
+
+### 單一 App 的語言測試不必更改 Windows 全域語言
+
+在沒有既有同 identity 安裝／資料的本機測試中，`Invoke-CommandInDesktopPackage` 可讓診斷用 PowerShell 取得該 package identity，設定 `Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride` 後重新啟動 App。此次確認設定 `zh-TW` 後讀回 `zh-Hant-TW`，測試工具應接受正規化結果，而非誤判為設定失敗。這是測試用途，不是產品語言切換 UI；清除本次測試安裝也清除該 App 的覆寫設定，不變更 Windows 語言偏好。
+
 ### Unpackaged App 不可假設具有 package identity
 
 **已驗證環境：** Windows App SDK 2.5.1、unpackaged WinUI 3、2026-09-24。

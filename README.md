@@ -1,6 +1,6 @@
 # Paddle Duel
 
-一款受 1972 年早期投幣式電子桌球遊戲啟發的 Windows 遊戲。Partner Center 產品名稱與 App 顯示名稱皆為 **Paddle Duel**；正式封裝素材仍待後續項目完成。本專案與 Atari 無關，也不使用原始遊戲的商標、程式、美術、字型或錄音。
+一款受 1972 年早期投幣式電子桌球遊戲啟發的 Windows 遊戲。Partner Center 產品名稱與 App 顯示名稱皆為 **Paddle Duel**，具有原創黑白封裝圖示與繁中／英文介面。本專案與 Atari 無關，也不使用原始遊戲的商標、程式、美術、字型或錄音。
 
 GitHub repository：[poychang/paddle-duel](https://github.com/poychang/paddle-duel)，Git remote URL 為 `https://github.com/poychang/paddle-duel.git`。Solution 為 [`PaddleDuel.sln`](PaddleDuel.sln)，專案目錄、`.csproj`、assembly 與 namespace 使用 `PaddleDuel.*`。本機 checkout 目錄名稱不影響建置，開啟中的工作目錄不在此次改名範圍。
 
@@ -16,7 +16,7 @@ GitHub repository：[poychang/paddle-duel](https://github.com/poychang/paddle-du
 | Package/Properties/PublisherDisplayName | `Poy Chang` |
 | Store ID | `9NJ180X2R7TF` |
 
-這些是產品識別資訊，不是登入憑證或簽署私鑰。此處僅記錄已取得的正式 identity；尚未套用到遊戲 App、上傳封裝或驗證 Store runtime。獨立 packaging spike 繼續使用自己的測試 identity，不應以正式值取代。
+這些是產品識別資訊，不是登入憑證或簽署私鑰。2026-10-15 已將 Package Name、Publisher 與 PublisherDisplayName 套用到遊戲 App，並核對最終 MSIX；本機安裝的 package family 為 `25526PoyChang.PaddleDuel_hwmjejkjqxx7e`。尚未上傳封裝或驗證真實 Store 購買。獨立 packaging spike 繼續使用自己的測試 identity，不應以正式值取代。
 
 此 Store ID 屬於遊戲本體，不能當作 1 次／10 次 consumable 的 Store ID。Partner Center 已建立以下商品，畫面分別顯示 `ManagedConsumable`、Quantity 1／10，Content type 選擇 `Electronic software download`。產品擁有者於 2026-10-08 回報兩個商品的隱私權政策與以下售價已設定完成：
 
@@ -100,7 +100,7 @@ node --test .\tests\site.test.mjs
 - 主選單顯示今日剩餘免費次數與下一個 00:00 UTC 重置日期。
 - 額度耗盡時會停用開局並顯示 Store 占位入口，不顯示假價格或執行假交易。
 
-遊戲 App 已支援開發用 MSIX 封裝；正式 Store identity、商品識別與商店素材仍待關聯。開發封裝不可視為已能購買正式商品。
+遊戲 App 的 MSIX 已關聯正式 Store identity 與封裝圖示；正式附加商品識別、Store 列表宣傳素材與交易驗收仍待完成。本機簽署封裝不可視為已能購買正式商品。
 
 Store commerce 已具備平台無關的商品、餘額、購買與 fulfillment gateway fake，以及可編譯的 `StoreContext` adapter。
 Entitlement coordinator 已實作免費優先與 1-play／10-play fallback；真實 Store fulfillment 尚未驗收。
@@ -124,13 +124,13 @@ dotnet build PaddleDuel.sln -c Release -p:Platform=x64
 
 遊戲 App 預設為 single-project MSIX。一般 `dotnet build` 驗證編譯，不代表已產生、安裝或啟動封裝；不要再把無參數的 `dotnet run` 當成 packaged 啟動方式。Visual Studio 提供 `PaddleDuel.App (Package)` launch profile；本次執行驗證使用已簽署 MSIX 安裝及 package activation，而非 IDE F5。
 
-### 遊戲 App 開發封裝
+### 遊戲 App 封裝
 
-[`Package.appxmanifest`](src/PaddleDuel.App/Package.appxmanifest) 暫用 `PaddleDuel.Development`／`CN=PaddleDuel Development`，不是 Partner Center identity。三張黑白幾何圖示重用本專案 spike 的原創占位素材，正式圖示與 zh-TW／en-US resources 留待下一項。
+[`Package.appxmanifest`](src/PaddleDuel.App/Package.appxmanifest) 使用上節的正式 Partner Center identity；套用 identity 不等於已送審、通過認證或公開發布。
 
 - target framework：`net10.0-windows10.0.26100.0`；Windows.Desktop 最低版本 `10.0.19045.0`。
 - x64，.NET 與 Windows App SDK 都為 self-contained；不啟用 trimming／ReadyToRun。
-- 預設不簽署、不產生 bundle 或 Store symbols package；不得將開發封裝提交至 Store。
+- 預設不簽署、不產生 bundle 或 Store symbols package；本節產物為本機 sideload 驗證用途，Store 提交用 bundle 另列待辦。
 
 先執行上面的 restore，再從 repository 根目錄使用 **Windows PowerShell 5.1**：
 
@@ -150,19 +150,33 @@ $package = (Resolve-Path .\src\PaddleDuel.App\AppPackages\PaddleDuel.App_1.0.0.0
 & .\scripts\Test-AppPackage.ps1 -PackagePath $package
 ```
 
-[`Test-AppPackage.ps1`](scripts/Test-AppPackage.ps1) 只讀取產物，不簽署、不安裝、不改變系統信任；驗證最終 identity、x64、Windows.Desktop 最低／目標版本、遊戲啟動入口、self-contained runtime 與圖示。它刻意要求開發 identity，正式 Store 關聯時需同步更新驗證契約。
+[`Test-AppPackage.ps1`](scripts/Test-AppPackage.ps1) 不簽署、不安裝、不改變系統信任；驗證最終正式 identity、x64、Windows.Desktop 最低／目標版本、遊戲啟動入口、self-contained runtime 與多尺寸圖示。另以 SDK 26100 MakePri 在暫存目錄解析**封裝內**的 PRI，逐項比對兩種語言的 100 個字串與原始資源；測試結束清除暫存檔。不以來源 manifest 或 resw 的存在代替產物驗證。
 
 MSIX 必須先以與 Publisher 相符且受本機信任的憑證簽署，才能透過 `Add-AppxPackage -Path $package` 安裝；不要直接安裝未簽署的產物。完成安裝後可透過 package activation 啟動：
 
 ```powershell
-$installed = Get-AppxPackage -Name PaddleDuel.Development
+$installed = Get-AppxPackage -Name 25526PoyChang.PaddleDuel
 if (-not $installed) { throw '請先完成開發封裝簽署與安裝。' }
 Start-Process explorer.exe -ArgumentList "shell:AppsFolder\$($installed.PackageFamilyName)!App"
 ```
 
-簽署、信任憑證與安裝必須先取得操作者同意；測試結束後僅移除該次安裝與憑證。不可使用正式 Store identity 或長期信任的開發憑證取代一次性測試，也不可提交私鑰／憑證。
+簽署、信任憑證與安裝必須先取得操作者同意；測試結束後僅移除該次安裝與憑證。使用正式 identity 做本機測試前，必須確認沒有既有同 identity 的 App 或資料，不能覆蓋／清除使用者安裝。本機一次性自簽憑證不是 Store 簽章，不應留作長期信任，也不可提交私鑰／憑證。
 
-**資料邊界：** 額度、視窗設定與 pending fulfillment journal 都透過 `LocalStateDirectory` 取得路徑。Packaged 模式使用 `%LocalAppData%\Packages\<PackageFamilyName>\LocalState`；本機開發 identity 與未來正式 identity 各自獨立，不自動匯入舊開發資料。正式版升級／遷移策略仍待驗收，不能將測試封裝的初始額度當成正式升級行為。
+**資料邊界：** 額度、視窗設定與 pending fulfillment journal 都透過 `LocalStateDirectory` 取得路徑。Packaged 模式使用 `%LocalAppData%\Packages\<PackageFamilyName>\LocalState`；先前 `PaddleDuel.Development` 與目前正式 identity 各自獨立，不自動匯入舊開發資料。正式版升級／遷移策略仍待驗收，不能將測試封裝的初始額度當成正式升級行為。
+
+### 雙語介面與原創素材
+
+- [`Strings/en-US/Resources.resw`](src/PaddleDuel.App/Strings/en-US/Resources.resw) 與 [`Strings/zh-TW/Resources.resw`](src/PaddleDuel.App/Strings/zh-TW/Resources.resw) 包含選單、操作說明、設定、暫停、額度、勝負與 Store 狀態文字，以及按鈕的輔助使用名稱／工具提示。品牌名維持 Paddle Duel。
+- 透過 Windows 資源選擇機制依使用者語言偏好解析，預設／最終回退語言為 `en-US`，不修改 Windows 語言、不加入 App 語言切換設定。Windows 可能將 `zh-TW` 正規化為 `zh-Hant-TW`；語言偏好變更後重新啟動 App。
+- XAML 使用 `x:Uid`，動態文字由 `AppStrings` 讀取相同 PRI；缺少資源明確拋錯，不以空字串或資源鍵掩蓋缺漏。日期仍明確顯示 UTC；Store 商品名稱與 formatted price 不自行翻譯或硬編碼。
+- [`New-AppAssets.ps1`](scripts/New-AppAssets.ps1) 是素材的可重建來源：原創雙球拍與方形球，不含字體或第三方圖片。從根目錄執行 `.\scripts\New-AppAssets.ps1` 可產生 100／125／150／200／400% 圖示與啟動畫面，以及 16／24／32／48／256 像素的深淺工作列圖示和多尺寸 ICO。
+- Manifest 指定 splash 素材；遊戲同一視窗也在首次額度讀取期間顯示該圖形，不依賴桌面封裝一定顯示系統 splash。讀取完成或失敗顯示既有錯誤提示後立即移除，不新增動畫、固定延遲或額外視窗。快速啟動時圖形可能一閃而過或來不及顯示。
+
+**2026-10-15 驗證：** 56 項測試通過（含雙語鍵值／格式參數對齊、XAML property 與動態資源覆蓋）。正式 identity 的本機 MSIX 簽署、安裝及 en-US／zh-TW UI Automation 通過，核對選單、輔助使用名稱、動態難度／顯示模式、操作說明、暫停、放棄不扣次及繁中 Store unavailable；已檢視兩種語言的實際畫面。測試 App、語言覆寫資料與憑證已隨測試清除；Windows 全域語言與舊開發資料不變。這不是上架審核或真實交易驗證。
+
+本機 `dotnet` 現在預設選到 SDK 11 RC，初次 App build 在既有 collection-expression 程式碼回報兩個 `CsWinRT1032` 警告；未為此次資源工作改動 Store 邏輯。Visual Studio MSIX 建置仍有既有 symbols 工具警告。
+
+### 先前開發 identity 驗證紀錄
 
 **2026-10-08 驗證：**
 
@@ -194,7 +208,7 @@ dotnet build .\src\PaddleDuel.App\PaddleDuel.App.csproj -c Debug -p:Platform=x64
 
 - `%LocalAppData%\Arcade1972`：既有 unpackaged 免費額度、視窗設定與 pending fulfillment journal；直接改路徑會讓既有資料看似遺失。
 - `Local\Arcade1972.SingleInstance`：保留與舊版的互斥關係，避免新舊 App 同時寫入相同資料。
-- `arcade1972.play.1`／`arcade1972.play.10`：原有開發占位商品 ID，待正式 Store 關聯項目替換為已取得的真實 Store ID；此次不改變交易行為或追蹤 ID。
+- `arcade1972.play.1`／`arcade1972.play.10`：原有開發占位商品 ID，待 Store runtime 整合項目替換為已取得的真實 Store ID；封裝 identity 關聯不自動啟用交易。
 - `Classic1972Rules` 與 golden regression 名稱：描述歷史規則，不是產品名稱。
 
 2026-10-08 改名驗證：53 項 .NET 測試通過（含改名前 JSON 額度資料的回歸測試），solution Debug／Release x64 均零警告、零錯誤。Release App 已透過 UI Automation 驗證名稱、既有額度載入、舊互斥鎖、新版重複啟動、資訊／設定 overlay、全螢幕切換、單人／雙人開局、最小化暫停、繼續、放棄不扣次與正常退出；測試後還原原有本機檔案。Escape 鍵自動化受焦點影響，未列為此次通過項目，未為此改動輸入邏輯。

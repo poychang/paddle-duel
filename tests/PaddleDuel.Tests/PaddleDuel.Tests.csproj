@@ -16,6 +16,12 @@
 
   <ItemGroup>
     <Using Include="Xunit" />
+    <Content Include="..\..\src\PaddleDuel.App\Strings\**\*.resw"
+             Link="AppResources\%(RecursiveDir)%(Filename)%(Extension)"
+             CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\..\src\PaddleDuel.App\MainWindow.xaml;..\..\src\PaddleDuel.App\MainWindow.xaml.cs"
+             Link="AppResources\%(Filename)%(Extension)"
+             CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>

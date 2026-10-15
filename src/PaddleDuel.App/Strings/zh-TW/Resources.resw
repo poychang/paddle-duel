@@ -1,0 +1,315 @@
+<?xml version='1.0' encoding='utf-8'?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms</value>
+  </resheader>
+  <data name="TitleBarBrand.Text" xml:space="preserve">
+    <value>PADDLE DUEL</value>
+  </data>
+  <data name="InformationButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>顯示操作說明</value>
+  </data>
+  <data name="InformationButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>操作說明</value>
+  </data>
+  <data name="SettingsButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>顯示設定</value>
+  </data>
+  <data name="SettingsButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="FullScreenButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>切換全螢幕</value>
+  </data>
+  <data name="FullScreenButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>全螢幕</value>
+  </data>
+  <data name="MenuHeading.Text" xml:space="preserve">
+    <value>PADDLE DUEL</value>
+  </data>
+  <data name="KeyboardSummary.Text" xml:space="preserve">
+    <value>W / S        ↑ / ↓</value>
+  </data>
+  <data name="QuotaStatusText.Text" xml:space="preserve">
+    <value>免費次數  -- / --</value>
+  </data>
+  <data name="QuotaResetText.Text" xml:space="preserve">
+    <value>重置時間  ---- -- --  00:00 UTC</value>
+  </data>
+  <data name="AiDifficultyText.Text" xml:space="preserve">
+    <value>電腦難度  中等</value>
+  </data>
+  <data name="EasyDifficultyButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>設定電腦難度為簡單</value>
+  </data>
+  <data name="EasyDifficultyButton.Content" xml:space="preserve">
+    <value>簡單</value>
+  </data>
+  <data name="MediumDifficultyButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>設定電腦難度為中等</value>
+  </data>
+  <data name="MediumDifficultyButton.Content" xml:space="preserve">
+    <value>中等</value>
+  </data>
+  <data name="HardDifficultyButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>設定電腦難度為困難</value>
+  </data>
+  <data name="HardDifficultyButton.Content" xml:space="preserve">
+    <value>困難</value>
+  </data>
+  <data name="OnePlayerButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>開始單人比賽</value>
+  </data>
+  <data name="OnePlayerButton.Content" xml:space="preserve">
+    <value>單人遊戲</value>
+  </data>
+  <data name="StartButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>開始本機雙人比賽</value>
+  </data>
+  <data name="StartButton.Content" xml:space="preserve">
+    <value>雙人遊戲</value>
+  </data>
+  <data name="PurchaseEntryButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>取得更多遊玩次數</value>
+  </data>
+  <data name="PurchaseEntryButton.Content" xml:space="preserve">
+    <value>取得次數</value>
+  </data>
+  <data name="InputSink.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>遊戲內部鍵盤輸入</value>
+  </data>
+  <data name="CloseInformationButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>關閉操作說明</value>
+  </data>
+  <data name="CloseInformationButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>關閉</value>
+  </data>
+  <data name="ControlsHeading.Text" xml:space="preserve">
+    <value>操作說明</value>
+  </data>
+  <data name="PlayerOneLabel.Text" xml:space="preserve">
+    <value>玩家 1</value>
+  </data>
+  <data name="PlayerOneUp.Text" xml:space="preserve">
+    <value>W   向上移動</value>
+  </data>
+  <data name="PlayerOneDown.Text" xml:space="preserve">
+    <value>S   向下移動</value>
+  </data>
+  <data name="PlayerTwoLabel.Text" xml:space="preserve">
+    <value>玩家 2</value>
+  </data>
+  <data name="PlayerTwoUp.Text" xml:space="preserve">
+    <value>↑   向上移動</value>
+  </data>
+  <data name="PlayerTwoDown.Text" xml:space="preserve">
+    <value>↓   向下移動</value>
+  </data>
+  <data name="SinglePlayerControlsHint.Text" xml:space="preserve">
+    <value>單人模式使用玩家 1 的按鍵</value>
+  </data>
+  <data name="ClosePurchasePlaceholderButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>關閉商店</value>
+  </data>
+  <data name="ClosePurchasePlaceholderButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>關閉</value>
+  </data>
+  <data name="StoreHeading.Text" xml:space="preserve">
+    <value>更多遊玩次數</value>
+  </data>
+  <data name="OnePlayProductText.Text" xml:space="preserve">
+    <value>1 次遊玩</value>
+  </data>
+  <data name="BuyOnePlayButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>購買 1 次遊玩</value>
+  </data>
+  <data name="BuyOnePlayButton.Content" xml:space="preserve">
+    <value>購買</value>
+  </data>
+  <data name="TenPlayProductText.Text" xml:space="preserve">
+    <value>10 次遊玩</value>
+  </data>
+  <data name="BuyTenPlayButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>購買 10 次遊玩</value>
+  </data>
+  <data name="BuyTenPlayButton.Content" xml:space="preserve">
+    <value>購買</value>
+  </data>
+  <data name="StorePurchaseStatusText.Text" xml:space="preserve">
+    <value>正在連線至 Microsoft Store…</value>
+  </data>
+  <data name="StoreProductFallbackText.Text" xml:space="preserve">
+    <value>尚未連線至 Microsoft Store</value>
+  </data>
+  <data name="PauseHeading.Text" xml:space="preserve">
+    <value>已暫停</value>
+  </data>
+  <data name="ResumeMatchButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>繼續比賽</value>
+  </data>
+  <data name="ResumeMatchButton.Content" xml:space="preserve">
+    <value>繼續</value>
+  </data>
+  <data name="AbandonMatchButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>放棄比賽並返回選單</value>
+  </data>
+  <data name="AbandonMatchButton.Content" xml:space="preserve">
+    <value>放棄比賽</value>
+  </data>
+  <data name="AbandonHint.Text" xml:space="preserve">
+    <value>返回選單不會扣除遊玩次數</value>
+  </data>
+  <data name="CloseSettingsButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>關閉設定</value>
+  </data>
+  <data name="CloseSettingsButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>關閉</value>
+  </data>
+  <data name="SettingsHeading.Text" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="SettingsAiDifficultyText.Text" xml:space="preserve">
+    <value>電腦難度  中等</value>
+  </data>
+  <data name="SettingsEasyDifficultyButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>在設定中將電腦難度改為簡單</value>
+  </data>
+  <data name="SettingsEasyDifficultyButton.Content" xml:space="preserve">
+    <value>簡單</value>
+  </data>
+  <data name="SettingsMediumDifficultyButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>在設定中將電腦難度改為中等</value>
+  </data>
+  <data name="SettingsMediumDifficultyButton.Content" xml:space="preserve">
+    <value>中等</value>
+  </data>
+  <data name="SettingsHardDifficultyButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>在設定中將電腦難度改為困難</value>
+  </data>
+  <data name="SettingsHardDifficultyButton.Content" xml:space="preserve">
+    <value>困難</value>
+  </data>
+  <data name="SettingsDisplayModeText.Text" xml:space="preserve">
+    <value>顯示模式  視窗</value>
+  </data>
+  <data name="SettingsWindowedButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>使用視窗模式</value>
+  </data>
+  <data name="SettingsWindowedButton.Content" xml:space="preserve">
+    <value>視窗</value>
+  </data>
+  <data name="SettingsFullScreenButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>使用全螢幕模式</value>
+  </data>
+  <data name="SettingsFullScreenButton.Content" xml:space="preserve">
+    <value>全螢幕</value>
+  </data>
+  <data name="StoreConnecting" xml:space="preserve">
+    <value>正在連線至 Microsoft Store…</value>
+  </data>
+  <data name="StoreSelectPurchase" xml:space="preserve">
+    <value>請選擇商品</value>
+  </data>
+  <data name="StoreUnavailable" xml:space="preserve">
+    <value>Microsoft Store 暫時無法使用</value>
+  </data>
+  <data name="StoreOpening" xml:space="preserve">
+    <value>正在開啟 Microsoft Store…</value>
+  </data>
+  <data name="PurchaseComplete" xml:space="preserve">
+    <value>購買完成</value>
+  </data>
+  <data name="PurchaseCancelled" xml:space="preserve">
+    <value>已取消購買</value>
+  </data>
+  <data name="PurchaseNetworkError" xml:space="preserve">
+    <value>網路錯誤，請重試</value>
+  </data>
+  <data name="PurchaseServerError" xml:space="preserve">
+    <value>商店伺服器錯誤，請重試</value>
+  </data>
+  <data name="PurchaseSignIn" xml:space="preserve">
+    <value>請登入 Microsoft Store</value>
+  </data>
+  <data name="PurchaseInProgress" xml:space="preserve">
+    <value>購買正在進行中</value>
+  </data>
+  <data name="ProductUnavailable" xml:space="preserve">
+    <value>商品暫時無法使用</value>
+  </data>
+  <data name="DisplayFullScreen" xml:space="preserve">
+    <value>顯示模式  全螢幕</value>
+  </data>
+  <data name="DisplayWindowed" xml:space="preserve">
+    <value>顯示模式  視窗</value>
+  </data>
+  <data name="NoPlaysAvailable" xml:space="preserve">
+    <value>沒有可用次數</value>
+  </data>
+  <data name="EntitlementStoreUnavailable" xml:space="preserve">
+    <value>商店暫時無法使用</value>
+  </data>
+  <data name="QuotaUnavailable" xml:space="preserve">
+    <value>無法讀取遊玩次數</value>
+  </data>
+  <data name="PaymentPending" xml:space="preserve">
+    <value>付費次數扣除待確認</value>
+  </data>
+  <data name="QuotaSaveFailed" xml:space="preserve">
+    <value>遊玩次數儲存失敗</value>
+  </data>
+  <data name="LeftPlayerWins" xml:space="preserve">
+    <value>左方玩家獲勝</value>
+  </data>
+  <data name="RightPlayerWins" xml:space="preserve">
+    <value>右方玩家獲勝</value>
+  </data>
+  <data name="PlayAgain" xml:space="preserve">
+    <value>再玩一次</value>
+  </data>
+  <data name="ResetUnavailable" xml:space="preserve">
+    <value>無法取得重置時間</value>
+  </data>
+  <data name="MatchAbandoned" xml:space="preserve">
+    <value>已放棄比賽</value>
+  </data>
+  <data name="AppDisplayName" xml:space="preserve">
+    <value>Paddle Duel</value>
+  </data>
+  <data name="AppDescription" xml:space="preserve">
+    <value>經典電子桌球對決，支援單人與本機雙人遊戲。</value>
+  </data>
+  <data name="DifficultyEasy" xml:space="preserve">
+    <value>簡單</value>
+  </data>
+  <data name="DifficultyMedium" xml:space="preserve">
+    <value>中等</value>
+  </data>
+  <data name="DifficultyHard" xml:space="preserve">
+    <value>困難</value>
+  </data>
+  <data name="AiDifficulty" xml:space="preserve">
+    <value>電腦難度  {0}</value>
+  </data>
+  <data name="FreePlays" xml:space="preserve">
+    <value>免費次數  {0} / {1}</value>
+  </data>
+  <data name="FreePlaysUnavailable" xml:space="preserve">
+    <value>免費次數  -- / {0}</value>
+  </data>
+  <data name="QuotaReset" xml:space="preserve">
+    <value>重置時間  {0}  00:00 UTC</value>
+  </data>
+  <data name="StartupImage.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>正在啟動 Paddle Duel</value>
+  </data>
+</root>

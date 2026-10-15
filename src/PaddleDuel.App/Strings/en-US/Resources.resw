@@ -1,0 +1,315 @@
+<?xml version='1.0' encoding='utf-8'?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms</value>
+  </resheader>
+  <data name="TitleBarBrand.Text" xml:space="preserve">
+    <value>PADDLE DUEL</value>
+  </data>
+  <data name="InformationButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Show controls</value>
+  </data>
+  <data name="InformationButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Controls</value>
+  </data>
+  <data name="SettingsButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Show settings</value>
+  </data>
+  <data name="SettingsButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="FullScreenButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Toggle full screen</value>
+  </data>
+  <data name="FullScreenButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Full screen</value>
+  </data>
+  <data name="MenuHeading.Text" xml:space="preserve">
+    <value>PADDLE DUEL</value>
+  </data>
+  <data name="KeyboardSummary.Text" xml:space="preserve">
+    <value>W / S        UP / DOWN</value>
+  </data>
+  <data name="QuotaStatusText.Text" xml:space="preserve">
+    <value>FREE PLAYS  -- / --</value>
+  </data>
+  <data name="QuotaResetText.Text" xml:space="preserve">
+    <value>RESET  ---- -- --  00:00 UTC</value>
+  </data>
+  <data name="AiDifficultyText.Text" xml:space="preserve">
+    <value>AI DIFFICULTY  MEDIUM</value>
+  </data>
+  <data name="EasyDifficultyButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Set AI difficulty easy</value>
+  </data>
+  <data name="EasyDifficultyButton.Content" xml:space="preserve">
+    <value>EASY</value>
+  </data>
+  <data name="MediumDifficultyButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Set AI difficulty medium</value>
+  </data>
+  <data name="MediumDifficultyButton.Content" xml:space="preserve">
+    <value>MEDIUM</value>
+  </data>
+  <data name="HardDifficultyButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Set AI difficulty hard</value>
+  </data>
+  <data name="HardDifficultyButton.Content" xml:space="preserve">
+    <value>HARD</value>
+  </data>
+  <data name="OnePlayerButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Start one player match</value>
+  </data>
+  <data name="OnePlayerButton.Content" xml:space="preserve">
+    <value>ONE PLAYER</value>
+  </data>
+  <data name="StartButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Start local two player match</value>
+  </data>
+  <data name="StartButton.Content" xml:space="preserve">
+    <value>TWO PLAYERS</value>
+  </data>
+  <data name="PurchaseEntryButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Get more plays</value>
+  </data>
+  <data name="PurchaseEntryButton.Content" xml:space="preserve">
+    <value>GET PLAYS</value>
+  </data>
+  <data name="InputSink.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Internal game keyboard input</value>
+  </data>
+  <data name="CloseInformationButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Close controls</value>
+  </data>
+  <data name="CloseInformationButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="ControlsHeading.Text" xml:space="preserve">
+    <value>CONTROLS</value>
+  </data>
+  <data name="PlayerOneLabel.Text" xml:space="preserve">
+    <value>PLAYER 1</value>
+  </data>
+  <data name="PlayerOneUp.Text" xml:space="preserve">
+    <value>W   MOVE UP</value>
+  </data>
+  <data name="PlayerOneDown.Text" xml:space="preserve">
+    <value>S   MOVE DOWN</value>
+  </data>
+  <data name="PlayerTwoLabel.Text" xml:space="preserve">
+    <value>PLAYER 2</value>
+  </data>
+  <data name="PlayerTwoUp.Text" xml:space="preserve">
+    <value>UP ARROW     MOVE UP</value>
+  </data>
+  <data name="PlayerTwoDown.Text" xml:space="preserve">
+    <value>DOWN ARROW   MOVE DOWN</value>
+  </data>
+  <data name="SinglePlayerControlsHint.Text" xml:space="preserve">
+    <value>ONE PLAYER MODE USES PLAYER 1 CONTROLS</value>
+  </data>
+  <data name="ClosePurchasePlaceholderButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Close Store placeholder</value>
+  </data>
+  <data name="ClosePurchasePlaceholderButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="StoreHeading.Text" xml:space="preserve">
+    <value>MORE PLAYS</value>
+  </data>
+  <data name="OnePlayProductText.Text" xml:space="preserve">
+    <value>1 PLAY</value>
+  </data>
+  <data name="BuyOnePlayButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Buy one play</value>
+  </data>
+  <data name="BuyOnePlayButton.Content" xml:space="preserve">
+    <value>BUY</value>
+  </data>
+  <data name="TenPlayProductText.Text" xml:space="preserve">
+    <value>10 PLAYS</value>
+  </data>
+  <data name="BuyTenPlayButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Buy ten plays</value>
+  </data>
+  <data name="BuyTenPlayButton.Content" xml:space="preserve">
+    <value>BUY</value>
+  </data>
+  <data name="StorePurchaseStatusText.Text" xml:space="preserve">
+    <value>CONNECTING TO MICROSOFT STORE...</value>
+  </data>
+  <data name="StoreProductFallbackText.Text" xml:space="preserve">
+    <value>MICROSOFT STORE IS NOT CONNECTED</value>
+  </data>
+  <data name="PauseHeading.Text" xml:space="preserve">
+    <value>PAUSED</value>
+  </data>
+  <data name="ResumeMatchButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Resume match</value>
+  </data>
+  <data name="ResumeMatchButton.Content" xml:space="preserve">
+    <value>CONTINUE</value>
+  </data>
+  <data name="AbandonMatchButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Abandon match and return to menu</value>
+  </data>
+  <data name="AbandonMatchButton.Content" xml:space="preserve">
+    <value>ABANDON MATCH</value>
+  </data>
+  <data name="AbandonHint.Text" xml:space="preserve">
+    <value>RETURNING TO MENU WILL NOT USE A PLAY</value>
+  </data>
+  <data name="CloseSettingsButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Close settings</value>
+  </data>
+  <data name="CloseSettingsButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="SettingsHeading.Text" xml:space="preserve">
+    <value>SETTINGS</value>
+  </data>
+  <data name="SettingsAiDifficultyText.Text" xml:space="preserve">
+    <value>AI DIFFICULTY  MEDIUM</value>
+  </data>
+  <data name="SettingsEasyDifficultyButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Set settings AI difficulty easy</value>
+  </data>
+  <data name="SettingsEasyDifficultyButton.Content" xml:space="preserve">
+    <value>EASY</value>
+  </data>
+  <data name="SettingsMediumDifficultyButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Set settings AI difficulty medium</value>
+  </data>
+  <data name="SettingsMediumDifficultyButton.Content" xml:space="preserve">
+    <value>MEDIUM</value>
+  </data>
+  <data name="SettingsHardDifficultyButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Set settings AI difficulty hard</value>
+  </data>
+  <data name="SettingsHardDifficultyButton.Content" xml:space="preserve">
+    <value>HARD</value>
+  </data>
+  <data name="SettingsDisplayModeText.Text" xml:space="preserve">
+    <value>DISPLAY  WINDOWED</value>
+  </data>
+  <data name="SettingsWindowedButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Use windowed display mode</value>
+  </data>
+  <data name="SettingsWindowedButton.Content" xml:space="preserve">
+    <value>WINDOWED</value>
+  </data>
+  <data name="SettingsFullScreenButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Use full screen display mode</value>
+  </data>
+  <data name="SettingsFullScreenButton.Content" xml:space="preserve">
+    <value>FULL SCREEN</value>
+  </data>
+  <data name="StoreConnecting" xml:space="preserve">
+    <value>CONNECTING TO MICROSOFT STORE...</value>
+  </data>
+  <data name="StoreSelectPurchase" xml:space="preserve">
+    <value>SELECT A PURCHASE</value>
+  </data>
+  <data name="StoreUnavailable" xml:space="preserve">
+    <value>MICROSOFT STORE UNAVAILABLE</value>
+  </data>
+  <data name="StoreOpening" xml:space="preserve">
+    <value>OPENING MICROSOFT STORE...</value>
+  </data>
+  <data name="PurchaseComplete" xml:space="preserve">
+    <value>PURCHASE COMPLETE</value>
+  </data>
+  <data name="PurchaseCancelled" xml:space="preserve">
+    <value>PURCHASE CANCELLED</value>
+  </data>
+  <data name="PurchaseNetworkError" xml:space="preserve">
+    <value>NETWORK ERROR - TRY AGAIN</value>
+  </data>
+  <data name="PurchaseServerError" xml:space="preserve">
+    <value>STORE SERVER ERROR - TRY AGAIN</value>
+  </data>
+  <data name="PurchaseSignIn" xml:space="preserve">
+    <value>SIGN IN TO MICROSOFT STORE</value>
+  </data>
+  <data name="PurchaseInProgress" xml:space="preserve">
+    <value>PURCHASE ALREADY IN PROGRESS</value>
+  </data>
+  <data name="ProductUnavailable" xml:space="preserve">
+    <value>PRODUCT UNAVAILABLE</value>
+  </data>
+  <data name="DisplayFullScreen" xml:space="preserve">
+    <value>DISPLAY  FULL SCREEN</value>
+  </data>
+  <data name="DisplayWindowed" xml:space="preserve">
+    <value>DISPLAY  WINDOWED</value>
+  </data>
+  <data name="NoPlaysAvailable" xml:space="preserve">
+    <value>NO PLAYS AVAILABLE</value>
+  </data>
+  <data name="EntitlementStoreUnavailable" xml:space="preserve">
+    <value>STORE UNAVAILABLE</value>
+  </data>
+  <data name="QuotaUnavailable" xml:space="preserve">
+    <value>QUOTA UNAVAILABLE</value>
+  </data>
+  <data name="PaymentPending" xml:space="preserve">
+    <value>PAYMENT PENDING</value>
+  </data>
+  <data name="QuotaSaveFailed" xml:space="preserve">
+    <value>QUOTA SAVE FAILED</value>
+  </data>
+  <data name="LeftPlayerWins" xml:space="preserve">
+    <value>LEFT PLAYER WINS</value>
+  </data>
+  <data name="RightPlayerWins" xml:space="preserve">
+    <value>RIGHT PLAYER WINS</value>
+  </data>
+  <data name="PlayAgain" xml:space="preserve">
+    <value>PLAY AGAIN</value>
+  </data>
+  <data name="ResetUnavailable" xml:space="preserve">
+    <value>RESET TIME UNAVAILABLE</value>
+  </data>
+  <data name="MatchAbandoned" xml:space="preserve">
+    <value>MATCH ABANDONED</value>
+  </data>
+  <data name="AppDisplayName" xml:space="preserve">
+    <value>Paddle Duel</value>
+  </data>
+  <data name="AppDescription" xml:space="preserve">
+    <value>A classic table-tennis duel for one or two players.</value>
+  </data>
+  <data name="DifficultyEasy" xml:space="preserve">
+    <value>EASY</value>
+  </data>
+  <data name="DifficultyMedium" xml:space="preserve">
+    <value>MEDIUM</value>
+  </data>
+  <data name="DifficultyHard" xml:space="preserve">
+    <value>HARD</value>
+  </data>
+  <data name="AiDifficulty" xml:space="preserve">
+    <value>AI DIFFICULTY  {0}</value>
+  </data>
+  <data name="FreePlays" xml:space="preserve">
+    <value>FREE PLAYS  {0} / {1}</value>
+  </data>
+  <data name="FreePlaysUnavailable" xml:space="preserve">
+    <value>FREE PLAYS  -- / {0}</value>
+  </data>
+  <data name="QuotaReset" xml:space="preserve">
+    <value>RESET  {0}  00:00 UTC</value>
+  </data>
+  <data name="StartupImage.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Starting Paddle Duel</value>
+  </data>
+</root>

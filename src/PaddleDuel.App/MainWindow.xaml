@@ -15,52 +15,57 @@
             Background="#101010"
             Loaded="AppTitleBar_Loaded"
             SizeChanged="AppTitleBar_SizeChanged">
-            <TextBlock
+            <TextBlock x:Uid="TitleBarBrand"
                 Margin="16,0,0,0"
                 VerticalAlignment="Center"
                 FontFamily="Consolas"
                 FontSize="12"
-                Foreground="{StaticResource GameForegroundBrush}"
-                Text="PADDLE DUEL" />
+                Foreground="{StaticResource GameForegroundBrush}" />
             <StackPanel
                 x:Name="TitleBarActions"
                 Margin="0,4,144,4"
                 HorizontalAlignment="Right"
                 Orientation="Horizontal">
-                <Button
+                <Button x:Uid="InformationButton"
                     x:Name="InformationButton"
                     Padding="10,0"
-                    AutomationProperties.Name="Show controls"
                     Background="Transparent"
                     BorderThickness="0"
                     Click="InformationButton_Click"
-                    Foreground="{StaticResource GameForegroundBrush}"
-                    ToolTipService.ToolTip="Controls">
+                    Foreground="{StaticResource GameForegroundBrush}">
                     <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE946;" />
                 </Button>
-                <Button
+                <Button x:Uid="SettingsButton"
                     x:Name="SettingsButton"
                     Padding="10,0"
-                    AutomationProperties.Name="Show settings"
                     Background="Transparent"
                     BorderThickness="0"
                     Click="SettingsButton_Click"
-                    Foreground="{StaticResource GameForegroundBrush}"
-                    ToolTipService.ToolTip="Settings">
+                    Foreground="{StaticResource GameForegroundBrush}">
                     <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE713;" />
                 </Button>
-                <Button
+                <Button x:Uid="FullScreenButton"
                     x:Name="FullScreenButton"
                     Padding="10,0"
-                    AutomationProperties.Name="Toggle full screen"
                     Background="Transparent"
                     BorderThickness="0"
                     Click="FullScreenButton_Click"
-                    Foreground="{StaticResource GameForegroundBrush}"
-                    ToolTipService.ToolTip="Full screen">
+                    Foreground="{StaticResource GameForegroundBrush}">
                     <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE740;" />
                 </Button>
             </StackPanel>
+            <Grid
+                x:Name="StartupOverlay"
+                Grid.RowSpan="2"
+                Canvas.ZIndex="100"
+                Background="Black">
+                <Image
+                    x:Uid="StartupImage"
+                    Width="310"
+                    Height="150"
+                    Source="ms-appx:///Assets/SplashScreen.png"
+                    Stretch="Uniform" />
+            </Grid>
         </Grid>
 
         <Grid
@@ -93,134 +98,116 @@
                 Background="#E6050505"
                 Loaded="MenuOverlay_Loaded">
                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="18">
-                    <TextBlock
+                    <TextBlock x:Uid="MenuHeading"
                         x:Name="MenuHeading"
                         HorizontalAlignment="Center"
                         FontFamily="Consolas"
                         FontSize="32"
-                        Foreground="{StaticResource GameForegroundBrush}"
-                        Text="PADDLE DUEL" />
-                    <TextBlock
+                        Foreground="{StaticResource GameForegroundBrush}" />
+                    <TextBlock x:Uid="KeyboardSummary"
                         HorizontalAlignment="Center"
                         FontFamily="Consolas"
                         FontSize="14"
-                        Foreground="{StaticResource GameForegroundBrush}"
-                        Text="W / S        UP / DOWN" />
+                        Foreground="{StaticResource GameForegroundBrush}" />
                     <StackPanel Height="44" HorizontalAlignment="Center" Spacing="4">
-                        <TextBlock
+                        <TextBlock x:Uid="QuotaStatusText"
                             x:Name="QuotaStatusText"
                             HorizontalAlignment="Center"
                             AutomationProperties.LiveSetting="Polite"
                             FontFamily="Consolas"
                             FontSize="14"
-                            Foreground="{StaticResource GameForegroundBrush}"
-                            Text="FREE PLAYS  -- / --" />
-                        <TextBlock
+                            Foreground="{StaticResource GameForegroundBrush}" />
+                        <TextBlock x:Uid="QuotaResetText"
                             x:Name="QuotaResetText"
                             HorizontalAlignment="Center"
                             FontFamily="Consolas"
                             FontSize="11"
-                            Foreground="#B8B8B8"
-                            Text="RESET  ---- -- --  00:00 UTC" />
+                            Foreground="#B8B8B8" />
                     </StackPanel>
                     <StackPanel HorizontalAlignment="Center" Spacing="6">
-                        <TextBlock
+                        <TextBlock x:Uid="AiDifficultyText"
                             x:Name="AiDifficultyText"
                             HorizontalAlignment="Center"
                             FontFamily="Consolas"
                             FontSize="11"
-                            Foreground="#B8B8B8"
-                            Text="AI DIFFICULTY  MEDIUM" />
+                            Foreground="#B8B8B8" />
                         <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Spacing="6">
-                            <Button
+                            <Button x:Uid="EasyDifficultyButton"
                                 x:Name="EasyDifficultyButton"
                                 Width="90"
                                 Padding="8,6"
-                                AutomationProperties.Name="Set AI difficulty easy"
                                 Background="Transparent"
                                 BorderBrush="#B8B8B8"
                                 BorderThickness="1"
                                 Click="EasyDifficultyButton_Click"
                                 CornerRadius="0"
                                 FontFamily="Consolas"
-                                Foreground="{StaticResource GameForegroundBrush}"
-                                Content="EASY" />
-                            <Button
+                                Foreground="{StaticResource GameForegroundBrush}" />
+                            <Button x:Uid="MediumDifficultyButton"
                                 x:Name="MediumDifficultyButton"
                                 Width="90"
                                 Padding="8,6"
-                                AutomationProperties.Name="Set AI difficulty medium"
                                 Background="#F4F1E8"
                                 BorderThickness="0"
                                 Click="MediumDifficultyButton_Click"
                                 CornerRadius="0"
                                 FontFamily="Consolas"
-                                Foreground="#050505"
-                                Content="MEDIUM" />
-                            <Button
+                                Foreground="#050505" />
+                            <Button x:Uid="HardDifficultyButton"
                                 x:Name="HardDifficultyButton"
                                 Width="90"
                                 Padding="8,6"
-                                AutomationProperties.Name="Set AI difficulty hard"
                                 Background="Transparent"
                                 BorderBrush="#B8B8B8"
                                 BorderThickness="1"
                                 Click="HardDifficultyButton_Click"
                                 CornerRadius="0"
                                 FontFamily="Consolas"
-                                Foreground="{StaticResource GameForegroundBrush}"
-                                Content="HARD" />
+                                Foreground="{StaticResource GameForegroundBrush}" />
                         </StackPanel>
                     </StackPanel>
-                    <Button
+                    <Button x:Uid="OnePlayerButton"
                         x:Name="OnePlayerButton"
                         MinWidth="180"
                         Padding="24,12"
                         HorizontalAlignment="Center"
-                        AutomationProperties.Name="Start one player match"
                         Background="#F4F1E8"
                         BorderThickness="0"
                         Click="StartOnePlayerButton_Click"
                         CornerRadius="0"
                         FontFamily="Consolas"
-                        Foreground="#050505"
-                        Content="ONE PLAYER" />
-                    <Button
+                        Foreground="#050505" />
+                    <Button x:Uid="StartButton"
                         x:Name="StartButton"
                         MinWidth="180"
                         Padding="24,12"
                         HorizontalAlignment="Center"
-                        AutomationProperties.Name="Start local two player match"
                         Background="#F4F1E8"
                         BorderThickness="0"
                         Click="StartButton_Click"
                         CornerRadius="0"
                         FontFamily="Consolas"
-                        Foreground="#050505"
-                        Content="TWO PLAYERS" />
-                    <Button
+                        Foreground="#050505" />
+                    <Button x:Uid="PurchaseEntryButton"
                         x:Name="PurchaseEntryButton"
                         MinWidth="180"
                         Padding="24,12"
                         HorizontalAlignment="Center"
-                        AutomationProperties.Name="Get more plays"
                         Background="#F4F1E8"
                         BorderThickness="0"
                         Click="PurchaseEntryButton_Click"
                         CornerRadius="0"
                         FontFamily="Consolas"
                         Foreground="#050505"
-                        Content="GET PLAYS"
                         Visibility="Collapsed" />
                 </StackPanel>
             </Grid>
 
-            <Button
+            <Button x:Uid="InputSink"
                 x:Name="InputSink"
                 Width="1"
                 Height="1"
                 Opacity="0"
-                AutomationProperties.Name="Internal game keyboard input"
                 IsTabStop="False"
                 KeyDown="InputSink_KeyDown"
                 KeyUp="InputSink_KeyUp" />
@@ -238,18 +225,16 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <Button
+            <Button x:Uid="CloseInformationButton"
                 x:Name="CloseInformationButton"
                 Grid.Row="0"
                 Margin="0,16,20,0"
                 Padding="12"
                 HorizontalAlignment="Right"
-                AutomationProperties.Name="Close controls"
                 Background="Transparent"
                 BorderThickness="0"
                 Click="CloseInformationButton_Click"
-                Foreground="{StaticResource GameForegroundBrush}"
-                ToolTipService.ToolTip="Close">
+                Foreground="{StaticResource GameForegroundBrush}">
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE711;" />
             </Button>
 
@@ -259,12 +244,11 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Spacing="28">
-                <TextBlock
+                <TextBlock x:Uid="ControlsHeading"
                     HorizontalAlignment="Center"
                     FontFamily="Consolas"
                     FontSize="30"
-                    Foreground="{StaticResource GameForegroundBrush}"
-                    Text="CONTROLS" />
+                    Foreground="{StaticResource GameForegroundBrush}" />
 
                 <Grid ColumnSpacing="64">
                     <Grid.ColumnDefinitions>
@@ -273,54 +257,47 @@
                     </Grid.ColumnDefinitions>
 
                     <StackPanel Grid.Column="0" Spacing="14">
-                        <TextBlock
+                        <TextBlock x:Uid="PlayerOneLabel"
                             HorizontalAlignment="Center"
                             FontFamily="Consolas"
                             FontSize="18"
-                            Foreground="{StaticResource GameForegroundBrush}"
-                            Text="PLAYER 1" />
-                        <TextBlock
+                            Foreground="{StaticResource GameForegroundBrush}" />
+                        <TextBlock x:Uid="PlayerOneUp"
                             HorizontalAlignment="Center"
                             FontFamily="Consolas"
                             FontSize="16"
-                            Foreground="{StaticResource GameForegroundBrush}"
-                            Text="W   MOVE UP" />
-                        <TextBlock
+                            Foreground="{StaticResource GameForegroundBrush}" />
+                        <TextBlock x:Uid="PlayerOneDown"
                             HorizontalAlignment="Center"
                             FontFamily="Consolas"
                             FontSize="16"
-                            Foreground="{StaticResource GameForegroundBrush}"
-                            Text="S   MOVE DOWN" />
+                            Foreground="{StaticResource GameForegroundBrush}" />
                     </StackPanel>
 
                     <StackPanel Grid.Column="1" Spacing="14">
-                        <TextBlock
+                        <TextBlock x:Uid="PlayerTwoLabel"
                             HorizontalAlignment="Center"
                             FontFamily="Consolas"
                             FontSize="18"
-                            Foreground="{StaticResource GameForegroundBrush}"
-                            Text="PLAYER 2" />
-                        <TextBlock
+                            Foreground="{StaticResource GameForegroundBrush}" />
+                        <TextBlock x:Uid="PlayerTwoUp"
                             HorizontalAlignment="Center"
                             FontFamily="Consolas"
                             FontSize="16"
-                            Foreground="{StaticResource GameForegroundBrush}"
-                            Text="UP ARROW     MOVE UP" />
-                        <TextBlock
+                            Foreground="{StaticResource GameForegroundBrush}" />
+                        <TextBlock x:Uid="PlayerTwoDown"
                             HorizontalAlignment="Center"
                             FontFamily="Consolas"
                             FontSize="16"
-                            Foreground="{StaticResource GameForegroundBrush}"
-                            Text="DOWN ARROW   MOVE DOWN" />
+                            Foreground="{StaticResource GameForegroundBrush}" />
                     </StackPanel>
                 </Grid>
 
-                <TextBlock
+                <TextBlock x:Uid="SinglePlayerControlsHint"
                     HorizontalAlignment="Center"
                     FontFamily="Consolas"
                     FontSize="13"
                     Foreground="#B8B8B8"
-                    Text="ONE PLAYER MODE USES PLAYER 1 CONTROLS"
                     TextAlignment="Center" />
             </StackPanel>
         </Grid>
@@ -337,18 +314,16 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <Button
+            <Button x:Uid="ClosePurchasePlaceholderButton"
                 x:Name="ClosePurchasePlaceholderButton"
                 Grid.Row="0"
                 Margin="0,16,20,0"
                 Padding="12"
                 HorizontalAlignment="Right"
-                AutomationProperties.Name="Close Store placeholder"
                 Background="Transparent"
                 BorderThickness="0"
                 Click="ClosePurchasePlaceholderButton_Click"
-                Foreground="{StaticResource GameForegroundBrush}"
-                ToolTipService.ToolTip="Close">
+                Foreground="{StaticResource GameForegroundBrush}">
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE711;" />
             </Button>
 
@@ -358,78 +333,69 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Spacing="24">
-                <TextBlock
+                <TextBlock x:Uid="StoreHeading"
                     HorizontalAlignment="Center"
                     FontFamily="Consolas"
                     FontSize="30"
-                    Foreground="{StaticResource GameForegroundBrush}"
-                    Text="MORE PLAYS" />
+                    Foreground="{StaticResource GameForegroundBrush}" />
                 <Grid ColumnSpacing="64">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="200" />
                         <ColumnDefinition Width="200" />
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0" Spacing="10">
-                        <TextBlock
+                        <TextBlock x:Uid="OnePlayProductText"
                             x:Name="OnePlayProductText"
                             HorizontalAlignment="Center"
                             FontFamily="Consolas"
                             FontSize="18"
-                            Foreground="{StaticResource GameForegroundBrush}"
-                            Text="1 PLAY" />
-                        <Button
+                            Foreground="{StaticResource GameForegroundBrush}" />
+                        <Button x:Uid="BuyOnePlayButton"
                             x:Name="BuyOnePlayButton"
                             Padding="12,8"
                             HorizontalAlignment="Center"
-                            AutomationProperties.Name="Buy one play"
                             Background="#F4F1E8"
                             BorderThickness="0"
                             Click="BuyOnePlayButton_Click"
                             CornerRadius="0"
                             FontFamily="Consolas"
                             Foreground="#050505"
-                            Content="BUY"
                             IsEnabled="False" />
                     </StackPanel>
                     <StackPanel Grid.Column="1" Spacing="10">
-                        <TextBlock
+                        <TextBlock x:Uid="TenPlayProductText"
                             x:Name="TenPlayProductText"
                             HorizontalAlignment="Center"
                             FontFamily="Consolas"
                             FontSize="18"
-                            Foreground="{StaticResource GameForegroundBrush}"
-                            Text="10 PLAYS" />
-                        <Button
+                            Foreground="{StaticResource GameForegroundBrush}" />
+                        <Button x:Uid="BuyTenPlayButton"
                             x:Name="BuyTenPlayButton"
                             Padding="12,8"
                             HorizontalAlignment="Center"
-                            AutomationProperties.Name="Buy ten plays"
                             Background="#F4F1E8"
                             BorderThickness="0"
                             Click="BuyTenPlayButton_Click"
                             CornerRadius="0"
                             FontFamily="Consolas"
                             Foreground="#050505"
-                            Content="BUY"
                             IsEnabled="False" />
                     </StackPanel>
                 </Grid>
-                <TextBlock
+                <TextBlock x:Uid="StorePurchaseStatusText"
                     x:Name="StorePurchaseStatusText"
                     HorizontalAlignment="Center"
                     FontFamily="Consolas"
                     FontSize="12"
                     Foreground="#B8B8B8"
-                    Text="CONNECTING TO MICROSOFT STORE..."
                     TextAlignment="Center" />
-                <TextBlock
+                <TextBlock x:Uid="StoreProductFallbackText"
                     x:Name="StoreProductFallbackText"
                         Grid.Column="0"
                         HorizontalAlignment="Center"
                     FontFamily="Consolas"
                     FontSize="13"
                     Foreground="#B8B8B8"
-                    Text="MICROSOFT STORE IS NOT CONNECTED"
                     TextAlignment="Center" />
             </StackPanel>
         </Grid>
@@ -445,45 +411,39 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Spacing="20">
-                <TextBlock
+                <TextBlock x:Uid="PauseHeading"
                     HorizontalAlignment="Center"
                     FontFamily="Consolas"
                     FontSize="30"
-                    Foreground="{StaticResource GameForegroundBrush}"
-                    Text="PAUSED" />
-                <Button
+                    Foreground="{StaticResource GameForegroundBrush}" />
+                <Button x:Uid="ResumeMatchButton"
                     x:Name="ResumeMatchButton"
                     MinWidth="220"
                     Padding="24,12"
                     HorizontalAlignment="Center"
-                    AutomationProperties.Name="Resume match"
                     Background="#F4F1E8"
                     BorderThickness="0"
                     Click="ResumeMatchButton_Click"
                     CornerRadius="0"
                     FontFamily="Consolas"
-                    Foreground="#050505"
-                    Content="CONTINUE" />
-                <Button
+                    Foreground="#050505" />
+                <Button x:Uid="AbandonMatchButton"
                     x:Name="AbandonMatchButton"
                     MinWidth="220"
                     Padding="24,12"
                     HorizontalAlignment="Center"
-                    AutomationProperties.Name="Abandon match and return to menu"
                     Background="Transparent"
                     BorderBrush="{StaticResource GameForegroundBrush}"
                     BorderThickness="1"
                     Click="AbandonMatchButton_Click"
                     CornerRadius="0"
                     FontFamily="Consolas"
-                    Foreground="{StaticResource GameForegroundBrush}"
-                    Content="ABANDON MATCH" />
-                <TextBlock
+                    Foreground="{StaticResource GameForegroundBrush}" />
+                <TextBlock x:Uid="AbandonHint"
                     HorizontalAlignment="Center"
                     FontFamily="Consolas"
                     FontSize="12"
-                    Foreground="#B8B8B8"
-                    Text="RETURNING TO MENU WILL NOT USE A PLAY" />
+                    Foreground="#B8B8B8" />
             </StackPanel>
         </Grid>
 
@@ -499,18 +459,16 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <Button
+            <Button x:Uid="CloseSettingsButton"
                 x:Name="CloseSettingsButton"
                 Grid.Row="0"
                 Margin="0,16,20,0"
                 Padding="12"
                 HorizontalAlignment="Right"
-                AutomationProperties.Name="Close settings"
                 Background="Transparent"
                 BorderThickness="0"
                 Click="CloseSettingsButton_Click"
-                Foreground="{StaticResource GameForegroundBrush}"
-                ToolTipService.ToolTip="Close">
+                Foreground="{StaticResource GameForegroundBrush}">
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE711;" />
             </Button>
 
@@ -519,95 +477,82 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Spacing="26">
-                <TextBlock
+                <TextBlock x:Uid="SettingsHeading"
                     HorizontalAlignment="Center"
                     FontFamily="Consolas"
                     FontSize="30"
-                    Foreground="{StaticResource GameForegroundBrush}"
-                    Text="SETTINGS" />
+                    Foreground="{StaticResource GameForegroundBrush}" />
                 <StackPanel HorizontalAlignment="Center" Spacing="8">
-                    <TextBlock
+                    <TextBlock x:Uid="SettingsAiDifficultyText"
                         x:Name="SettingsAiDifficultyText"
                         HorizontalAlignment="Center"
                         FontFamily="Consolas"
                         FontSize="13"
-                        Foreground="#B8B8B8"
-                        Text="AI DIFFICULTY  MEDIUM" />
+                        Foreground="#B8B8B8" />
                     <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Spacing="6">
-                        <Button
+                        <Button x:Uid="SettingsEasyDifficultyButton"
                             x:Name="SettingsEasyDifficultyButton"
                             Width="90"
                             Padding="8,6"
-                            AutomationProperties.Name="Set settings AI difficulty easy"
                             Background="Transparent"
                             BorderBrush="#B8B8B8"
                             BorderThickness="1"
                             Click="SettingsEasyDifficultyButton_Click"
                             CornerRadius="0"
                             FontFamily="Consolas"
-                            Foreground="{StaticResource GameForegroundBrush}"
-                            Content="EASY" />
-                        <Button
+                            Foreground="{StaticResource GameForegroundBrush}" />
+                        <Button x:Uid="SettingsMediumDifficultyButton"
                             x:Name="SettingsMediumDifficultyButton"
                             Width="90"
                             Padding="8,6"
-                            AutomationProperties.Name="Set settings AI difficulty medium"
                             Background="#F4F1E8"
                             BorderThickness="0"
                             Click="SettingsMediumDifficultyButton_Click"
                             CornerRadius="0"
                             FontFamily="Consolas"
-                            Foreground="#050505"
-                            Content="MEDIUM" />
-                        <Button
+                            Foreground="#050505" />
+                        <Button x:Uid="SettingsHardDifficultyButton"
                             x:Name="SettingsHardDifficultyButton"
                             Width="90"
                             Padding="8,6"
-                            AutomationProperties.Name="Set settings AI difficulty hard"
                             Background="Transparent"
                             BorderBrush="#B8B8B8"
                             BorderThickness="1"
                             Click="SettingsHardDifficultyButton_Click"
                             CornerRadius="0"
                             FontFamily="Consolas"
-                            Foreground="{StaticResource GameForegroundBrush}"
-                            Content="HARD" />
+                            Foreground="{StaticResource GameForegroundBrush}" />
                     </StackPanel>
                 </StackPanel>
                 <StackPanel HorizontalAlignment="Center" Spacing="8">
-                    <TextBlock
+                    <TextBlock x:Uid="SettingsDisplayModeText"
                         x:Name="SettingsDisplayModeText"
                         HorizontalAlignment="Center"
                         FontFamily="Consolas"
                         FontSize="13"
-                        Foreground="#B8B8B8"
-                        Text="DISPLAY  WINDOWED" />
+                        Foreground="#B8B8B8" />
                     <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Spacing="8">
-                        <Button
+                        <Button x:Uid="SettingsWindowedButton"
                             x:Name="SettingsWindowedButton"
                             Width="150"
                             Padding="12,8"
-                            AutomationProperties.Name="Use windowed display mode"
                             Background="#F4F1E8"
                             BorderThickness="0"
                             Click="SettingsWindowedButton_Click"
                             CornerRadius="0"
                             FontFamily="Consolas"
-                            Foreground="#050505"
-                            Content="WINDOWED" />
-                        <Button
+                            Foreground="#050505" />
+                        <Button x:Uid="SettingsFullScreenButton"
                             x:Name="SettingsFullScreenButton"
                             Width="150"
                             Padding="12,8"
-                            AutomationProperties.Name="Use full screen display mode"
                             Background="Transparent"
                             BorderBrush="#B8B8B8"
                             BorderThickness="1"
                             Click="SettingsFullScreenButton_Click"
                             CornerRadius="0"
                             FontFamily="Consolas"
-                            Foreground="{StaticResource GameForegroundBrush}"
-                            Content="FULL SCREEN" />
+                            Foreground="{StaticResource GameForegroundBrush}" />
                     </StackPanel>
                 </StackPanel>
             </StackPanel>
