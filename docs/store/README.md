@@ -14,7 +14,7 @@
 
 - [en-US 草稿](en-US.md)：Description／Product features 已填入，整頁儲存狀態待確認。
 - zh-TW：待新增語言與文案。
-- Screenshots：已收到重拍的 1920×1080 英文全螢幕主選單原圖，格式與尺寸通過；見 [英文素材紀錄](en-US.md#screenshot-candidates)，尚未上傳。
+- Screenshots：擁有者決定使用主選單與對戰兩張原圖，皆為 1920×1080 PNG，格式與尺寸通過；保留現有檔名，見 [英文素材紀錄](en-US.md#selected-screenshots)，尚未上傳。
 - Store logos：待製作及上傳。
 - Trailers：尚未決定是否製作。
 

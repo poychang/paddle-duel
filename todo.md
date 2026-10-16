@@ -12,7 +12,7 @@
 - [ ] 逐步完成主 App 的 Partner Center 私人測試提交草稿，同步保存[商店資料](docs/store/README.md)。
   - 2026-10-16：Pricing and availability 已回報 Complete（Free／Private audience／Internal Testers）；IARC 問卷結果已儲存，互動元素僅 In-Game Purchases。
   - en-US Description／5 項 Product features 已回報填入；整頁儲存、Properties Complete、繁中文案、Screenshots／Store logos 與政策／支援欄位待核對。
-  - 第一張英文主選單已由擁有者重拍覆蓋為 1920×1080 全螢幕 PNG，格式／尺寸檢查通過並保存；尚未上傳，提交前須核對最終 App 外觀。
+  - 擁有者選定主選單與對戰兩張 1920×1080 全螢幕 PNG，格式／尺寸檢查通過並保存，不另製作第三張；尚未上傳，提交前須核對最終 App 外觀。
   - 不送審、不發布；正式商品接線與交易驗收仍未完成。
 
 ## 待辦
