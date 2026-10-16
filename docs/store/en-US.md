@@ -47,7 +47,7 @@ Play in a resizable window or switch to full screen.
   - 2026-10-16 擁有者提供的欄位規格：PNG、每張小於 50 MB、最多 30 張；建議至少 1366×768，支援 3840×2160，允許橫向或直向。未確認最低張數，不把建議尺寸當成強制門檻。
   - 擁有者於 2026-10-16 決定只使用下列兩張 1920×1080 橫向截圖：主選單與對戰畫面，不另製作第三張設定截圖。
   - 英文 listing 使用英文 App 畫面；只保留遊戲視窗，不包含桌面、通知或帳戶資訊，不拉伸／放大低解析度畫面。收件後核對實際像素尺寸及檔案大小，再記錄版本、日期與用途。
-- Store logos：待依 Store 欄位規格製作／上傳；既有 App 封裝圖示不代表商店素材已完成。
+- Store logos：已依擁有者指定的官網 favicon 製作兩張 PNG，見下方紀錄；待上傳確認，不以本機檢查代替 Partner Center 驗證。
 - Trailers and additional assets：尚未提供，尚未決定是否製作影片。
 - 繁體中文 listing：尚未建立對應文案，不以此英文檔代替。
 
@@ -63,3 +63,22 @@ Play in a resizable window or switch to full screen.
 若欄位提供 caption，可分別使用 `Choose solo or local two-player play and select your difficulty.` 與 `Return the ball and race to 11 points.`；尚未回報填入 caption。
 
 這兩張直接保留擁有者提供的檔名與路徑，不另複製至 `assets`，避免多份素材混淆；不拉伸或補邊。先前視窗版可由 Git 歷史取得。圖片不視為正式 MSIX 安裝、Store 購買或最終提交版本的驗收證據；提交前須確認與最終 App 外觀一致。檔案檢查通過不代表 Partner Center 已接受上傳。
+
+### Store logos
+
+2026-10-16：擁有者指定沿用 [favicon.svg](../../sites/favicon.svg)。直接以向量渲染，不放大小型點陣圖、不加文字、不拉伸圖案；深灰底 `#101010`、米白圖案 `#f3f3ed`。圖案位於上方三分之二，底部留給 Store 文字覆蓋。兩種語言可共用；未修改 App 封裝圖示。
+
+| 檔案 | 用途 | 尺寸／格式 | 大小 | 狀態 |
+| --- | --- | --- | --- | --- |
+| [poster-1440x2160.png](poster-1440x2160.png) | Poster art | 1440×2160，2:3 PNG | 14,164 bytes | 本機尺寸、格式、底部留白及視覺檢查通過；未上傳 |
+| [box-2160x2160.png](box-2160x2160.png) | Box art | 2160×2160，1:1 PNG | 18,305 bytes | 本機尺寸、格式、底部留白及視覺檢查通過；未上傳 |
+
+擁有者提供的頁面文字為「9:16 Poster art」，上傳框沒有像素提示；[目前 MSIX 官方文件](https://learn.microsoft.com/windows/apps/publish/publish-your-app/msix/screenshots-and-images)則列出 **2:3，720×1080 或 1440×2160**，Box art 為 **1080×1080 或 2160×2160**。本次依文件的高解析度尺寸製作，不能宣稱已解決介面標籤差異，須以上傳驗證結果確認。兩張皆低於頁面的 50 MB 限制。這是 PC 素材；不宣稱符合 Xbox 必須含產品名稱的要求。
+
+重建命令（Windows，需已安裝 Google Chrome；不需 npm 套件或網路轉檔服務）：
+
+```powershell
+& .\scripts\New-StoreAssets.ps1
+```
+
+[產生腳本](../../scripts/New-StoreAssets.ps1) 使用隔離的暫存瀏覽器 profile 渲染本機 SVG，驗證精確尺寸／PNG／檔案大小與底部三分之一全為背景色，再複製到此資料夾並清除暫存資料。既有 PNG 會被重建結果覆蓋；SVG 是唯一圖案來源。
