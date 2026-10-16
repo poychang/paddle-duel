@@ -11,8 +11,8 @@
 
 - [ ] 逐步完成主 App 的 Partner Center 私人測試提交草稿，同步保存[商店資料](docs/store/README.md)。
   - 2026-10-16：Pricing and availability 已回報 Complete（Free／Private audience／Internal Testers）；IARC 問卷結果已儲存，互動元素僅 In-Game Purchases。
-  - en-US Description／5 項 Product features 已回報填入；整頁儲存、Properties Complete、繁中文案、Screenshots／Store logos 與政策／支援欄位待核對。
-  - 擁有者選定主選單與對戰兩張 1920×1080 全螢幕 PNG，格式／尺寸檢查通過並保存，不另製作第三張；已回報上傳及預覽正常，整頁儲存待確認，提交前須核對最終 App 外觀。
+  - 2026-10-16 10:23 概況截圖確認 Pricing and availability／Properties／Age ratings／Store listings 均為 Complete，Packages 尚未開始；繁中文案、政策／支援欄位最終值待核對，整體仍 In draft。
+  - 擁有者選定主選單與對戰兩張 1920×1080 全螢幕 PNG，格式／尺寸檢查通過並保存，不另製作第三張；已回報上傳及預覽正常，listing 已 Complete，提交前須核對最終 App 外觀。
   - 依擁有者指定的 favicon SVG 產生 1440×2160 Poster／2160×2160 Box PNG，保存向量轉檔腳本；擁有者更新兩張成品並回報處理完成，尺寸／格式通過。腳本僅重建初版，已記錄 Box art 底部覆蓋風險；整頁儲存與最終 Store 呈現待確認。
   - 不送審、不發布；正式商品接線與交易驗收仍未完成。
 

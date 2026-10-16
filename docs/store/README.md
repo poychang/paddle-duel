@@ -12,15 +12,17 @@
 
 ## 文案與素材
 
-- [en-US 草稿](en-US.md)：Description／Product features 已填入，整頁儲存狀態待確認。
+- [en-US 草稿](en-US.md)：Description／Product features 已填入，2026-10-16 提交概況截圖確認 Store listings 為 Complete；未發布。
 - zh-TW：待新增語言與文案。
-- Screenshots：擁有者選定主選單與對戰兩張 1920×1080 PNG，並於 2026-10-16 回報已上傳及確認預覽；整頁儲存狀態仍待確認。保留現有檔名，見 [英文素材紀錄](en-US.md#selected-screenshots)。
-- Store logos：已保存官網 favicon 轉出的 Poster／Box PNG，擁有者更新成品並回報處理完成；[素材紀錄](en-US.md#store-logos) 註明腳本與手動調整版本差異、Box art 底部覆蓋風險。整頁儲存與最終 Store 呈現待確認。
+- Screenshots：擁有者選定主選單與對戰兩張 1920×1080 PNG，並於 2026-10-16 回報已上傳及確認預覽；Store listings 已顯示 Complete。保留現有檔名，見 [英文素材紀錄](en-US.md#selected-screenshots)。
+- Store logos：已保存官網 favicon 轉出的 Poster／Box PNG，擁有者更新成品並回報處理完成；[素材紀錄](en-US.md#store-logos) 註明腳本與手動調整版本差異、Box art 底部覆蓋風險。Store listings 已顯示 Complete，最終 Store 呈現仍待確認。
 - Trailers：尚未決定是否製作。
 
 ## 2026-10-16 主 App 提交進度
 
 產品為 Paddle Duel，Store ID `9NJ180X2R7TF`。正式 identity 與附加商品識別見 [專案 README](../../README.md#partner-center-產品識別)。
+
+10:23 提交概況截圖確認：Pricing and availability、Properties、Age ratings、Store listings 均為 **Complete**；Packages 為 **Not started**，Submission options 為 **Recommended**，整體仍為 **In draft**。Xbox Creators Program 為 Not started；目前產品為 Windows PC、無 Xbox services 整合，不為完成清單而啟用。Complete 僅代表提交欄位狀態，不代表通過認證或所有功能已驗收。
 
 ### Pricing and availability
 
@@ -36,7 +38,7 @@
 
 ### Properties
 
-以下是協作過程中的填寫建議與回報，**尚未取得整頁儲存成功／Complete 的確認**：
+2026-10-16 提交概況截圖確認本頁為 **Complete**。以下保留協作過程中的填寫建議與回報；概況狀態不取代各欄位最終值的核對：
 
 | 區塊 | 建議／填寫紀錄 |
 | --- | --- |
@@ -61,16 +63,16 @@
 
 ### Store listings
 
-擁有者確認 en-US Description 與 5 項 Product features 已填入，原文見 [英文草稿](en-US.md)。圖片、繁中與其他欄位未完成；不宣稱 listing 已 Complete。
+擁有者確認 en-US Description 與 5 項 Product features 已填入，原文見 [英文草稿](en-US.md)；兩張截圖已上傳，logos 已回報處理完成。2026-10-16 概況截圖確認 Store listings 為 **Complete**。繁中尚未製作；沒有以 Complete 推定額外語言也已完成。
 
 ## 提交前仍需完成
 
-- 確認 Properties 儲存狀態、主 App 政策／支援資訊及其他必填欄位。
-- 完成中英文文案與實際遊戲截圖、Store logos；核對整頁儲存狀態。
-- 接入正式附加商品識別，驗證購買與 fulfillment，再重建／核對提交封裝。現有 bundle 不是已完成交易功能的上市版本。
+- 核對主 App 政策／支援資訊及各欄位最終值，不能僅以 Properties Complete 推定正確。
+- 繁中 listing 待製作；提交前核對英文文案、截圖與最終程式一致，並檢查 logos 的最終呈現。
+- 先接入正式附加商品識別、跑本機回歸測試，再重建／核對私人測試封裝並上傳 Packages；現有 bundle 仍含開發占位商品識別。
 - 確認私人測試者能在附加商品公開排程前取得商品；不能由主 App 的 Private audience 推定。
 - Partner Center 曾顯示稅務／收款資料待更新；由擁有者在平台內處理，不收集或存放敏感資料。
-- 所有項目未完成前，不按 `Submit for certification`。尚未提交主 App、發布或驗證真實交易。
+- 私人測試提交前先核對封裝、政策、測試對象與 Submission options，並取得擁有者明確同意；目前不按 `Submit for certification`。真實 Store 交易驗收需要可由 Store 取得的測試版本，因此在私人測試發佈後執行，不誤列為首次私人提交前必須已通過。正式公開上市前仍須完成交易及其餘發行驗收。
 
 ## 官方參考
 

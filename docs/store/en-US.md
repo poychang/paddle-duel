@@ -2,9 +2,9 @@
 
 ## Status
 
-2026-10-16：擁有者確認已在 Partner Center 的 en-US listing 填入以下 Description 與 5 項 Product features。尚未確認整頁儲存或 Complete；未送審、未發布。
+2026-10-16：擁有者確認已在 Partner Center 的 en-US listing 填入以下 Description 與 5 項 Product features。10:23 提交概況截圖確認 Store listings 已為 Complete；未送審、未發布，不代表繁中已完成。
 
-以下為已填入的草稿原文，不是已通過驗收的功能聲明。購買相關描述須在正式商品 ID 接線與真實 Store 驗收完成後才能作為提交文案；若產品行為改變，須同步修改此檔與 Partner Center。
+以下為已填入的草稿原文，不是已通過驗收的功能聲明。私人測試提交前須接入正式商品 ID，真實 Store 購買驗收於可取得測試版本後執行，並於公開上市前完成；若產品行為改變，須同步修改此檔與 Partner Center。
 
 ## Description
 
@@ -58,7 +58,7 @@ Play in a resizable window or switch to full screen.
 | [screenshot01.png](screenshot01.png) | en-US 全螢幕主選單，含難度選擇與免費額度 | 1920×1080，PNG，24,161 bytes | 2026-10-16；本機 unpackaged 開發版，執行檔 FileVersion 1.0.0.0 | 擁有者全螢幕重拍並覆蓋原檔；格式、大小與尺寸通過，無視窗外灰色背景或可見私人資訊；已回報上傳及預覽正常 |
 | [screenshot02.png](screenshot02.png) | 全螢幕對戰，顯示雙方球拍、球及 0–2 比分 | 1920×1080，PNG，15,700 bytes | 2026-10-16；同次本機 unpackaged 開發版操作 | 格式、大小與尺寸通過，無暫停選單或可見私人資訊；已回報上傳及預覽正常 |
 
-2026-10-16：擁有者回報已依主選單、對戰畫面的順序完成兩張上傳及預覽確認；尚未確認整個 listing 儲存／Complete，未送審或發布。
+2026-10-16：擁有者回報已依主選單、對戰畫面的順序完成兩張上傳及預覽確認；後續提交概況截圖確認 Store listings 為 Complete，未送審或發布。
 
 若欄位提供 caption，可分別使用 `Choose solo or local two-player play and select your difficulty.` 與 `Return the ball and race to 11 points.`；尚未回報填入 caption。
 
