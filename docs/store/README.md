@@ -40,17 +40,18 @@
 
 ### Properties
 
-2026-10-16 10:23 本頁為 Complete；11:21 上傳封裝後的最新截圖顯示 **Incomplete**，原因待查看頁面提示。以下保留協作過程中的填寫建議與回報；概況狀態不取代各欄位最終值的核對：
+2026-10-16 10:23 本頁為 Complete；11:21 上傳封裝後的截圖顯示 **Incomplete**。擁有者隨後確認缺少 Privacy policy URL，已補上 `https://project.poychang.net/paddle-duel/privacy.html`；儲存後恢復 Complete 待確認。以下保留協作過程中的填寫建議與回報；概況狀態不取代各欄位最終值的核對：
 
 | 區塊 | 建議／填寫紀錄 |
 | --- | --- |
 | Category | 建議 Classics；實際選取值待最後核對 |
+| Privacy policy URL | 擁有者確認已填入 `https://project.poychang.net/paddle-duel/privacy.html`；儲存後狀態待確認 |
 | Display mode | 4K、HDR、VRR、Mixed Reality 不宣告；尚未完成相關驗證 |
 | Game settings | PC single player；local multiplayer 最少／最多 2 人；不宣告 Xbox、split screen、online、cross-platform、co-op 或 Broadcasting |
 | Product declarations | 不使用外部金流、不宣告已通過完整無障礙測試；允許其他磁碟安裝；建議停用 OneDrive 自動備份與 Windows 錄影／廣播宣告；沒有生成式 AI 功能 |
 | System requirements | 擁有者回報完成此區；Keyboard minimum、Mouse recommended；其他硬體不勾，Memory／DirectX／Video memory 保持 Not specified，Processor／Graphics 留空 |
 
-這些宣告不是額外硬體、無障礙、備份還原或錄影功能的驗收結果。主 App 的隱私權／支援聯絡欄位仍待核對。
+這些宣告不是額外硬體、無障礙、備份還原或錄影功能的驗收結果。主 App 的政策網址已回報填入，儲存狀態及支援聯絡欄位仍待核對。
 
 ### Age ratings
 
@@ -82,7 +83,7 @@
 
 - 核對主 App 政策／支援資訊及各欄位最終值，不能僅以 Properties Complete 推定正確。
 - 繁中 listing 待製作；提交前核對英文文案、截圖與最終程式一致，並檢查 logos 的最終呈現。
-- 先查看 Properties 的 Incomplete 提示並處理，再查看 Store listings 的缺漏；不把上傳封裝 Validated 當成送審通過。
+- 確認 Properties 補上政策網址並儲存後恢復 Complete，再查看 Store listings 的缺漏；不把上傳封裝 Validated 當成送審通過。
 - 確認私人測試者能在附加商品公開排程前取得商品；不能由主 App 的 Private audience 推定。
 - Partner Center 曾顯示稅務／收款資料待更新；由擁有者在平台內處理，不收集或存放敏感資料。
 - 私人測試提交前先核對封裝、政策、測試對象與 Submission options，並取得擁有者明確同意；目前不按 `Submit for certification`。真實 Store 交易驗收需要可由 Store 取得的測試版本，因此在私人測試發佈後執行，不誤列為首次私人提交前必須已通過。正式公開上市前仍須完成交易及其餘發行驗收。
