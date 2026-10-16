@@ -4,7 +4,9 @@
 
 2026-10-16：擁有者確認已在 Partner Center 的 en-US listing 填入以下 Description 與 5 項 Product features。10:23 提交概況截圖確認 Store listings 已為 Complete；未送審、未發布，不代表繁中已完成。
 
-以下為已填入的草稿原文，不是已通過驗收的功能聲明。私人測試提交前須接入正式商品 ID，真實 Store 購買驗收於可取得測試版本後執行，並於公開上市前完成；若產品行為改變，須同步修改此檔與 Partner Center。
+11:24 語言清單截圖再次確認 English (United States) 為 Complete；目前整體 listing 的缺漏位於 Chinese (Taiwan)。
+
+以下為已填入的草稿原文，不是已通過驗收的功能聲明。正式商品 ID 已接入；真實 Store 購買驗收於可取得測試版本後執行，並於公開上市前完成；若產品行為改變，須同步修改此檔與 Partner Center。
 
 ## Description
 
@@ -49,7 +51,7 @@ Play in a resizable window or switch to full screen.
   - 英文 listing 使用英文 App 畫面；只保留遊戲視窗，不包含桌面、通知或帳戶資訊，不拉伸／放大低解析度畫面。收件後核對實際像素尺寸及檔案大小，再記錄版本、日期與用途。
 - Store logos：已依擁有者指定的官網 favicon 製作兩張 PNG，見下方紀錄；待上傳確認，不以本機檢查代替 Partner Center 驗證。
 - Trailers and additional assets：尚未提供，尚未決定是否製作影片。
-- 繁體中文 listing：尚未建立對應文案，不以此英文檔代替。
+- 繁體中文 listing：已建立 [zh-TW 草稿](zh-TW.md)，尚未回報填入或儲存，不以此英文檔代替。
 
 ### Selected screenshots
 

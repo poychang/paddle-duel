@@ -16,6 +16,7 @@
   - 依擁有者指定的 favicon SVG 產生 1440×2160 Poster／2160×2160 Box PNG，保存向量轉檔腳本；擁有者更新兩張成品並回報處理完成，尺寸／格式通過。腳本僅重建初版，已記錄 Box art 底部覆蓋風險；Store listings 已 Complete，最終 Store 呈現待確認。
   - 2026-10-16 11:21 新版封裝已上傳，截圖確認 Packages Complete／Validated；Properties 與 Store listings 改為 Incomplete，下一步先查看 Properties 的實際缺漏，再處理 listing。整體仍 In draft，不送審、不發布，真實交易仍待私人測試。
   - 擁有者確認 Properties 缺少 Privacy policy URL，已補上 `https://project.poychang.net/paddle-duel/privacy.html`；儲存後 Complete 待確認，接著處理 Store listings。
+  - 11:24 語言清單截圖確認英文 Complete、Chinese (Taiwan) Incomplete；已保存[繁中 Description／features 草稿](docs/store/zh-TW.md)，下一步填入並核對素材，尚未回報儲存。
 
 ## 待辦
 

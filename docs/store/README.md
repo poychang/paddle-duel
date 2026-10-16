@@ -13,7 +13,7 @@
 ## 文案與素材
 
 - [en-US 草稿](en-US.md)：Description／Product features 已填入，2026-10-16 提交概況截圖確認 Store listings 為 Complete；未發布。
-- zh-TW：待新增語言與文案。
+- [zh-TW 草稿](zh-TW.md)：11:24 截圖確認 Chinese (Taiwan) 為 Incomplete、英文為 Complete；已準備 Description／5 項 features，尚未回報填入或儲存。
 - Screenshots：擁有者選定主選單與對戰兩張 1920×1080 PNG，並於 2026-10-16 回報已上傳及確認預覽；Store listings 已顯示 Complete。保留現有檔名，見 [英文素材紀錄](en-US.md#selected-screenshots)。
 - Store logos：已保存官網 favicon 轉出的 Poster／Box PNG，擁有者更新成品並回報處理完成；[素材紀錄](en-US.md#store-logos) 註明腳本與手動調整版本差異、Box art 底部覆蓋風險。Store listings 已顯示 Complete，最終 Store 呈現仍待確認。
 - Trailers：尚未決定是否製作。
@@ -70,6 +70,8 @@
 
 11:21 最新概況改為 **Incomplete**；尚未展開 Languages supported in packages 或各語言清單，不能推定是哪個語言或素材缺漏。
 
+11:24 擁有者展開語言清單，截圖確認 **Chinese (Taiwan)：Incomplete**、**English (United States)：Complete**。已保存 [繁中草稿](zh-TW.md)，接著填入 Description／Product features 並核對素材；不由語言層級的 Incomplete 推定每個欄位都缺漏。
+
 ## 2026-10-16 私人測試候選封裝
 
 - 正式 `plays1`／`plays10` ID 已接入；商品名稱／價格仍由 Store 提供，沒有本機付費餘額。
@@ -82,7 +84,7 @@
 ## 提交前仍需完成
 
 - 核對主 App 政策／支援資訊及各欄位最終值，不能僅以 Properties Complete 推定正確。
-- 繁中 listing 待製作；提交前核對英文文案、截圖與最終程式一致，並檢查 logos 的最終呈現。
+- 繁中 listing 草稿已備妥，待填入、核對素材並儲存；提交前核對兩種語言文案、截圖與最終程式一致，並檢查 logos 的最終呈現。
 - 確認 Properties 補上政策網址並儲存後恢復 Complete，再查看 Store listings 的缺漏；不把上傳封裝 Validated 當成送審通過。
 - 確認私人測試者能在附加商品公開排程前取得商品；不能由主 App 的 Private audience 推定。
 - Partner Center 曾顯示稅務／收款資料待更新；由擁有者在平台內處理，不收集或存放敏感資料。
