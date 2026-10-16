@@ -55,6 +55,6 @@ Play in a resizable window or switch to full screen.
 
 | 檔案 | 語言／用途 | 尺寸／大小 | 擷取日期與來源 | 狀態 |
 | --- | --- | --- | --- | --- |
-| [screenshot01.png](screenshot01.png) | en-US 主選單，含難度選擇與免費額度 | 1366×768，PNG，13,641 bytes | 2026-10-16；本機 unpackaged 開發版，執行檔 FileVersion 1.0.0.0 | 格式、大小與整張圖片尺寸符合提供的規格；畫面含灰色外圍背景，遊戲視窗未填滿，建議全螢幕重拍；未上傳 |
+| [screenshot01.png](screenshot01.png) | en-US 全螢幕主選單，含難度選擇與免費額度 | 1920×1080，PNG，24,161 bytes | 2026-10-16；本機 unpackaged 開發版，執行檔 FileVersion 1.0.0.0 | 擁有者全螢幕重拍並覆蓋原檔；格式、大小與尺寸通過，無視窗外灰色背景或可見私人資訊，可用於英文 listing 草稿；未上傳 |
 
-保留收到的原圖，不拉伸或補邊。此圖僅供候選／回顧，不視為正式 MSIX 安裝、Store 購買或最終提交版本的驗收證據。重拍後再挑選成品整理至 `assets/screenshots/en-US`。
+保留收到的原圖，不拉伸或補邊；先前視窗版可由 Git 歷史取得。此圖不視為正式 MSIX 安裝、Store 購買或最終提交版本的驗收證據；提交前須確認與最終 App 外觀一致。素材收齊後再整理至 `assets/screenshots/en-US`。
