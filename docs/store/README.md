@@ -14,7 +14,8 @@
 
 - [en-US 草稿](en-US.md)：Description／Product features 已填入，整頁儲存狀態待確認。
 - zh-TW：待新增語言與文案。
-- Screenshots／Store logos：待製作及上傳。
+- Screenshots：已收到英文主選單候選原圖，規格與重拍建議見 [英文素材紀錄](en-US.md#screenshot-candidates)，尚未上傳。
+- Store logos：待製作及上傳。
 - Trailers：尚未決定是否製作。
 
 ## 2026-10-16 主 App 提交進度
