@@ -24,6 +24,8 @@
 
 10:23 提交概況截圖確認：Pricing and availability、Properties、Age ratings、Store listings 均為 **Complete**；Packages 為 **Not started**，Submission options 為 **Recommended**，整體仍為 **In draft**。Xbox Creators Program 為 Not started；目前產品為 Windows PC、無 Xbox services 整合，不為完成清單而啟用。Complete 僅代表提交欄位狀態，不代表通過認證或所有功能已驗收。
 
+11:21 擁有者回報新版封裝上傳完成，截圖顯示 Packages 為 **Complete**，上傳檔案狀態為 **Validated**。Pricing and availability／Age ratings 仍為 Complete，但 **Properties／Store listings 改為 Incomplete**；整體仍 In draft。須開啟各頁確認實際缺漏，不能僅憑概況推定是語言、政策或宣告欄位造成；Validated 不等於通過 certification。
+
 ### Pricing and availability
 
 擁有者確認已儲存且顯示 Complete：
@@ -38,7 +40,7 @@
 
 ### Properties
 
-2026-10-16 提交概況截圖確認本頁為 **Complete**。以下保留協作過程中的填寫建議與回報；概況狀態不取代各欄位最終值的核對：
+2026-10-16 10:23 本頁為 Complete；11:21 上傳封裝後的最新截圖顯示 **Incomplete**，原因待查看頁面提示。以下保留協作過程中的填寫建議與回報；概況狀態不取代各欄位最終值的核對：
 
 | 區塊 | 建議／填寫紀錄 |
 | --- | --- |
@@ -65,6 +67,8 @@
 
 擁有者確認 en-US Description 與 5 項 Product features 已填入，原文見 [英文草稿](en-US.md)；兩張截圖已上傳，logos 已回報處理完成。2026-10-16 概況截圖確認 Store listings 為 **Complete**。繁中尚未製作；沒有以 Complete 推定額外語言也已完成。
 
+11:21 最新概況改為 **Incomplete**；尚未展開 Languages supported in packages 或各語言清單，不能推定是哪個語言或素材缺漏。
+
 ## 2026-10-16 私人測試候選封裝
 
 - 正式 `plays1`／`plays10` ID 已接入；商品名稱／價格仍由 Store 提供，沒有本機付費餘額。
@@ -72,13 +76,13 @@
 - 付費完成先保存 journal，再向 Store 扣一單位；開局前重試未結清紀錄，並行重試序列化，損毀紀錄保留並報錯。73 項 .NET 測試通過，商務情境使用 fake gateway。
 - Release x64 `1.0.0.0` 未簽署 bundle／msixupload 皆通過實際 payload 檢查；位於 Git 忽略的 `BundleArtifacts\Release-x64\704aea306d5a416dab4a7fa0d43423f5\`。
 - 上傳候選檔為該目錄的 `PaddleDuel.App_1.0.0.0_x64_bundle.msixupload`；SHA-256：`7AE0ED5EC7F29173DDB658CEEE74019ABC87CBCF1BB77A442090AFB526AE613E`。不要使用前一批含占位商品 ID 的封裝。
-- 未上傳 Packages、未送審、未發布、未執行真實購買。只有既有缺少 `mspdbcmf.exe` 的 symbols 警告。
+- 11:21 擁有者確認上傳完成，概況顯示檔名 `PaddleDuel.App_1.0.0.0_x64_bundle.msixupload`、Validated 與 Packages Complete；截圖未提供遠端檔案雜湊。未送審、未發布、未執行真實購買。建置只有既有缺少 `mspdbcmf.exe` 的 symbols 警告。
 
 ## 提交前仍需完成
 
 - 核對主 App 政策／支援資訊及各欄位最終值，不能僅以 Properties Complete 推定正確。
 - 繁中 listing 待製作；提交前核對英文文案、截圖與最終程式一致，並檢查 logos 的最終呈現。
-- 將上述新版候選封裝上傳 Packages，檢查 Partner Center 解析結果；本機驗證不取代平台檢查。
+- 先查看 Properties 的 Incomplete 提示並處理，再查看 Store listings 的缺漏；不把上傳封裝 Validated 當成送審通過。
 - 確認私人測試者能在附加商品公開排程前取得商品；不能由主 App 的 Private audience 推定。
 - Partner Center 曾顯示稅務／收款資料待更新；由擁有者在平台內處理，不收集或存放敏感資料。
 - 私人測試提交前先核對封裝、政策、測試對象與 Submission options，並取得擁有者明確同意；目前不按 `Submit for certification`。真實 Store 交易驗收需要可由 Store 取得的測試版本，因此在私人測試發佈後執行，不誤列為首次私人提交前必須已通過。正式公開上市前仍須完成交易及其餘發行驗收。
