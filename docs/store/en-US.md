@@ -66,12 +66,12 @@ Play in a resizable window or switch to full screen.
 
 ### Store logos
 
-2026-10-16：擁有者指定沿用 [favicon.svg](../../sites/favicon.svg)。直接以向量渲染，不放大小型點陣圖、不加文字、不拉伸圖案；深灰底 `#101010`、米白圖案 `#f3f3ed`。圖案位於上方三分之二，底部留給 Store 文字覆蓋。兩種語言可共用；未修改 App 封裝圖示。
+2026-10-16：擁有者指定沿用 [favicon.svg](../../sites/favicon.svg)。初版直接以向量渲染，不加文字，深灰底 `#101010`、米白圖案 `#f3f3ed`，圖案位於上方三分之二。擁有者隨後更新兩張 PNG 並回報已處理完成；目前提交保留其更新版本，Box art 的圖案較初版放大，左側球拍進入底部三分之一，可能被 Store 文字覆蓋。兩種語言可共用；未修改 App 封裝圖示。
 
 | 檔案 | 用途 | 尺寸／格式 | 大小 | 狀態 |
 | --- | --- | --- | --- | --- |
-| [poster-1440x2160.png](poster-1440x2160.png) | Poster art | 1440×2160，2:3 PNG | 14,164 bytes | 本機尺寸、格式、底部留白及視覺檢查通過；未上傳 |
-| [box-2160x2160.png](box-2160x2160.png) | Box art | 2160×2160，1:1 PNG | 18,305 bytes | 本機尺寸、格式、底部留白及視覺檢查通過；未上傳 |
+| [poster-1440x2160.png](poster-1440x2160.png) | Poster art | 1440×2160，2:3 PNG | 2,726 bytes | 擁有者更新版本；本機尺寸與格式檢查通過，已回報處理完成 |
+| [box-2160x2160.png](box-2160x2160.png) | Box art | 2160×2160，1:1 PNG | 9,944 bytes | 擁有者更新版本；本機尺寸與格式檢查通過，已回報處理完成；注意底部覆蓋風險 |
 
 擁有者提供的頁面文字為「9:16 Poster art」，上傳框沒有像素提示；[目前 MSIX 官方文件](https://learn.microsoft.com/windows/apps/publish/publish-your-app/msix/screenshots-and-images)則列出 **2:3，720×1080 或 1440×2160**，Box art 為 **1080×1080 或 2160×2160**。本次依文件的高解析度尺寸製作，不能宣稱已解決介面標籤差異，須以上傳驗證結果確認。兩張皆低於頁面的 50 MB 限制。這是 PC 素材；不宣稱符合 Xbox 必須含產品名稱的要求。
 
@@ -81,4 +81,4 @@ Play in a resizable window or switch to full screen.
 & .\scripts\New-StoreAssets.ps1
 ```
 
-[產生腳本](../../scripts/New-StoreAssets.ps1) 使用隔離的暫存瀏覽器 profile 渲染本機 SVG，驗證精確尺寸／PNG／檔案大小與底部三分之一全為背景色，再複製到此資料夾並清除暫存資料。既有 PNG 會被重建結果覆蓋；SVG 是唯一圖案來源。
+[產生腳本](../../scripts/New-StoreAssets.ps1) 使用隔離的暫存瀏覽器 profile 渲染本機 SVG，驗證精確尺寸／PNG／檔案大小與底部三分之一全為背景色，再複製到此資料夾並清除暫存資料。**此命令只能重建初版留白構圖，不會重現擁有者後續的 PNG 調整／編碼；執行會覆蓋目前成品。** 目前版本以 Git 保存的 PNG 為準，不應直接重跑後當作相同成品上傳。整個 listing 的儲存／Complete 與最終 Store 呈現仍待確認。

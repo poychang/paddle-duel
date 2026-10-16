@@ -15,7 +15,7 @@
 - [en-US 草稿](en-US.md)：Description／Product features 已填入，整頁儲存狀態待確認。
 - zh-TW：待新增語言與文案。
 - Screenshots：擁有者選定主選單與對戰兩張 1920×1080 PNG，並於 2026-10-16 回報已上傳及確認預覽；整頁儲存狀態仍待確認。保留現有檔名，見 [英文素材紀錄](en-US.md#selected-screenshots)。
-- Store logos：已由官網 favicon 產生 Poster／Box PNG 並保存[重建方式](en-US.md#store-logos)，待 Partner Center 上傳驗證。
+- Store logos：已保存官網 favicon 轉出的 Poster／Box PNG，擁有者更新成品並回報處理完成；[素材紀錄](en-US.md#store-logos) 註明腳本與手動調整版本差異、Box art 底部覆蓋風險。整頁儲存與最終 Store 呈現待確認。
 - Trailers：尚未決定是否製作。
 
 ## 2026-10-16 主 App 提交進度
