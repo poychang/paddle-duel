@@ -9,17 +9,21 @@
 
 ## 進行中
 
-目前無進行中項目；下一項為真實 Store 商品接線與 Partner Center private flight 驗收。
+- [ ] 逐步完成主 App 的 Partner Center 私人測試提交草稿，同步保存[商店資料](docs/store/README.md)。
+  - 2026-10-16：Pricing and availability 已回報 Complete（Free／Private audience／Internal Testers）；IARC 問卷結果已儲存，互動元素僅 In-Game Purchases。
+  - en-US Description／5 項 Product features 已回報填入；整頁儲存、Properties Complete、繁中文案、Screenshots／Store logos 與政策／支援欄位待核對。
+  - 不送審、不發布；正式商品接線與交易驗收仍未完成。
 
 ## 待辦
 
 ### Store 與發行驗收
 
-- [ ] 透過 Partner Center private flight 驗證 1／10 units、取消、重複購買、斷線恢復及跨裝置餘額。
+- [ ] 透過 Partner Center 私人測試驗證 1／10 units、取消、重複購買、斷線恢復及跨裝置餘額。
+  - 尚未公開的主 App 先採 Private audience；不與已發布後的 Package flights 混淆。
   - 接入已取得的 `plays1`／`plays10` 真實 Store ID；目前僅封裝 identity 已關聯，商品 ID 仍為開發占位，不宣稱已能購買。
   - 附加商品預定於 `2027-01-01 00:00 UTC` 公開供應；上市前的測試取得方式與排程限制需另行確認，不將 Public audience 視為私人測試設定。
 - [ ] 以可退款的小額真實交易驗證 Microsoft 帳戶禮品卡可由 Store checkout 使用；App 不接觸卡號。
-- [ ] 完成 IARC 分級，並將已部署的聯絡／政策網址及非官方產品聲明填入適用的 Store 欄位。
+- [ ] 將已部署的聯絡／政策網址及非官方產品聲明填入並核對適用的主 App Store 欄位。
 - [ ] 核對正式版資料處理與已發布隱私權政策一致，加入 App 政策入口並完成 Store 欄位驗收。
 - [ ] 製作 Store 圖示、螢幕截圖、商品文案及價格／市場設定。
 - [ ] 建立 Windows CI：restore、tests、Release x64 build 與 MSIX bundle artifact；簽署資訊只存於受保護 secrets。
@@ -28,6 +32,9 @@
 
 ## 已完成
 
+- [x] 保存主 App IARC 問卷結果，並建立可版本控制的商店文案與設定紀錄。
+  - 2026-10-16 擁有者確認 IARC 10.3 結果已儲存，概述多為 3+／All Ages，互動元素僅 In-Game Purchases；未逐項核對各地區正式分級，不宣稱已送審。
+  - [英文文案](docs/store/en-US.md) 保存已填入的 Description／5 項 features；[設定紀錄](docs/store/README.md) 區分已確認與待核對狀態，不保存測試成員或財務資料。
 - [x] 產生 Release x64 MSIX bundle 與 Store upload，且不提交憑證或封裝產物。
   - 2026-10-15 使用 Visual Studio 2026 MSBuild 產生未簽署 `1.0.0.0` x64 bundle／msixupload，存於 Git 忽略的 `BundleArtifacts\Release-x64\<run-id>\`；不自動增版、簽署、安裝或上傳。
   - 同時驗證兩種容器的實際內層 App：正式 identity、相同版號、x64、Windows.Desktop 19045／26100、自包含 runtime、兩種語言與全部圖示尺寸。
