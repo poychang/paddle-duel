@@ -55,9 +55,11 @@ Play in a resizable window or switch to full screen.
 
 | 檔案 | 語言／用途 | 尺寸／大小 | 擷取日期與來源 | 狀態 |
 | --- | --- | --- | --- | --- |
-| [screenshot01.png](screenshot01.png) | en-US 全螢幕主選單，含難度選擇與免費額度 | 1920×1080，PNG，24,161 bytes | 2026-10-16；本機 unpackaged 開發版，執行檔 FileVersion 1.0.0.0 | 擁有者全螢幕重拍並覆蓋原檔；格式、大小與尺寸通過，無視窗外灰色背景或可見私人資訊，可用於英文 listing 草稿；未上傳 |
-| [screenshot02.png](screenshot02.png) | 全螢幕對戰，顯示雙方球拍、球及 0–2 比分 | 1920×1080，PNG，15,700 bytes | 2026-10-16；同次本機 unpackaged 開發版操作 | 格式、大小與尺寸通過，無暫停選單或可見私人資訊；擁有者選用，未上傳 |
+| [screenshot01.png](screenshot01.png) | en-US 全螢幕主選單，含難度選擇與免費額度 | 1920×1080，PNG，24,161 bytes | 2026-10-16；本機 unpackaged 開發版，執行檔 FileVersion 1.0.0.0 | 擁有者全螢幕重拍並覆蓋原檔；格式、大小與尺寸通過，無視窗外灰色背景或可見私人資訊；已回報上傳及預覽正常 |
+| [screenshot02.png](screenshot02.png) | 全螢幕對戰，顯示雙方球拍、球及 0–2 比分 | 1920×1080，PNG，15,700 bytes | 2026-10-16；同次本機 unpackaged 開發版操作 | 格式、大小與尺寸通過，無暫停選單或可見私人資訊；已回報上傳及預覽正常 |
 
-上傳順序建議為主選單、對戰畫面。若欄位提供 caption，可分別使用 `Choose solo or local two-player play and select your difficulty.` 與 `Return the ball and race to 11 points.`。
+2026-10-16：擁有者回報已依主選單、對戰畫面的順序完成兩張上傳及預覽確認；尚未確認整個 listing 儲存／Complete，未送審或發布。
+
+若欄位提供 caption，可分別使用 `Choose solo or local two-player play and select your difficulty.` 與 `Return the ball and race to 11 points.`；尚未回報填入 caption。
 
 這兩張直接保留擁有者提供的檔名與路徑，不另複製至 `assets`，避免多份素材混淆；不拉伸或補邊。先前視窗版可由 Git 歷史取得。圖片不視為正式 MSIX 安裝、Store 購買或最終提交版本的驗收證據；提交前須確認與最終 App 外觀一致。檔案檢查通過不代表 Partner Center 已接受上傳。
