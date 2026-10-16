@@ -13,6 +13,7 @@ public enum EntitlementStartStatus
     Allowed,
     NoEntitlement,
     StoreUnavailable,
+    FulfillmentPending,
 }
 
 public enum EntitlementCompletionStatus
@@ -48,13 +49,20 @@ public sealed class PlayEntitlementService(
     DailyFreePlayQuota freePlayQuota,
     Func<IStoreGateway> storeGatewayFactory,
     string onePlayStoreId,
-    string tenPlayStoreId) : IPlayEntitlementService
+    string tenPlayStoreId,
+    PendingFulfillmentCoordinator pendingFulfillment) : IPlayEntitlementService
 {
     private IStoreGateway? storeGateway;
 
     public async ValueTask<EntitlementStartResult> TryStartMatchAsync(
         CancellationToken cancellationToken = default)
     {
+        await pendingFulfillment.RetryPendingAsync(cancellationToken);
+        if (await pendingFulfillment.HasPendingAsync(cancellationToken))
+        {
+            return new EntitlementStartResult(EntitlementStartStatus.FulfillmentPending, null);
+        }
+
         var freeStart = await freePlayQuota.TryStartMatchAsync(cancellationToken);
         if (freeStart.IsAllowed)
         {
@@ -123,23 +131,14 @@ public sealed class PlayEntitlementService(
 
         if (session.PaidStoreId is null)
         {
-            return EntitlementCompletionStatus.Failed;
+            throw new InvalidOperationException("Paid entitlement session is missing its Store product.");
         }
 
-        storeGateway ??= storeGatewayFactory();
-        var result = await storeGateway.ReportConsumableFulfillmentAsync(
+        return await pendingFulfillment.FulfillAsync(
             session.PaidStoreId,
             1,
             session.TrackingId,
             cancellationToken);
-        return result.Status switch
-        {
-            StoreOperationStatus.Succeeded => EntitlementCompletionStatus.Consumed,
-            StoreOperationStatus.AlreadyFulfilled => EntitlementCompletionStatus.AlreadyConsumed,
-            StoreOperationStatus.NetworkError or StoreOperationStatus.ServerError
-                => EntitlementCompletionStatus.Pending,
-            _ => EntitlementCompletionStatus.Failed,
-        };
     }
 
     private static string CreateTrackingId(Guid matchId) => $"play:{matchId:N}";

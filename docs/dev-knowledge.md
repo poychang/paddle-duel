@@ -77,9 +77,20 @@ WinUI 3 程序可能已建立可見視窗，但 `Process.MainWindowHandle` 仍�
 
 `ExtendsContentIntoTitleBar` 與 `SetTitleBar` 會讓標題列區域由 non-client input 處理。畫面上可見的資訊或全螢幕按鈕不一定能收到滑鼠事件，必須透過 `InputNonClientPointerSource.SetRegionRects` 將控制項範圍設為 `Passthrough`。矩形座標須乘上 `XamlRoot.RasterizationScale`，並在標題列尺寸改變時重算。
 
- ### 內部鍵盤 focus sink 不應進入玩家的 Tab 導覽
+### 不可把 IsTabStop=False 的隱藏控制項當作可靠的鍵盤接收點
 
- 遊戲需要一個不可見控制項接收程式化鍵盤 focus，但它不應成為玩家 Tab 導覽中的遊戲按鈕。`InputSink` 保留程式化 `Focus`，設定 `IsTabStop="False"`，並提供內部用途的 automation name。
+**已驗證：** 2026-10-16，WinUI 3 unpackaged App。原 `InputSink` Button 設定 `IsTabStop="False"` 時，UI Automation 回報不可取得鍵盤焦點，開局後焦點仍在資訊按鈕；忽略 `Focus` 回傳值會造成兩位玩家都無法移動。先前「保留程式化 Focus 即可」的紀錄已由此次實測更正。
+
+改用可見球場 UserControl，在遊玩時開啟 tab stop 並檢查 `Focus` 成功；失敗則暫停。根節點 PreviewKeyDown 接收遊戲鍵、KeyUp 以 `handledEventsToo` 註冊，避免標題列按鈕先處理方向鍵或漏收放鍵。非遊玩狀態不攔截遊戲鍵，Tab 維持一般導覽；overlay／失焦清空 held input，overlay 開啟期間失焦也要清除自動繼續意圖。
+
+[`Test-GameInput.ps1`](../scripts/Test-GameInput.ps1) 用 SendInput 與球拍像素位置驗證真實移動，不只檢查「開始」按鈕可呼叫。多鍵同批注入；相反方向抵銷應量測所有鍵已按住時的穩定區間，不能把分別按下／放開期間的正常移動誤判成 bug。驗收需保持遊戲在前景。
+
+### Partner Center 商品類型與 Windows Store API 字串不同
+
+Partner Center 顯示 `ManagedConsumable`，但 [`StoreProduct.ProductKind`](https://learn.microsoft.com/uwp/api/windows.services.store.storeproduct.productkind) 明訂其 API 字串是 **`Consumable`**；`UnmanagedConsumable` 才是開發者管理餘額。不可直接把入口網站標籤搬到 GetAssociatedStoreProductsAsync。商品識別使用 `StoreProduct.StoreId`，不混用 SKU Store ID；桌面 StoreContext 須用實際視窗 HWND 執行 InitializeWithWindow。
+
+[`StoreConsumableStatus`](https://learn.microsoft.com/uwp/api/windows.services.store.storeconsumablestatus) 的不足餘額列舉拼字是 `InsufficentQuantity`，與本專案 `InsufficientQuantity` 不同；使用具型別 switch，避免字串比對拼錯而落入泛用錯誤。2026-10-16 已依官方定義建置驗證，**尚非真實 Store 交易驗收**。
+
 ### Unpackaged 開發版先在 OnLaunched 取得單一程序鎖
 
 原先 unpackaged 開發版沒有 package identity，也沒有依賴 MSIX 的 instance redirection。若讓第二個程序先建立 Window 和 quota store，兩個程序可能同時讀寫同一份 LocalState。`App.OnLaunched` 在建立 Window 前取得 per-user named mutex；取得失敗的程序立即退出，第一個程序在 Window 關閉時釋放 mutex。2026-10-08 轉換後的開發 MSIX 已重新驗證重複啟動仍只保留第一個程序；目前仍保留舊互斥鎖，是否改用 Windows App SDK `AppInstance` 的啟動轉導功能另行評估。

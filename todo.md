@@ -13,8 +13,8 @@
   - 2026-10-16：Pricing and availability 已回報 Complete（Free／Private audience／Internal Testers）；IARC 問卷結果已儲存，互動元素僅 In-Game Purchases。
   - 2026-10-16 10:23 概況截圖確認 Pricing and availability／Properties／Age ratings／Store listings 均為 Complete，Packages 尚未開始；繁中文案、政策／支援欄位最終值待核對，整體仍 In draft。
   - 擁有者選定主選單與對戰兩張 1920×1080 全螢幕 PNG，格式／尺寸檢查通過並保存，不另製作第三張；已回報上傳及預覽正常，listing 已 Complete，提交前須核對最終 App 外觀。
-  - 依擁有者指定的 favicon SVG 產生 1440×2160 Poster／2160×2160 Box PNG，保存向量轉檔腳本；擁有者更新兩張成品並回報處理完成，尺寸／格式通過。腳本僅重建初版，已記錄 Box art 底部覆蓋風險；整頁儲存與最終 Store 呈現待確認。
-  - 不送審、不發布；正式商品接線與交易驗收仍未完成。
+  - 依擁有者指定的 favicon SVG 產生 1440×2160 Poster／2160×2160 Box PNG，保存向量轉檔腳本；擁有者更新兩張成品並回報處理完成，尺寸／格式通過。腳本僅重建初版，已記錄 Box art 底部覆蓋風險；Store listings 已 Complete，最終 Store 呈現待確認。
+  - 正式商品接線、本機回歸與新版候選封裝已完成，下一步上傳 Packages 並核對解析結果；不送審、不發布，真實交易仍待私人測試。
 
 ## 待辦
 
@@ -22,17 +22,24 @@
 
 - [ ] 透過 Partner Center 私人測試驗證 1／10 units、取消、重複購買、斷線恢復及跨裝置餘額。
   - 尚未公開的主 App 先採 Private audience；不與已發布後的 Package flights 混淆。
-  - 接入已取得的 `plays1`／`plays10` 真實 Store ID；目前僅封裝 identity 已關聯，商品 ID 仍為開發占位，不宣稱已能購買。
+  - 已接入 `plays1`／`plays10` 真實 Store ID、視窗化 StoreContext 與持久化扣次；本機 fake 測試不代表已能購買，須驗證 Store 發佈版本。
   - 附加商品預定於 `2027-01-01 00:00 UTC` 公開供應；上市前的測試取得方式與排程限制需另行確認，不將 Public audience 視為私人測試設定。
 - [ ] 以可退款的小額真實交易驗證 Microsoft 帳戶禮品卡可由 Store checkout 使用；App 不接觸卡號。
 - [ ] 將已部署的聯絡／政策網址及非官方產品聲明填入並核對適用的主 App Store 欄位。
 - [ ] 核對正式版資料處理與已發布隱私權政策一致，加入 App 政策入口並完成 Store 欄位驗收。
-- [ ] 製作 Store 圖示、螢幕截圖、商品文案及價格／市場設定。
+- [ ] 補齊繁中 Store listing，核對已保存文案、截圖與 logos 在最終版本的呈現。
 - [ ] 建立 Windows CI：restore、tests、Release x64 build 與 MSIX bundle artifact；簽署資訊只存於受保護 secrets。
 - [ ] 在 Windows 10 22H2、Windows 11 與 100／150／200% DPI 執行安裝、升級與操作驗收。
 - [ ] 執行 Windows App Certification Kit 與至少 2 小時 soak test，涵蓋連續賽局、暫停、視窗切換、音效與 fulfillment。
 
 ## 已完成
+
+- [x] 修復玩家鍵盤控制，接入正式 Store 商品並重建私人測試候選封裝。
+  - 2026-10-16 重現隱藏 InputSink 無法取得焦點，改用可見球場與根節點按鍵路由；overlay／失焦清除輸入與自動繼續意圖。
+  - 真實按鍵與球拍位置驗證雙人 W／S、Up／Down、放鍵停止、相反方向抵銷、標題列焦點、Esc、資訊／設定、最小化、全螢幕與單人 W／S；放棄不扣次。可重跑工具為 [Test-GameInput.ps1](scripts/Test-GameInput.ps1)，此次為 unpackaged 驗收。
+  - 正式 Store ID 集中設定，API 使用 `Consumable`（Partner Center 名稱為 ManagedConsumable）、實際 HWND、Store 名稱／價格與型別化狀態；免費用完仍可透過開局檢查付費餘額，非同步開局與未結清比賽不允許重入。
+  - 付費扣次先寫入 journal，沿用 tracking ID 重試；跨重啟、並行、錯誤與損毀拒絕回歸通過，全部 73 項 .NET 測試通過，編輯器無診斷。
+  - Debug unpackaged 零警告／錯誤；Release x64 `1.0.0.0` bundle／upload 的實際 payload 檢查通過，輸出 `BundleArtifacts\Release-x64\704aea306d5a416dab4a7fa0d43423f5\`。僅既有 symbols 工具警告；未安裝新版 MSIX、上傳、購買、送審或發布。
 
 - [x] 保存主 App IARC 問卷結果，並建立可版本控制的商店文案與設定紀錄。
   - 2026-10-16 擁有者確認 IARC 10.3 結果已儲存，概述多為 3+／All Ages，互動元素僅 In-Game Purchases；未逐項核對各地區正式分級，不宣稱已送審。

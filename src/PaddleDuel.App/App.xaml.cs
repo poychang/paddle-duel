@@ -1,5 +1,4 @@
 using PaddleDuel.App.Storage;
-using PaddleDuel.App.Store;
 using PaddleDuel.Core;
 using PaddleDuel.Infrastructure;
 using PaddleDuel.Infrastructure.Store;
@@ -31,10 +30,9 @@ public partial class App : Application
         var freePlayQuota = new DailyFreePlayQuota(
             new SystemUtcClock(),
             new LocalStateFreePlayQuotaStore());
-        var pendingFulfillment = new PendingFulfillmentCoordinator(
-            () => new WindowsStoreGateway(),
+        window = new MainWindow(
+            freePlayQuota,
             new JsonPendingFulfillmentJournal(LocalStateDirectory.GetPath()));
-        window = new MainWindow(freePlayQuota, pendingFulfillment);
         window.Closed += Window_Closed;
         window.Activate();
     }

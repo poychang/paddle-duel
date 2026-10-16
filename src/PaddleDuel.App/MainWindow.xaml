@@ -3,7 +3,10 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title="Paddle Duel">
-    <Grid Background="{StaticResource GameBackgroundBrush}">
+    <Grid
+        x:Name="WindowRoot"
+        Background="{StaticResource GameBackgroundBrush}"
+        PreviewKeyDown="WindowRoot_PreviewKeyDown">
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
             <RowDefinition Height="*" />
@@ -68,10 +71,14 @@
             </Grid>
         </Grid>
 
-        <Grid
+        <UserControl
+            x:Uid="GameRoot"
             x:Name="GameRoot"
             Grid.Row="1"
+            IsTabStop="False"
+            UseSystemFocusVisuals="True"
             PointerPressed="GameRoot_PointerPressed">
+            <Grid>
             <Border Margin="32" BorderBrush="{StaticResource GameForegroundBrush}" BorderThickness="2">
                 <Canvas x:Name="GameCanvas" SizeChanged="GameCanvas_SizeChanged">
                     <Rectangle x:Name="CenterLine" Fill="{StaticResource GameForegroundBrush}" />
@@ -203,15 +210,8 @@
                 </StackPanel>
             </Grid>
 
-            <Button x:Uid="InputSink"
-                x:Name="InputSink"
-                Width="1"
-                Height="1"
-                Opacity="0"
-                IsTabStop="False"
-                KeyDown="InputSink_KeyDown"
-                KeyUp="InputSink_KeyUp" />
-        </Grid>
+            </Grid>
+        </UserControl>
 
         <Grid
             x:Name="InformationOverlay"

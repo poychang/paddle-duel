@@ -39,21 +39,7 @@ public sealed class JsonPendingFulfillmentJournal(
         await gate.WaitAsync(cancellationToken);
         try
         {
-            if (!File.Exists(filePath))
-            {
-                return [];
-            }
-
-            try
-            {
-                var json = await File.ReadAllTextAsync(filePath, cancellationToken);
-                return JsonSerializer.Deserialize<List<PendingFulfillment>>(json, SerializerOptions)
-                    ?? [];
-            }
-            catch (JsonException)
-            {
-                return [];
-            }
+            return await LoadUnsafeAsync(cancellationToken);
         }
         finally
         {
@@ -109,16 +95,17 @@ public sealed class JsonPendingFulfillmentJournal(
             return [];
         }
 
-        try
+        var json = await File.ReadAllTextAsync(filePath, cancellationToken);
+        var items = JsonSerializer.Deserialize<List<PendingFulfillment>>(json, SerializerOptions)
+            ?? throw new InvalidDataException("The fulfillment journal must contain an array.");
+        if (items.Any(item => item is null || string.IsNullOrWhiteSpace(item.StoreId)
+            || item.Quantity == 0 || string.IsNullOrWhiteSpace(item.TrackingId))
+            || items.Select(item => item.TrackingId).Distinct(StringComparer.Ordinal).Count() != items.Count)
         {
-            var json = await File.ReadAllTextAsync(filePath, cancellationToken);
-            return JsonSerializer.Deserialize<List<PendingFulfillment>>(json, SerializerOptions)
-                ?? [];
+            throw new InvalidDataException("The fulfillment journal contains invalid or duplicate entries.");
         }
-        catch (JsonException)
-        {
-            return [];
-        }
+
+        return items;
     }
 
     private async ValueTask SaveUnsafeAsync(

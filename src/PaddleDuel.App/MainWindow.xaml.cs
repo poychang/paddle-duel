@@ -14,14 +14,12 @@ using Microsoft.UI.Xaml.Media;
 using Windows.Graphics;
 using VirtualKey = Windows.System.VirtualKey;
 using Rect = Windows.Foundation.Rect;
+using static PaddleDuel.Infrastructure.Store.StorePlayCatalog;
 
 namespace PaddleDuel.App;
 
 public sealed partial class MainWindow : Window
 {
-    // Legacy development placeholders; real Store IDs are wired during the Store integration task.
-    private const string OnePlayStoreId = "arcade1972.play.1";
-    private const string TenPlayStoreId = "arcade1972.play.10";
     private readonly DailyFreePlayQuota freePlayQuota;
     private readonly PendingFulfillmentCoordinator pendingFulfillment;
     private readonly PlayEntitlementService playEntitlementService;
@@ -41,6 +39,8 @@ public sealed partial class MainWindow : Window
     private bool resumeGameAfterSettings;
     private bool isMatchPaused;
     private bool isCompletingMatch;
+    private bool isStartingMatch;
+    private bool isWindowActive;
     private PlayEntitlementSession? activePlaySession;
     private ClassicAiDifficulty aiDifficulty = ClassicAiDifficulty.Medium;
     private IStoreGateway? storeGateway;
@@ -49,16 +49,18 @@ public sealed partial class MainWindow : Window
 
     public MainWindow(
         DailyFreePlayQuota freePlayQuota,
-        PendingFulfillmentCoordinator pendingFulfillment)
+        IPendingFulfillmentJournal fulfillmentJournal)
     {
         this.freePlayQuota = freePlayQuota;
-        this.pendingFulfillment = pendingFulfillment;
+        pendingFulfillment = new PendingFulfillmentCoordinator(GetStoreGateway, fulfillmentJournal);
         playEntitlementService = new(
             freePlayQuota,
-            () => new WindowsStoreGateway(),
+            GetStoreGateway,
             OnePlayStoreId,
-            TenPlayStoreId);
+            TenPlayStoreId,
+            pendingFulfillment);
         InitializeComponent();
+        WindowRoot.AddHandler(UIElement.KeyUpEvent, new KeyEventHandler(WindowRoot_KeyUp), true);
         AppWindow.SetIcon(Path.Combine(AppContext.BaseDirectory, "Assets", "PaddleDuel.ico"));
 
         simulation = new ClassicGameSimulation(rules);
@@ -83,6 +85,9 @@ public sealed partial class MainWindow : Window
         Activated += MainWindow_Activated;
         Closed += MainWindow_Closed;
     }
+
+    private IStoreGateway GetStoreGateway() =>
+        storeGateway ??= new WindowsStoreGateway(WinRT.Interop.WindowNative.GetWindowHandle(this));
 
     private void FullScreenButton_Click(object sender, RoutedEventArgs e)
     {
@@ -143,6 +148,11 @@ public sealed partial class MainWindow : Window
 
     private void PurchaseEntryButton_Click(object sender, RoutedEventArgs e)
     {
+        if (isStartingMatch || isCompletingMatch || activePlaySession is not null)
+        {
+            return;
+        }
+
         PurchasePlaceholderOverlay.Visibility = Visibility.Visible;
         ClosePurchasePlaceholderButton.Focus(FocusState.Programmatic);
         _ = LoadStoreProductsAsync();
@@ -169,9 +179,9 @@ public sealed partial class MainWindow : Window
 
         try
         {
-            storeGateway ??= new WindowsStoreGateway();
-            purchaseCoordinator ??= new StorePurchaseCoordinator(storeGateway);
-            var result = await storeGateway.GetProductsAsync([OnePlayStoreId, TenPlayStoreId]);
+            var gateway = GetStoreGateway();
+            purchaseCoordinator ??= new StorePurchaseCoordinator(gateway);
+            var result = await gateway.GetProductsAsync(new[] { OnePlayStoreId, TenPlayStoreId });
             if (result.Status != StoreOperationStatus.Succeeded)
             {
                 ShowStoreUnavailable();
@@ -193,8 +203,9 @@ public sealed partial class MainWindow : Window
             BuyOnePlayButton.IsEnabled = true;
             BuyTenPlayButton.IsEnabled = true;
         }
-        catch (Exception)
+        catch (Exception error)
         {
+            Debug.WriteLine($"Unable to load Store products: {error}");
             ShowStoreUnavailable();
         }
     }
@@ -238,6 +249,15 @@ public sealed partial class MainWindow : Window
                 StorePurchaseUiStatus.AlreadyInProgress => AppStrings.Get("PurchaseInProgress"),
                 _ => AppStrings.Get("ProductUnavailable"),
             };
+            if (result.Status == StorePurchaseUiStatus.Purchased)
+            {
+                await RefreshQuotaDisplayAsync();
+            }
+        }
+        catch (Exception error)
+        {
+            Debug.WriteLine($"Unable to complete Store purchase: {error}");
+            ShowStoreUnavailable();
         }
         finally
         {
@@ -248,13 +268,15 @@ public sealed partial class MainWindow : Window
 
     private void ShowInformation()
     {
-        if (InformationOverlay.Visibility == Visibility.Visible)
+        if (InformationOverlay.Visibility == Visibility.Visible
+            || SettingsOverlay.Visibility == Visibility.Visible)
         {
             return;
         }
 
         resumeGameAfterInformation = gameTimer.IsRunning;
         gameTimer.Stop();
+        GameRoot.IsTabStop = false;
         ClearInput();
         InformationOverlay.Visibility = Visibility.Visible;
         CloseInformationButton.Focus(FocusState.Programmatic);
@@ -268,7 +290,11 @@ public sealed partial class MainWindow : Window
         {
             frameClock.Restart();
             gameTimer.Start();
-            InputSink.Focus(FocusState.Programmatic);
+            FocusGameSurface();
+        }
+        else if (isMatchPaused)
+        {
+            ShowPauseOverlay();
         }
         else
         {
@@ -280,13 +306,15 @@ public sealed partial class MainWindow : Window
 
     private void ShowSettings()
     {
-        if (SettingsOverlay.Visibility == Visibility.Visible)
+        if (SettingsOverlay.Visibility == Visibility.Visible
+            || InformationOverlay.Visibility == Visibility.Visible)
         {
             return;
         }
 
         resumeGameAfterSettings = gameTimer.IsRunning;
         gameTimer.Stop();
+        GameRoot.IsTabStop = false;
         ClearInput();
         SettingsDisplayModeText.Text = AppWindow.Presenter.Kind == AppWindowPresenterKind.FullScreen
             ? AppStrings.Get("DisplayFullScreen")
@@ -307,7 +335,11 @@ public sealed partial class MainWindow : Window
         {
             frameClock.Restart();
             gameTimer.Start();
-            InputSink.Focus(FocusState.Programmatic);
+            FocusGameSurface();
+        }
+        else if (isMatchPaused)
+        {
+            ShowPauseOverlay();
         }
         else
         {
@@ -407,44 +439,68 @@ public sealed partial class MainWindow : Window
 
     private async Task TryStartMatchAsync(bool onePlayer)
     {
+        if (isStartingMatch || isCompletingMatch || activePlaySession is not null)
+        {
+            return;
+        }
+
+        isStartingMatch = true;
         SetStartButtonsEnabled(false);
         try
         {
             var startResult = await playEntitlementService.TryStartMatchAsync();
             if (startResult.Status != EntitlementStartStatus.Allowed)
             {
-                MenuHeading.Text = startResult.Status == EntitlementStartStatus.NoEntitlement
-                    ? AppStrings.Get("NoPlaysAvailable")
-                    : AppStrings.Get("EntitlementStoreUnavailable");
-                await RefreshQuotaDisplayAsync();
+                MenuHeading.Text = startResult.Status switch
+                {
+                    EntitlementStartStatus.NoEntitlement => AppStrings.Get("NoPlaysAvailable"),
+                    EntitlementStartStatus.FulfillmentPending => AppStrings.Get("PaymentPending"),
+                    _ => AppStrings.Get("EntitlementStoreUnavailable"),
+                };
                 return;
             }
 
             activePlaySession = startResult.Session;
+            isOnePlayer = onePlayer;
+            isMatchPaused = false;
+            PauseOverlay.Visibility = Visibility.Collapsed;
+            if (onePlayer)
+            {
+                aiController = new ClassicAiController(rules, aiDifficulty);
+            }
+            aiController.Reset();
+            gameLoop = new FixedStepGameLoop(simulation, simulation.CreateInitialState());
+            MenuOverlay.Visibility = Visibility.Collapsed;
+            ClearInput();
+            RenderGame();
+            frameClock.Restart();
+            gameTimer.Start();
+            if (!isWindowActive || InformationOverlay.Visibility == Visibility.Visible
+                || SettingsOverlay.Visibility == Visibility.Visible
+                || PurchasePlaceholderOverlay.Visibility == Visibility.Visible)
+            {
+                PauseMatch();
+            }
+            else
+            {
+                FocusGameSurface();
+            }
         }
-        catch (Exception)
+        catch (Exception error)
         {
+            Debug.WriteLine($"Unable to start match: {error}");
             MenuHeading.Text = AppStrings.Get("QuotaUnavailable");
             SetStartButtonsEnabled(false);
             PurchaseEntryButton.Visibility = Visibility.Collapsed;
-            return;
         }
-
-        isOnePlayer = onePlayer;
-        isMatchPaused = false;
-        PauseOverlay.Visibility = Visibility.Collapsed;
-        if (onePlayer)
+        finally
         {
-            aiController = new ClassicAiController(rules, aiDifficulty);
+            isStartingMatch = false;
+            if (MenuOverlay.Visibility == Visibility.Visible)
+            {
+                await RefreshQuotaDisplayAsync();
+            }
         }
-        aiController.Reset();
-        gameLoop = new FixedStepGameLoop(simulation, simulation.CreateInitialState());
-        MenuOverlay.Visibility = Visibility.Collapsed;
-        ClearInput();
-        RenderGame();
-        InputSink.Focus(FocusState.Programmatic);
-        frameClock.Restart();
-        gameTimer.Start();
     }
 
     private async void GameTimer_Tick(DispatcherQueueTimer sender, object args)
@@ -487,7 +543,6 @@ public sealed partial class MainWindow : Window
             if (completion == EntitlementCompletionStatus.Pending)
             {
                 ShowMenu(AppStrings.Get("PaymentPending"), allowNewMatch: false);
-                await RefreshQuotaDisplayAsync();
                 return;
             }
             if (completion == EntitlementCompletionStatus.Failed)
@@ -501,20 +556,22 @@ public sealed partial class MainWindow : Window
                 ? AppStrings.Get("LeftPlayerWins")
                 : AppStrings.Get("RightPlayerWins");
             ShowMenu(heading, allowNewMatch: true);
-            await RefreshQuotaDisplayAsync();
         }
-        catch (Exception)
+        catch (Exception error)
         {
+            Debug.WriteLine($"Unable to persist completed match: {error}");
             ShowMenu(AppStrings.Get("QuotaSaveFailed"), allowNewMatch: false);
         }
         finally
         {
             isCompletingMatch = false;
+            await RefreshQuotaDisplayAsync();
         }
     }
 
     private void ShowMenu(string heading, bool allowNewMatch)
     {
+        GameRoot.IsTabStop = false;
         MenuHeading.Text = heading;
         StartButton.Content = AppStrings.Get("PlayAgain");
         SetStartButtonsEnabled(allowNewMatch);
@@ -527,8 +584,9 @@ public sealed partial class MainWindow : Window
 
     private void SetStartButtonsEnabled(bool isEnabled)
     {
-        OnePlayerButton.IsEnabled = isEnabled;
-        StartButton.IsEnabled = isEnabled;
+        var canStart = isEnabled && !isStartingMatch && !isCompletingMatch && activePlaySession is null;
+        OnePlayerButton.IsEnabled = canStart;
+        StartButton.IsEnabled = canStart;
     }
 
     private async void MenuOverlay_Loaded(object sender, RoutedEventArgs e)
@@ -545,23 +603,32 @@ public sealed partial class MainWindow : Window
 
     private async void MainWindow_Activated(object sender, WindowActivatedEventArgs args)
     {
+        isWindowActive = args.WindowActivationState != WindowActivationState.Deactivated;
         if (args.WindowActivationState == WindowActivationState.Deactivated)
         {
             PauseMatch();
             return;
         }
 
-        if (MenuOverlay.Visibility == Visibility.Visible)
-        {
-            await RefreshQuotaDisplayAsync();
-        }
-
         try
         {
             await pendingFulfillment.RetryPendingAsync();
+            if (activePlaySession is not null && gameLoop.State.Phase == MatchPhase.Finished
+                && !isCompletingMatch)
+            {
+                isCompletingMatch = true;
+                await CompleteFinishedMatchAsync();
+            }
+            else if (MenuOverlay.Visibility == Visibility.Visible)
+            {
+                await RefreshQuotaDisplayAsync();
+            }
         }
-        catch (Exception)
+        catch (Exception error)
         {
+            Debug.WriteLine($"Unable to retry pending fulfillment: {error}");
+            MenuHeading.Text = AppStrings.Get("PaymentPending");
+            SetStartButtonsEnabled(false);
         }
 
         if (isMatchPaused && PauseOverlay.Visibility == Visibility.Visible)
@@ -576,8 +643,9 @@ public sealed partial class MainWindow : Window
         {
             UpdateQuotaDisplay(await freePlayQuota.GetAvailabilityAsync());
         }
-        catch (Exception)
+        catch (Exception error)
         {
+            Debug.WriteLine($"Unable to read daily quota: {error}");
             QuotaStatusText.Text = AppStrings.Format("FreePlaysUnavailable", freePlayQuota.DailyLimit);
             QuotaResetText.Text = AppStrings.Get("ResetUnavailable");
             SetStartButtonsEnabled(false);
@@ -592,7 +660,8 @@ public sealed partial class MainWindow : Window
             AppStrings.Format("FreePlays", availability.RemainingPlays, freePlayQuota.DailyLimit);
         QuotaResetText.Text = AppStrings.Format("QuotaReset", resetDate.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture));
         var hasFreePlays = availability.RemainingPlays > 0;
-        SetStartButtonsEnabled(hasFreePlays);
+        // Starting a match checks Store balances after free plays are exhausted.
+        SetStartButtonsEnabled(true);
         PurchaseEntryButton.Visibility = hasFreePlays
             ? Visibility.Collapsed
             : Visibility.Visible;
@@ -663,8 +732,13 @@ public sealed partial class MainWindow : Window
         return (downPressed ? 1 : 0) - (upPressed ? 1 : 0);
     }
 
-    private void InputSink_KeyDown(object sender, KeyRoutedEventArgs e)
+    private void WindowRoot_PreviewKeyDown(object sender, KeyRoutedEventArgs e)
     {
+        if (!gameTimer.IsRunning)
+        {
+            return;
+        }
+
         if (e.Key == VirtualKey.Escape)
         {
             PauseMatch();
@@ -673,9 +747,13 @@ public sealed partial class MainWindow : Window
         {
             ShowInformation();
         }
-        else
+        else if (e.Key is VirtualKey.W or VirtualKey.S or VirtualKey.Up or VirtualKey.Down)
         {
             SetKeyState(e.Key, true);
+        }
+        else
+        {
+            return;
         }
 
         e.Handled = true;
@@ -683,14 +761,27 @@ public sealed partial class MainWindow : Window
 
     private void PauseMatch()
     {
-        if (!gameTimer.IsRunning || activePlaySession is null || isCompletingMatch)
+        ClearInput();
+        if (activePlaySession is null || isCompletingMatch
+            || (!gameTimer.IsRunning && !resumeGameAfterInformation && !resumeGameAfterSettings))
         {
             return;
         }
 
         gameTimer.Stop();
+        GameRoot.IsTabStop = false;
         isMatchPaused = true;
-        ClearInput();
+        resumeGameAfterInformation = false;
+        resumeGameAfterSettings = false;
+        if (InformationOverlay.Visibility != Visibility.Visible
+            && SettingsOverlay.Visibility != Visibility.Visible)
+        {
+            ShowPauseOverlay();
+        }
+    }
+
+    private void ShowPauseOverlay()
+    {
         PauseOverlay.Visibility = Visibility.Visible;
         ResumeMatchButton.Focus(FocusState.Programmatic);
     }
@@ -711,8 +802,8 @@ public sealed partial class MainWindow : Window
         isMatchPaused = false;
         ClearInput();
         frameClock.Restart();
-        InputSink.Focus(FocusState.Programmatic);
         gameTimer.Start();
+        FocusGameSurface();
     }
 
     private async void AbandonMatchButton_Click(object sender, RoutedEventArgs e)
@@ -740,10 +831,16 @@ public sealed partial class MainWindow : Window
         }
     }
 
-    private void InputSink_KeyUp(object sender, KeyRoutedEventArgs e)
+    private void WindowRoot_KeyUp(object sender, KeyRoutedEventArgs e)
     {
-        SetKeyState(e.Key, false);
-        e.Handled = true;
+        if (e.Key is VirtualKey.W or VirtualKey.S or VirtualKey.Up or VirtualKey.Down)
+        {
+            SetKeyState(e.Key, false);
+            if (gameTimer.IsRunning)
+            {
+                e.Handled = true;
+            }
+        }
     }
 
     private void SetKeyState(VirtualKey key, bool isPressed)
@@ -767,9 +864,19 @@ public sealed partial class MainWindow : Window
 
     private void GameRoot_PointerPressed(object sender, PointerRoutedEventArgs e)
     {
-        if (MenuOverlay.Visibility == Visibility.Collapsed)
+        if (gameTimer.IsRunning)
         {
-            InputSink.Focus(FocusState.Programmatic);
+            FocusGameSurface();
+        }
+    }
+
+    private void FocusGameSurface()
+    {
+        GameRoot.IsTabStop = true;
+        if (!GameRoot.Focus(FocusState.Programmatic))
+        {
+            Debug.WriteLine("Unable to focus the game surface; pausing to avoid uncontrolled play.");
+            PauseMatch();
         }
     }
 

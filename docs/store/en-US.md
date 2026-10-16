@@ -81,4 +81,4 @@ Play in a resizable window or switch to full screen.
 & .\scripts\New-StoreAssets.ps1
 ```
 
-[產生腳本](../../scripts/New-StoreAssets.ps1) 使用隔離的暫存瀏覽器 profile 渲染本機 SVG，驗證精確尺寸／PNG／檔案大小與底部三分之一全為背景色，再複製到此資料夾並清除暫存資料。**此命令只能重建初版留白構圖，不會重現擁有者後續的 PNG 調整／編碼；執行會覆蓋目前成品。** 目前版本以 Git 保存的 PNG 為準，不應直接重跑後當作相同成品上傳。整個 listing 的儲存／Complete 與最終 Store 呈現仍待確認。
+[產生腳本](../../scripts/New-StoreAssets.ps1) 使用隔離的暫存瀏覽器 profile 渲染本機 SVG，驗證精確尺寸／PNG／檔案大小與底部三分之一全為背景色，再複製到此資料夾並清除暫存資料。**此命令只能重建初版留白構圖，不會重現擁有者後續的 PNG 調整／編碼；執行會覆蓋目前成品。** 目前版本以 Git 保存的 PNG 為準，不應直接重跑後當作相同成品上傳。2026-10-16 提交概況已確認 Store listings 為 Complete；最終 Store 呈現仍待確認。

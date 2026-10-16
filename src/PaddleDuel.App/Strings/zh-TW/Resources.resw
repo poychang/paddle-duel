@@ -84,8 +84,8 @@
   <data name="PurchaseEntryButton.Content" xml:space="preserve">
     <value>取得次數</value>
   </data>
-  <data name="InputSink.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>遊戲內部鍵盤輸入</value>
+  <data name="GameRoot.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>遊戲球場</value>
   </data>
   <data name="CloseInformationButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>關閉操作說明</value>

@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Text;
 using PaddleDuel.Infrastructure.Store;
@@ -9,7 +10,18 @@ namespace PaddleDuel.App.Store;
 
 public sealed class WindowsStoreGateway : IStoreGateway
 {
-    private readonly StoreContext storeContext = StoreContext.GetDefault();
+    private readonly StoreContext storeContext;
+
+    public WindowsStoreGateway(nint windowHandle)
+    {
+        if (windowHandle == 0)
+        {
+            throw new ArgumentException("Store dialogs require the owning window.", nameof(windowHandle));
+        }
+
+        storeContext = StoreContext.GetDefault();
+        WinRT.Interop.InitializeWithWindow.Initialize(storeContext, windowHandle);
+    }
 
     public async ValueTask<(StoreOperationStatus Status, IReadOnlyList<GatewayStoreProduct> Products)> GetProductsAsync(
         IReadOnlyList<string> storeIds,
@@ -18,28 +30,30 @@ public sealed class WindowsStoreGateway : IStoreGateway
         cancellationToken.ThrowIfCancellationRequested();
         try
         {
-            var result = await storeContext.GetAssociatedStoreProductsAsync(["Consumable"]);
+            var result = await storeContext.GetAssociatedStoreProductsAsync(new[] { StorePlayCatalog.ProductKind });
             if (result.ExtendedError is not null)
             {
+                Debug.WriteLine($"Store product query failed: {result.ExtendedError}");
                 return (StoreOperationStatus.NetworkError, []);
             }
 
-            var products = storeIds
-                .Where(result.Products.ContainsKey)
-                .Select(storeId =>
+            var products = result.Products.Values
+                .Where(product => storeIds.Contains(product.StoreId, StringComparer.Ordinal)
+                    && product.ProductKind == StorePlayCatalog.ProductKind)
+                .Select(product =>
                 {
-                    var product = result.Products[storeId];
                     return new GatewayStoreProduct(
-                        storeId,
+                        product.StoreId,
                         product.Title,
                         product.Price.FormattedPrice,
-                        0);
+                        StorePlayCatalog.GetUnitsPerPurchase(product.StoreId));
                 })
                 .ToArray();
             return (StoreOperationStatus.Succeeded, products);
         }
-        catch (Exception)
+        catch (Exception error) when (error is not OperationCanceledException)
         {
+            Debug.WriteLine($"Store product query failed: {error}");
             return (StoreOperationStatus.NetworkError, []);
         }
     }
@@ -49,16 +63,22 @@ public sealed class WindowsStoreGateway : IStoreGateway
         CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
+        _ = StorePlayCatalog.GetUnitsPerPurchase(storeId);
         try
         {
             var result = await storeContext.GetConsumableBalanceRemainingAsync(storeId);
-            var status = MapStatus(result.Status.ToString());
+            if (result.ExtendedError is not null)
+            {
+                Debug.WriteLine($"Store balance query failed: {result.ExtendedError}");
+            }
+            var status = MapStatus(result.Status);
             return status == StoreOperationStatus.Succeeded
                 ? (status, new StoreBalance(storeId, result.BalanceRemaining))
                 : (status, null);
         }
-        catch (Exception)
+        catch (Exception error) when (error is not OperationCanceledException)
         {
+            Debug.WriteLine($"Store balance query failed: {error}");
             return (StoreOperationStatus.NetworkError, null);
         }
     }
@@ -68,13 +88,19 @@ public sealed class WindowsStoreGateway : IStoreGateway
         CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
+        _ = StorePlayCatalog.GetUnitsPerPurchase(storeId);
         try
         {
             var result = await storeContext.RequestPurchaseAsync(storeId);
-            return new GatewayStorePurchaseResult(MapStatus(result.Status.ToString()));
+            if (result.ExtendedError is not null)
+            {
+                Debug.WriteLine($"Store purchase failed: {result.ExtendedError}");
+            }
+            return new GatewayStorePurchaseResult(MapStatus(result.Status));
         }
-        catch (Exception)
+        catch (Exception error) when (error is not OperationCanceledException)
         {
+            Debug.WriteLine($"Store purchase failed: {error}");
             return new GatewayStorePurchaseResult(StoreOperationStatus.NetworkError);
         }
     }
@@ -86,19 +112,25 @@ public sealed class WindowsStoreGateway : IStoreGateway
         CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
+        _ = StorePlayCatalog.GetUnitsPerPurchase(storeId);
         try
         {
             var result = await storeContext.ReportConsumableFulfillmentAsync(
                 storeId,
                 quantity,
                 ToTrackingGuid(trackingId));
+            if (result.ExtendedError is not null)
+            {
+                Debug.WriteLine($"Store fulfillment failed: {result.ExtendedError}");
+            }
             return new StoreFulfillmentResult(
-                MapStatus(result.Status.ToString()),
+                MapStatus(result.Status),
                 trackingId,
                 result.BalanceRemaining);
         }
-        catch (Exception)
+        catch (Exception error) when (error is not OperationCanceledException)
         {
+            Debug.WriteLine($"Store fulfillment failed: {error}");
             return new StoreFulfillmentResult(
                 StoreOperationStatus.NetworkError,
                 trackingId,
@@ -106,16 +138,21 @@ public sealed class WindowsStoreGateway : IStoreGateway
         }
     }
 
-    private static StoreOperationStatus MapStatus(string status) => status switch
+    private static StoreOperationStatus MapStatus(StorePurchaseStatus status) => status switch
     {
-        "Succeeded" => StoreOperationStatus.Succeeded,
-        "AlreadyPurchased" => StoreOperationStatus.Succeeded,
-        "AlreadyFulfilled" => StoreOperationStatus.AlreadyFulfilled,
-        "NotPurchased" => StoreOperationStatus.Cancelled,
-        "NetworkError" => StoreOperationStatus.NetworkError,
-        "ServerError" => StoreOperationStatus.ServerError,
-        "UserNotSignedIn" => StoreOperationStatus.NotSignedIn,
-        "InsufficientQuantity" => StoreOperationStatus.InsufficientQuantity,
+        StorePurchaseStatus.Succeeded or StorePurchaseStatus.AlreadyPurchased => StoreOperationStatus.Succeeded,
+        StorePurchaseStatus.NotPurchased => StoreOperationStatus.Cancelled,
+        StorePurchaseStatus.NetworkError => StoreOperationStatus.NetworkError,
+        StorePurchaseStatus.ServerError => StoreOperationStatus.ServerError,
+        _ => StoreOperationStatus.NotAvailable,
+    };
+
+    private static StoreOperationStatus MapStatus(StoreConsumableStatus status) => status switch
+    {
+        StoreConsumableStatus.Succeeded => StoreOperationStatus.Succeeded,
+        StoreConsumableStatus.InsufficentQuantity => StoreOperationStatus.InsufficientQuantity,
+        StoreConsumableStatus.NetworkError => StoreOperationStatus.NetworkError,
+        StoreConsumableStatus.ServerError => StoreOperationStatus.ServerError,
         _ => StoreOperationStatus.NotAvailable,
     };
 

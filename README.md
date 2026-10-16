@@ -36,7 +36,7 @@ GitHub repository：[poychang/paddle-duel](https://github.com/poychang/paddle-du
 
 目前仍保留草稿，不送審或公開發布；設定排程不保證當日上市，仍須完成審核與發布。這些是附加商品的公開供應設定，不代表主 App 排程或私人測試已設定，也不代表已驗證購買。上市前的測試取得方式與排程限制須在 Store runtime 驗收時另行確認。
 
-建立產品不代表已公開上架或完成商標查核。遊戲程式尚未套用上述正式附加商品識別。
+建立產品不代表已公開上架或完成商標查核。2026-10-16 已將上述附加商品識別集中於 [`StorePlayCatalog`](src/PaddleDuel.Infrastructure/Store/StorePlayCatalog.cs)，接入商品查詢、購買、餘額與持久化扣次重試；真實 Store 交易仍待私人測試版本驗收。
 
 ### 隱私權政策與官網
 
@@ -96,20 +96,20 @@ node --test .\tests\site.test.mjs
 - 每日免費 3 次的純核心模型已完成，包含 UTC 重置、完成才扣與時鐘回撥保護。
 - 額度狀態使用 Windows LocalState 路徑與原子 JSON 替換，損毀資料會隔離保留。
 - 額度完成紀錄只保留最近 400 個 UTC 日，避免本機狀態無限成長。
-- 單人與雙人開局皆會建立免費額度 session，只有完成 11 分比賽才實際扣除。
+- 單人與雙人開局皆建立 entitlement session，免費優先，只有完成 11 分比賽才實際扣除。
 - 主選單顯示今日剩餘免費次數與下一個 00:00 UTC 重置日期。
-- 額度耗盡時會停用開局並顯示 Store 占位入口，不顯示假價格或執行假交易。
+- 免費額度耗盡時仍可按開局，查詢 Store 付費餘額；沒有餘額則不開局，並提供 Store 購買入口，不顯示假價格或執行假交易。
 
-遊戲 App 的 MSIX 已關聯正式 Store identity 與封裝圖示；正式附加商品識別、Store 列表宣傳素材與交易驗收仍待完成。本機簽署封裝不可視為已能購買正式商品。
+遊戲 App 的 MSIX 已關聯正式 Store identity、封裝圖示與附加商品識別；Store 文案／宣傳素材保存在 [商店資料](docs/store/README.md)。真實交易驗收仍待完成，本機建置或簽署封裝不可視為已能購買正式商品。
 
 Store commerce 已具備平台無關的商品、餘額、購買與 fulfillment gateway fake，以及可編譯的 `StoreContext` adapter。
 Entitlement coordinator 已實作免費優先與 1-play／10-play fallback；真實 Store fulfillment 尚未驗收。
 免費額度耗盡時，付費局開始前會先查詢 Store balance，並將選定商品 pool 保存於 entitlement session。
 付費 fulfillment 會先寫入 pending journal；失敗時保留 tracking ID，供之後重試。
-App 啟動與回到前景時會嘗試重試 pending fulfillment；Store 暫時不可用不會阻塞遊戲啟動。
-Windows `StoreContext` adapter 已可編譯並映射 Store 結果；真實 runtime 驗證仍需 package identity 與 private flight。
+App 啟動／回到前景與開局前會嘗試重試 pending fulfillment；未結清交易會阻止新局，損毀 journal 明確報錯並保留原檔，不當成空清單。沒有 pending 且有免費額度時不建立 Store gateway。
+Windows `StoreContext` adapter 使用視窗 HWND 初始化，依官方 API 的 `Consumable` 類型查詢 Store-managed 商品，以 `StoreProduct.StoreId` 精確比對，不接受 SKU ID 或占位 ID。真實 runtime 驗證仍需 Store 發佈的 Private audience 測試版本。
 Store UI 已接入商品 discovery 與購買協調器；沒有 package identity 或 Store 商品時，購買按鈕會保持停用，不會模擬購買。
-Fake commerce tests 已覆蓋取消、餘額錯誤、pending retry、重啟 session 與重複 fulfillment。
+Fake commerce tests 已覆蓋取消、餘額錯誤、持久化 pending retry、只靠 journal 重啟恢復、並行重試、損毀拒絕與重複 fulfillment。2026-10-16 全部 73 項 .NET 測試通過。
 
 ## 建置與執行
 
@@ -194,7 +194,9 @@ Start-Process explorer.exe -ArgumentList "shell:AppsFolder\$($installed.PackageF
 & .\scripts\Test-AppPackage.ps1 -PackagePath '<實際 .msixbundle 或 .msixupload 路徑>' -RequireUnsigned
 ```
 
-**2026-10-15：** Release x64 `1.0.0.0` bundle／upload 已建置並通過上述內容檢查；Windows PowerShell 5.1／PowerShell 7 的拒絕測試均通過。SDK 26100 MakeAppx 亦在未停用驗證下成功 unbundle／unpack。這不取代真實 Store 商品接線、private flight、WACK 或支援 OS／DPI 驗收；目前商品 ID 仍為開發占位，**不要將此產物直接當成已完成交易功能的正式上市版本**。
+**2026-10-15：** 初版 Release x64 `1.0.0.0` bundle／upload 已建置並通過上述內容檢查；Windows PowerShell 5.1／PowerShell 7 的拒絕測試均通過。SDK 26100 MakeAppx 亦在未停用驗證下成功 unbundle／unpack。
+
+**2026-10-16：** 修正鍵盤控制並接入正式商品後，重新產生未簽署 `1.0.0.0` bundle／upload，兩種容器及實際 payload 檢查通過。此次輸出為 `BundleArtifacts\Release-x64\704aea306d5a416dab4a7fa0d43423f5\`；應使用這次產物，不再使用含占位 ID 的舊 bundle。僅剩既有 `mspdbcmf.exe` symbols 警告；未安裝、上傳或送審。**這是待私人測試的候選封裝，不是已完成真實交易、WACK 或支援 OS／DPI 驗收的正式上市版本。**
 
 ### 安裝、升級與解除安裝驗收
 
@@ -267,6 +269,21 @@ dotnet build .\src\PaddleDuel.App\PaddleDuel.App.csproj -c Debug -p:Platform=x64
 
 此模式保留 `%LocalAppData%\Arcade1972` 與既有互斥鎖；已重新驗證建置、啟動、舊額度載入及正常退出。測試後還原原有資料。2026-10-15 擁有者明確選擇繼續保留此模式，因此 identity 偵測、舊路徑 fallback 與互斥鎖仍有用途，不以完成 packaged 驗收為由移除。
 
+### 真實鍵盤操作驗收
+
+2026-10-16 修正原不可見 focus sink 無法取得焦點的問題，以可見遊戲球場接收焦點，根節點預覽按鍵與已處理的 KeyUp 事件。已實測兩人同時上下移動、放鍵停止、相反方向抵銷、標題列焦點、Esc 暫停、資訊 overlay 清除輸入、設定期間失焦須手動繼續、全螢幕切換及單人 W／S。放棄不扣免費次數；此次執行於 unpackaged 開發版，非 Store 安裝版驗收。
+
+先依上節建置 unpackaged App，關閉既有遊戲，確認仍有免費額度，再以 **Windows PowerShell 5.1** 執行：
+
+```powershell
+& "$env:WINDIR\System32\WindowsPowerShell\v1.0\powershell.exe" `
+    -NoProfile -File .\scripts\Test-GameInput.ps1 `
+    -ExecutablePath .\src\PaddleDuel.App\bin\Unpackaged\PaddleDuel.App.exe `
+    -AllowInteractiveTest
+```
+
+腳本會使用真實鍵盤輸入、暫時切換顯示模式，以畫面球拍座標驗證移動，最後放棄比賽並關閉自己的程序。不購買商品、不完成比賽；App 仍會正常保存視窗設定。測試時不要操作滑鼠／鍵盤或切換視窗；失去前景焦點會明確失敗。不可將 UI Automation 成功按下「開始」視為已驗證球拍操作。
+
 ### Paddle Duel 改名與相容性
 
 改名後請開啟 `PaddleDuel.sln`，執行檔為 `PaddleDuel.App.exe`。App 視窗標題與檔案產品資訊為 `Paddle Duel`，自訂標題列與主選單為 `PADDLE DUEL`；spike 為 `PaddleDuel.PackagingSpike`，仍使用獨立測試 identity。
@@ -275,7 +292,7 @@ dotnet build .\src\PaddleDuel.App\PaddleDuel.App.csproj -c Debug -p:Platform=x64
 
 - `%LocalAppData%\Arcade1972`：既有 unpackaged 免費額度、視窗設定與 pending fulfillment journal；直接改路徑會讓既有資料看似遺失。
 - `Local\Arcade1972.SingleInstance`：保留與舊版的互斥關係，避免新舊 App 同時寫入相同資料。
-- `arcade1972.play.1`／`arcade1972.play.10`：原有開發占位商品 ID，待 Store runtime 整合項目替換為已取得的真實 Store ID；封裝 identity 關聯不自動啟用交易。
+- 舊開發占位商品 ID 已於 2026-10-16 換成正式 Store ID；未知／舊 ID 的 pending journal 不會自動改寫為真實扣次，必須先釐清來源。
 - `Classic1972Rules` 與 golden regression 名稱：描述歷史規則，不是產品名稱。
 
 2026-10-08 改名驗證：53 項 .NET 測試通過（含改名前 JSON 額度資料的回歸測試），solution Debug／Release x64 均零警告、零錯誤。Release App 已透過 UI Automation 驗證名稱、既有額度載入、舊互斥鎖、新版重複啟動、資訊／設定 overlay、全螢幕切換、單人／雙人開局、最小化暫停、繼續、放棄不扣次與正常退出；測試後還原原有本機檔案。Escape 鍵自動化受焦點影響，未列為此次通過項目，未為此改動輸入邏輯。

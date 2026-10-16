@@ -8,6 +8,22 @@ public sealed class AppResourceTests
 {
     private static readonly string ResourceDirectory = Path.Combine(AppContext.BaseDirectory, "AppResources");
 
+    [Fact]
+    public void GameplayInputUsesVisibleSurfaceAndPreviewRoutingInsteadOfInvisibleButton()
+    {
+        var document = XDocument.Load(Path.Combine(ResourceDirectory, "MainWindow.xaml"));
+        XNamespace xaml = "http://schemas.microsoft.com/winfx/2006/xaml";
+        Assert.DoesNotContain(document.Descendants(),
+            element => element.Attribute(xaml + "Name")?.Value == "InputSink");
+        var surface = Assert.Single(document.Descendants(),
+            element => element.Attribute(xaml + "Name")?.Value == "GameRoot");
+        Assert.Equal("UserControl", surface.Name.LocalName);
+        Assert.Equal("True", surface.Attribute("UseSystemFocusVisuals")?.Value);
+        var root = Assert.Single(document.Descendants(),
+            element => element.Attribute(xaml + "Name")?.Value == "WindowRoot");
+        Assert.Equal("WindowRoot_PreviewKeyDown", root.Attribute("PreviewKeyDown")?.Value);
+    }
+
     private static Dictionary<string, string> Load(string language)
     {
         return XDocument.Load(Path.Combine(ResourceDirectory, language, "Resources.resw"))

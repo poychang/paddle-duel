@@ -84,8 +84,8 @@
   <data name="PurchaseEntryButton.Content" xml:space="preserve">
     <value>GET PLAYS</value>
   </data>
-  <data name="InputSink.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Internal game keyboard input</value>
+  <data name="GameRoot.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Game playfield</value>
   </data>
   <data name="CloseInformationButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Close controls</value>

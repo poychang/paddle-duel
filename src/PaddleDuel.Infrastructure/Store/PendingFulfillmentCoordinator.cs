@@ -12,12 +12,30 @@ public sealed class PendingFulfillmentCoordinator(
         string trackingId,
         CancellationToken cancellationToken = default)
     {
-        await journal.UpsertAsync(
-            new PendingFulfillment(storeId, quantity, trackingId),
-            cancellationToken);
-        return await TryFulfillAsync(
-            new PendingFulfillment(storeId, quantity, trackingId),
-            cancellationToken);
+        await retryGate.WaitAsync(cancellationToken);
+        try
+        {
+            var fulfillment = new PendingFulfillment(storeId, quantity, trackingId);
+            await journal.UpsertAsync(fulfillment, cancellationToken);
+            return await TryFulfillAsync(fulfillment, cancellationToken);
+        }
+        finally
+        {
+            retryGate.Release();
+        }
+    }
+
+    public async ValueTask<bool> HasPendingAsync(CancellationToken cancellationToken = default)
+    {
+        await retryGate.WaitAsync(cancellationToken);
+        try
+        {
+            return (await journal.LoadAsync(cancellationToken)).Count > 0;
+        }
+        finally
+        {
+            retryGate.Release();
+        }
     }
 
     public async ValueTask<int> RetryPendingAsync(
@@ -27,7 +45,7 @@ public sealed class PendingFulfillmentCoordinator(
         try
         {
             var pending = await journal.LoadAsync(cancellationToken);
-        var completed = 0;
+            var completed = 0;
             foreach (var fulfillment in pending)
             {
                 var result = await TryFulfillAsync(fulfillment, cancellationToken);

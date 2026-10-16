@@ -89,6 +89,47 @@ public sealed class PendingFulfillmentTests : IDisposable
         Assert.Equal(1u, balance.Balance!.UnitsRemaining);
     }
 
+    [Theory]
+    [InlineData("{")]
+    [InlineData("null")]
+    [InlineData("[null]")]
+    [InlineData("[{\"StoreId\":\"test.play.1\",\"Quantity\":0,\"TrackingId\":\"a\"}]")]
+    [InlineData("[{\"StoreId\":\"test.play.1\",\"Quantity\":1,\"TrackingId\":\"\"}]")]
+    [InlineData("[{\"StoreId\":\"test.play.1\",\"Quantity\":1,\"TrackingId\":\"a\"},{\"StoreId\":\"test.play.1\",\"Quantity\":1,\"TrackingId\":\"a\"}]")]
+    public async Task InvalidJournalFailsClosedWithoutErasingUnsettledTransactions(string content)
+    {
+        Directory.CreateDirectory(directoryPath);
+        var filePath = Path.Combine(directoryPath, "pending-fulfillments.json");
+        await File.WriteAllTextAsync(filePath, content);
+        var gateway = CreateGateway();
+        var journal = new JsonPendingFulfillmentJournal(directoryPath);
+        var coordinator = new PendingFulfillmentCoordinator(() => gateway, journal);
+
+        var error = await Record.ExceptionAsync(async () => await coordinator.RetryPendingAsync());
+        Assert.True(error is System.Text.Json.JsonException or InvalidDataException, error?.ToString());
+        Assert.Equal(content, await File.ReadAllTextAsync(filePath));
+        Assert.Empty(gateway.FulfillmentTrackingIds);
+    }
+
+    [Fact]
+    public async Task ConcurrentCompletionAndActivationRetryConsumeOnlyOnce()
+    {
+        var gateway = CreateGateway();
+        await gateway.RequestPurchaseAsync("test.play.1");
+        await gateway.RequestPurchaseAsync("test.play.1");
+        var journal = new JsonPendingFulfillmentJournal(directoryPath);
+        var coordinator = new PendingFulfillmentCoordinator(() => gateway, journal);
+
+        await Task.WhenAll(
+            coordinator.FulfillAsync("test.play.1", 1, "same-match").AsTask(),
+            coordinator.RetryPendingAsync().AsTask(),
+            coordinator.FulfillAsync("test.play.1", 1, "same-match").AsTask());
+
+        Assert.False(await coordinator.HasPendingAsync());
+        Assert.Single(gateway.FulfillmentTrackingIds);
+        Assert.Equal(1u, (await gateway.GetBalanceAsync("test.play.1")).Balance!.UnitsRemaining);
+    }
+
     public void Dispose()
     {
         if (Directory.Exists(directoryPath))

@@ -3,8 +3,10 @@ using PaddleDuel.Infrastructure.Store;
 
 namespace PaddleDuel.Tests;
 
-public sealed class PlayEntitlementServiceTests
+public sealed class PlayEntitlementServiceTests : IDisposable
 {
+    private readonly string directoryPath = Path.Combine(
+        Path.GetTempPath(), "PaddleDuel.Tests", Guid.NewGuid().ToString("N"));
     private const string OnePlayStoreId = "test.play.1";
     private const string TenPlayStoreId = "test.play.10";
     private static readonly DateTimeOffset InitialTime =
@@ -104,6 +106,10 @@ public sealed class PlayEntitlementServiceTests
         var completion = await service.CompleteMatchAsync(start.Session!);
 
         Assert.Equal(EntitlementCompletionStatus.Pending, completion);
+        var entry = Assert.Single(await new JsonPendingFulfillmentJournal(directoryPath).LoadAsync());
+        Assert.Equal(start.Session!.TrackingId, entry.TrackingId);
+        Assert.Equal(OnePlayStoreId, entry.StoreId);
+        Assert.Equal(1u, entry.Quantity);
     }
 
     [Fact]
@@ -139,13 +145,74 @@ public sealed class PlayEntitlementServiceTests
         Assert.Equal(EntitlementCompletionStatus.Consumed, completion);
     }
 
-    private static PlayEntitlementService CreateService(FakeStoreGateway gateway)
+    [Fact]
+    public async Task RestartRetriesJournalBeforeOfferingAnotherMatchWithoutOriginalSession()
+    {
+        var gateway = CreateGateway();
+        var quota = new DailyFreePlayQuota(new FakeClock(InitialTime), new MemoryQuotaStore());
+        var service = CreateService(gateway, quota);
+        await CompleteFreePlaysAsync(service);
+        await gateway.RequestPurchaseAsync(OnePlayStoreId);
+        var paid = await service.TryStartMatchAsync();
+        gateway.FulfillmentStatus = StoreOperationStatus.NetworkError;
+        await service.CompleteMatchAsync(paid.Session!);
+
+        var restarted = CreateService(gateway, quota);
+        var blocked = await restarted.TryStartMatchAsync();
+        Assert.Equal(EntitlementStartStatus.FulfillmentPending, blocked.Status);
+        Assert.Null(blocked.Session);
+
+        gateway.FulfillmentStatus = StoreOperationStatus.Succeeded;
+        var recovered = await restarted.TryStartMatchAsync();
+        Assert.Equal(EntitlementStartStatus.NoEntitlement, recovered.Status);
+        Assert.Empty(await new JsonPendingFulfillmentJournal(directoryPath).LoadAsync());
+        Assert.Equal(paid.Session!.TrackingId, Assert.Single(gateway.FulfillmentTrackingIds));
+        Assert.Equal(0u, (await gateway.GetBalanceAsync(OnePlayStoreId)).Balance!.UnitsRemaining);
+    }
+
+    [Fact]
+    public async Task PendingFulfillmentAlsoBlocksFreshDailyAllowance()
+    {
+        var gateway = CreateGateway();
+        var journal = new JsonPendingFulfillmentJournal(directoryPath);
+        await journal.UpsertAsync(new PendingFulfillment(OnePlayStoreId, 1, "previous-day"));
+        gateway.FulfillmentStatus = StoreOperationStatus.NetworkError;
+
+        var result = await CreateService(gateway).TryStartMatchAsync();
+
+        Assert.Equal(EntitlementStartStatus.FulfillmentPending, result.Status);
+        Assert.Null(result.Session);
+    }
+
+    [Fact]
+    public async Task FreeStartDoesNotConstructStoreGatewayWhenJournalIsEmpty()
+    {
+        IStoreGateway UnexpectedGateway() => throw new InvalidOperationException("Unexpected Store access.");
+        var quota = new DailyFreePlayQuota(new FakeClock(InitialTime), new MemoryQuotaStore());
+        var service = new PlayEntitlementService(
+            quota, UnexpectedGateway, OnePlayStoreId, TenPlayStoreId,
+            new PendingFulfillmentCoordinator(UnexpectedGateway, new JsonPendingFulfillmentJournal(directoryPath)));
+
+        Assert.Equal(EntitlementStartStatus.Allowed, (await service.TryStartMatchAsync()).Status);
+    }
+
+    private PlayEntitlementService CreateService(FakeStoreGateway gateway, DailyFreePlayQuota? quota = null)
     {
         return new PlayEntitlementService(
-            new DailyFreePlayQuota(new FakeClock(InitialTime), new MemoryQuotaStore()),
+            quota ?? new DailyFreePlayQuota(new FakeClock(InitialTime), new MemoryQuotaStore()),
             () => gateway,
             OnePlayStoreId,
-            TenPlayStoreId);
+            TenPlayStoreId,
+            new PendingFulfillmentCoordinator(() => gateway, new JsonPendingFulfillmentJournal(directoryPath)));
+    }
+
+    public void Dispose()
+    {
+        if (Directory.Exists(directoryPath))
+        {
+            Directory.Delete(directoryPath, recursive: true);
+        }
+        GC.SuppressFinalize(this);
     }
 
     private static FakeStoreGateway CreateGateway()
